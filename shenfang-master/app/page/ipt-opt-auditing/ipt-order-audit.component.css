@@ -1,0 +1,140 @@
+.fillspace-sm {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    bottom: 15px;
+    left: 25px;
+    background-color: #fff;
+    padding: 0 20px;
+    color: #515253
+}
+
+.ipt-order-audit-header {
+    margin: 20px 0;
+}
+
+.urgent-flag {
+    display: inline-block;
+    width: 35px;
+    color: #ffffff;
+    background: darkorange;
+    border-radius: 8px;
+}
+
+.btn-agree,
+.btn-refuse,
+.btn-close {
+    min-width: 66px;
+    height: 30px;
+    color: #fff;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.btn-agree {
+    background: #4EB7E0;
+}
+.btn-refuse{
+    margin-left: 15px;
+    background: #26C24C;
+}
+.btn-close{
+    float: right;
+    background: #FF8E09;
+}
+
+.ipt-order-audit-table {
+    margin-bottom: 0 !important;
+}
+
+.ipt-order-audit-table tr {
+    border: 1px solid #F9F9F9;
+}
+
+table, td, th {
+    border: 1px solid #DFDFDF;
+    border-bottom: none;
+    vertical-align: middle;
+}
+
+.even-tr {
+    background: #FDFDFE;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.hint {
+    opacity: 0;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    padding: 5px 10px;
+    min-width: 250px;
+    min-height: 35px;
+    line-height: 28px;
+    font-size: 12px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    background: #fff;
+}
+.hint.show{
+    animation: floatVertical 3s ease-in-out;
+}
+@keyframes floatVertical{
+	0% {
+        opacity: 0;
+		-webkit-transform: translate(-50%, 0);
+	}
+    25%{
+        opacity: 1;
+        -webkit-transform: translate(-50%, 80px);
+    }
+	75% {
+        opacity: 1;
+		-webkit-transform: translate(-50%, 80px);
+	}
+	100% {
+        opacity: 0;
+		-webkit-transform: translate(-50%, 0);
+	}
+}
+
+
+.hint > img {
+    padding: 0 8px;
+    vertical-align: middle;
+}
+
+.hint > span {
+    vertical-align: middle;
+}
+
+.not-available {
+    height: 45px;
+    line-height: 45px;
+    border: 1px solid #999;
+    border-top: none;
+    background: #fff;
+}
+
+
+.warning-msg p{
+    margin-bottom: .25rem;
+}
+.warning-msg p:last-child{
+    margin: 0;
+}

@@ -1,0 +1,263 @@
+body {
+    font-size: 13px;
+}
+
+.clear-both {
+    clear: both;
+}
+
+.pre-ckeck {
+    overflow: hidden;   
+}
+
+.check-return {
+    float: left;
+    background: #fff;
+    border: 1px solid rgb(121, 121, 121);
+    margin: 15px;
+}
+
+.check-title {
+    display: block;
+    font-size: 14px;
+    line-height: 64px;
+    margin: 0 152px;
+}
+
+.check-header {
+    height: 60px;
+    margin-bottom: 10px;
+    background: #fff;
+    border-top: 1px solid #ccc;
+}
+
+
+.check-header-patient table{
+    border: none;margin: 0;
+}
+.check-header-patient td {
+    padding: 5px 7px;height: 30px;
+    font-size: 12px;color: #999;text-align: left;
+    border: none;
+}
+.check-header-patient span{
+    color: #000;
+}
+
+
+.check-list {
+    height: 60px;padding: 0 5px;
+    line-height: 60px;
+    vertical-align: initial;
+    cursor: pointer;
+}
+
+.check-list>img {
+    width: 25px;
+    height: 25px;
+}
+
+.pre-ord-list {
+    padding: 0;
+    border: 1px solid #ccc;
+    background: #fff;
+    overflow: auto;
+}
+
+.pre-ord {
+    margin: 10px;
+}
+
+.pre-ord-num {
+    padding: 5px 8px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    background: rgb(200, 200, 200);
+}
+.pre-suggest-num{
+    height: 30px;
+    padding: 5px 8px;
+    background: #f2f3f4;
+    color: #00a82e;
+    border-bottom: 1px solid #ccc;
+}
+.pre-suggest-num .green-dot-icon{
+    padding: 6px;margin-right: 5px;
+    border-radius: 6px;
+    background: #00a82e;
+    font-size: 0;
+    vertical-align: middle;
+}
+
+.pre-old-num {
+    height: 24px;
+    line-height: 24px;
+}
+.pre-ord table{margin: 0;}
+.pre-ord-table{
+    padding: 5px;
+    border: 1px solid #ccc;border-top: none;
+}
+.pre-ord-table .table-header{
+    margin-bottom: 5px;
+}
+.pre-ord-table .table-header, .pre-ord-table .table-header td{
+    border: none;
+    color: #999;
+}
+.pre-ord-table .table-header span{
+    color: #000;
+}
+
+
+.pre-ord-action {
+    background: #00a82e;
+    color: #fff;
+}
+
+.pre-ord-check {
+    color: red;
+    cursor: pointer;
+}
+
+.pre-suggest-list {
+    padding-right: 0;
+}
+
+.pre-suggest-question {
+    margin-left: 60%;
+}
+
+.pre-suggest-num {
+
+}
+
+.pre-suggest {
+    height: 100%;
+    background: #fff;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.pre-suggest-text {
+    padding: 5px 10px;
+}
+
+.audit-info-list{
+    margin-bottom: 10px;
+}
+.audit-info{
+    margin-left: 5px;
+    border-left: 1px solid #ccc;
+}
+.audit-info:after{
+    content: " ";display: block;visibility: hidden;clear: both;
+}
+
+.blue-circle {
+    float: left;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #4EB7E0;
+    background: #fff;
+    border-radius: 50%;
+    margin: 8px 10px 0 -5px;
+}
+
+.pre-suggest-time {
+    height: 30px;line-height: 30px;
+    float: left;
+}
+
+.pre-suggest-info {
+    height: 30px;
+    margin-left: 15px;padding: 5px;
+    background: #f1f0ee;
+}
+
+.pre-suggest-drug {
+    border: 1px solid #ccc;
+    border-bottom: none;
+    margin-bottom: 10px;
+}
+.pre-suggest-drug .drug-name{
+    padding: 5px 10px;
+    border-bottom: 1px solid #ccc;
+}
+.pre-suggest-drug .drug-warning-sug{
+    padding: 10px 10px 5px 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.warning-msg{
+    margin-bottom: 5px;
+}
+.warning-msg input[type='checkbox']{
+    vertical-align: -2px;
+}
+.warning-msg .warning-level{
+    margin-left: 5px;
+}
+
+.phar-suggestion{
+    
+}
+.phar-suggestion span{
+    display: inline-block;margin: 0 10px 5px 0;
+    padding: 5px;
+    background: #f2f2f2;
+    border-radius: 3px;
+}
+
+.doctor-opinion-first {
+    border-radius: 5px;
+    padding: 5px;
+    background: #FFCCCC;
+}
+
+.doctor-opinion-second {
+    border-radius: 5px;
+    padding: 5px;
+    background: #BBFF66;
+}
+.pre-suggest-handler{
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    text-align: center;
+}
+
+
+.check-textarea {
+    width: 100%;
+    height: 65px;
+    color: rgb(153, 153, 153);
+}
+
+.check-text {
+    border-top: 1px solid rgba(121, 121, 121, 1);
+    padding: 5px 15px;
+}
+
+.check-text>span {
+    font-size: 12px;
+}
+
+.check-btn-fail {
+    float: left;
+    color: #535353;
+    margin: 5px 40px;
+    background: #fff;
+    border: 1px solid #E1E1E1;
+    border-radius: 5px;
+}
+
+.check-btn-pass {
+    float: right;
+    color: #fff;
+    margin: 5px 40px;
+    background: #4EB7E0;
+    border-radius: 5px;
+}
+
+
+/*table hotfix*/

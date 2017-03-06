@@ -1,0 +1,245 @@
+<div class="fillspace alert-msg-wrap">
+	<div class="query-bar">
+		<div class="col-11 float-left">
+			<div class="col-6 form-inline mt-2 float-left">
+				<div class="col-2">
+					<label>日期</label>
+				</div>
+				<div class="col-10">
+					<time-interval [startTime]="searchParams.startDate" [endTime]="searchParams.endDate" (timeSetted)="updateSearchTime($event)"></time-interval>
+				</div>
+			</div>
+			<div class="col-3 form-inline mt-2 float-left">
+				<div class="col-4">
+					<label>审核对象</label>
+				</div>
+				<div class="col-8">
+					<select class="form-control form-control-sm" [(ngModel)]="searchParams.auditObject" (change)="auditObjChange()">
+						<option value="1" selected>门诊处方</option>
+						<option value="2">门诊患者</option>
+						<option value="3">住院医嘱</option>
+					</select>
+				</div>
+			</div>
+			<!-- <div class="col-3 form-inline mt-2 float-left" *ngIf="pathNum == 0 || (pathNum != 0 && searchParams.auditObject != 3)"> -->
+			<div class="col-3 form-inline mt-2 float-left" *ngIf="searchParams.auditObject != 3">
+				<div class="col-4">
+					<label>来源</label>
+				</div>
+				<div class="col-8">
+					<select class="form-control form-control-sm" [(ngModel)]="searchParams.recipeSource">
+						<option value="0" selected>全部</option>
+						<option value="1">门诊</option>
+						<option value="2">急诊</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-3 form-inline mt-2 float-left">
+				<div class="col-4">
+					<label>药品分类</label>
+				</div>
+				<div class="col-8">
+					<div class="like-input" (click)="chooseDrug()">
+						<span *ngFor="let drug of drugCategoryResultList" class="add-program-header">
+							{{drug.name}}
+                        	<span class="add-program-checked" (click)="drugCategoryResultDelete($event,drug.id)">×</span>
+                        </span>
+					</div>
+				</div>
+			</div>
+			<div class="col-3 form-inline mt-2 float-left">
+				<div class="col-4">
+					<label>药品名称</label>
+				</div>
+				<div class="col-8">
+					<!-- <auto-complete [option]="drugOption" (select)="drugNameSelect($event)"></auto-complete> -->
+					<input type="text" class="form-control form-control-sm" method="getDrugList" placeholder="请输入药品名称" (select)="drugNameSelect($event)" [(ngModel)]="searchParams.productName" [autocomplete]>
+				</div>
+			</div>
+			<div class="col-3 form-inline mt-2 float-left">
+				<div class="col-4">
+					<label>科室</label>
+				</div>
+				<div class="col-8">
+					<div class="like-input" (click)="deptclick($event)" #deptComp>
+						<!-- <span *ngFor="let dept of activeDept" class="add-program-header">
+							{{dept.name}}
+                        	<span class="add-program-checked" (click)="fnZoneDeptDelete(dept,$event)">×</span>
+                        </span>
+                        <span *ngFor="let zone of activeZone" class="add-program-header">
+							{{zone.name}}
+                        	<span class="add-program-checked" (click)="fnZoneDeptDelete(zone,$event)">×</span>
+                        </span> -->
+                        <span *ngFor="let _zone of deptList" style="line-height:30px;">
+                            <span class="audit-plan-dept-name" *ngFor="let dept of trans2Arr(_zone&&_zone.idNamePairs || {})">
+                                {{dept.name}}
+                                <span class="audit-plan-X" (click)="fnZoneDeptDelete('dept',dept,$event)">X</span>
+                            </span>
+                            <span class="audit-plan-dept-name">
+                                {{_zone.zoneName}}
+                                <span class="audit-plan-X" (click)="fnZoneDeptDelete('zone',_zone,$event)">X</span>
+                            </span>
+                        </span>
+                        <zone-dept-wrap-component [options]="deptOptions" [relydom]="deptComp" (output)="fnDeptSelect($event)" [deptList]="deptList"></zone-dept-wrap-component>
+                    </div>
+				</div>
+			</div>
+			<div class="col-3 form-inline mt-2 float-left">
+				<div class="col-4">
+					<label>分析类型</label>
+				</div>
+				<div class="col-8">
+					<select-comp [option]="analysisTypeOption" (select)="analysisTypeSelect($event)"></select-comp>
+				</div>
+			</div>
+			<div class="col-3 form-inline mt-2 float-left" *ngIf="fullMode">
+				<div class="col-4">
+					<label>提示类型</label>
+				</div>
+				<div class="col-8">
+					<select  class="form-control form-control-sm" [(ngModel)]="searchParams.analysisResultType">
+						<option value="">全部</option>
+						<option *ngFor="let analysisResultType of analysisResultTypeList" value="{{analysisResultType.id}}">{{analysisResultType.name}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-3 form-inline mt-2 float-left" *ngIf="pathNum == 0 && fullMode">
+				<div class="col-4">
+					<label>医生</label>
+				</div>
+				<div class="col-8">
+					<input type="text" class="form-control form-control-sm" method="getDoctorList" placeholder="请输入医生名称" [(ngModel)]="docName" (select)="doctorSelect($event)" [autocomplete]>
+				</div>
+			</div>
+			<div class="col-3 form-inline mt-2 float-left" *ngIf="fullMode">
+				<div class="col-4">
+					<label>警示等级</label>
+				</div>
+				<div class="col-4">
+					<select class="form-control form-control-sm" [(ngModel)]="searchParams.severitySymbol">
+						<option value=">" selected> > </option>
+						<option value=">="> >= </option>
+						<option value="<"> < </option>
+						<option value="<="> <= </option>
+						<option value="="> = </option>
+					</select>
+				</div>
+				<div class="col-4">
+					<select class="form-control form-control-sm" [(ngModel)]="searchParams.severity">
+						<option value="0" selected>0</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+						<option value="9">9</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-3 form-inline mt-2 float-left" *ngIf="fullMode">
+				<div class="col-4">
+					<label>警示状态</label>
+				</div>
+				<div class="col-8">
+					<select  class="form-control form-control-sm" [(ngModel)]="searchParams.messageStatus">
+						<option value="0" selected>全部</option>
+						<option value="1">未处理</option>
+						<option value="2">已确认</option>
+						<option value="3">已待查</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-3 form-inline mt-2 float-left" *ngIf="pathNum == 0 && fullMode">
+				<div class="col-4">
+					<label>申请状态</label>
+				</div>
+				<div class="col-8">
+					<select  class="form-control form-control-sm" [(ngModel)]="searchParams.userAppliedStatus">
+						<option value="0" selected>全部</option>
+						<option value="1">申请确认</option>
+						<option value="2">申请待查</option>
+						<option value="3">未处理</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="col-1 mt-2 float-left btn-block">
+			<button class="btn btn-sm btn-primary" (click)="search()" role="button">搜索</button>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+	<div class="mt-2 slide-bar">  
+        <a class="slide-tip" (click)="fullMode = !fullMode">{{fullMode ? '收起' : '展开'}}筛选条件<img src="../../../images/arrows-down-a.svg" class="tips-arrow" [class.uparrow]="fullMode"/></a>
+    </div>
+    <div class="mt-2 table-shadow">
+    	<div class="row float-right mb-1 mr-2 mt-1">
+	    	<div class="btn-group btn-group-sm">
+				<button type="button" class="btn btn-danger" (click)="exportList()">下载</button>
+				<button type="button" class="btn btn-warning" (click)="export()">导出</button>
+			</div>
+    	</div>
+    	<my-table [table]="AMListTable">
+	        <template #tableTemplate let-tableinfo>
+	            <tr *ngFor="let trow of tableinfo.dataList;let i = index;"  (mouseover)="touchedTrow = trow">
+	                <td>
+	                	<a (click)="goAlertMsgDetail(trow)">{{trow.infoName}}</a>
+	                </td>
+	                <td>{{trow.analysisResultType}}</td>
+	                <td>{{trow.severity}}</td>
+	                <td>{{trow.message}}</td>
+	                <td>{{trow.messageStatusStr}}</td>
+	                <td>{{trow.userAppliedStatusStr}}</td>
+	                <td>{{trow.count}}</td>
+	                <td>
+	                	<a (click)="goAlertMsgDetail(trow)"><img src="../../../images/check.svg"></a>
+	                </td>
+	            </tr>
+	            <tr *ngIf="!(tableinfo.dataList&&tableinfo.dataList.length)">
+	            	<td colspan="100" style="text-align:center;">没有查询到数据！</td>
+	            </tr>
+	        </template>
+	    </my-table>
+    </div>
+</div>
+
+
+<drug-category-dialog #drugCategoryDialog [options]="drugCategoryDialogOptions" (onChooseDrugs)="chooseNewCategoryConfirm($event)"></drug-category-dialog>
+
+<div class="popup-add" id="popupAdd" *ngIf="downloadWin">
+    <div class="popup-add-doctor flex column" id="popupDrug">
+        <div class="popup-add-header">下载</div>
+        <div class="popup-add-body flex1 flex">
+            <table class="table table-bordered">
+            	<thead>
+            		<th>序号</th>
+            		<th>导出时间</th>
+            		<th>下载次数</th>
+            		<th>状态</th>
+            		<th>操作</th>
+            	</thead>
+            	<tbody>
+            		<tr *ngFor="let download of downloadList; let i = index;">
+            			<td>{{i+1}}</td>
+            			<td>{{download.createdTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+            			<td>{{download.downloadTimes}}</td>
+            			<td>{{download.status}}</td>
+            			<td>
+            				<button class="btn btn-sm btn-info" (click)="fnDownload(download)">下载</button>
+            				<button class="btn btn-sm btn-danger" (click)="fnDelete(download)">删除</button>
+            			</td>
+            		</tr>
+            		<tr *ngIf="!downloadList.length" style="text-align:center;">
+            			<td colspan="100">没有查询到数据！</td>
+            		</tr>
+            	</tbody>
+            </table>
+        </div>
+        <div class="popup-add-footer">
+            <button type="button" class="btn btn-sm btn-grey" (click)="this.downloadWin = false">取消</button>
+            <button type="button" class="btn btn-sm btn-primary" (click)="this.downloadWin = false">确认</button>
+        </div>
+    </div>
+</div>

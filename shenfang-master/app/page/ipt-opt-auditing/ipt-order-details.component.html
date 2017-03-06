@@ -1,0 +1,999 @@
+<header style="overflow: hidden;">
+    <button type="button" class="btn check-return" routerLink="/ipt-order-audit">
+        <img src="../../images/ipt-back.svg"/>
+        返回
+    </button>
+    <span class="check-title text-center">医 嘱 审 核</span>
+</header>
+<div class="container-fluid">
+    <div class="row ipt-info-head">
+        <div class="col-lg-9 ipt-info-patient-main">
+            <div>
+                <table class="table col-lg-12 ipt-info-patient ipt-info-table-default">
+                    <tbody>
+                        <tr>
+                            <td><span>住院号:</span>{{patientInfo.idNo}}</td>
+                            <td><span>患者号:</span>{{patientInfo.patientId}}</td>
+                            <td><span>姓名:</span>{{patientInfo.name}}</td>
+                            <td><span>年龄:</span>{{patientInfo.age}}</td>
+                            <td><span>性别:</span>{{patientInfo.sex==1?'男':'女'}}</td>
+                            <td><span>身高:</span>{{patientInfo.height}}</td>
+                            <td><span>体重:</span>{{patientInfo.weight}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table col-lg-12 ipt-info-patient ipt-info-table-default">
+                    <tbody>
+                        <tr>
+                            <td><span>体表面积:</span>{{patientInfo.race}}</td>
+                            <td><span>是否怀孕:</span>{{patientInfo.pregnancy==1?'是':'否'}}</td>
+                            <td><span>孕期:</span>{{patientInfo.timeOfPreg}}</td>
+                            <td><span>是否哺乳:</span>{{patientInfo.breastFeeding==1?'是':'否'}}</td>
+                            <td><span>过敏药品列表:</span>
+                                <i class="pre-ord-check" id="openAllergy" (click)="isPopupShow=true&&isAllergyShow=true">查看</i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table ipt-info-patient ipt-info-table-default">
+                    <tbody>
+                        <tr>
+                            <td><span>床位号:</span>{{patientInfo.inWardBedNo}}</td>
+                            <td><span>入院科室:</span>{{patientInfo.inDeptName}}</td>
+                            <td><span>入院时间:</span>{{patientInfo.hospitalizedTime | date:"yyyy-MM-dd"}}</td>
+                            <td class="td-right" (click)="isPopupShow=true&&isProgressShow=true">
+                                <img src="../../images/progress.svg" />
+                                <a href="javascript:void(0)" id="openProcess" class="pre-ord-check">病程记录</a>
+                            </td>
+                            <td class="td-right" (click)="isPopupShow=true&&isRecordShow=true">
+                                <img src="../../images/record2.svg" />
+                                <a href="javascript:void(0)" id="openAdmission" class="pre-ord-check">入院记录</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table ipt-info-patient ipt-info-table-default">
+                    <tbody>
+                        <tr>
+                            <td><span class="diagnose">诊断</span>{{diagnoseStr}}</td>
+                            <td class="td-right"><a href="javascript:void(0)" style="color: #4EB7E0;" id="openDiagnostic" (click)="isPopupShow=true&&isDiagnoseShow=true">查看诊断记录</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-3 ipt-info-patient-more">
+            <table class="col-lg-12 table text-center yz-menuright">
+                <tbody>
+                    <tr class="hos-check-check">
+                        <td id="openChecklist" (click)="isPopupShow=true&&isExamShow=true">
+                            <img src="../../images/check-exam.svg" />
+                            <div class="pre-ord-check">查看检验/检查单</div>
+                        </td>
+                        <td id="openOperation" (click)="isPopupShow=true&&isOperationShow=true">
+                            <img src="../../images/check-operation.svg" />
+                            <div class="pre-ord-check">查看手术</div>
+                        </td>
+                    </tr>
+                    <tr class="hos-check-check">
+                        <td id="openVital" (click)="vitalSignShow()">
+                            <img src="../../images/check-vitalsign.svg" />
+                            <div class="pre-ord-check">查看生命体征</div>
+                        </td>
+                        <td id="openAdvice" (click)="isPopupShow=true&&isNonOrderShow=true">
+                            <img src="../../images/check-nonorder.svg" />
+                            <div class="pre-ord-check">查看非药医嘱</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row ipt-info-title">
+        <div class="col-lg-2 text-center hos-check-action" [class.cur]="isOrderShow" [class.nocur]="!isOrderShow" (click)="orderClick()">药嘱</div>
+        <div class="col-lg-2 text-center" [class.cur]="isSummaryShow" [class.nocur]="!isSummaryShow" (click)="summaryClick()">住院信息汇总</div>
+        <div class="col-lg-8"></div>
+    </div>
+    <div class="row ipt-info-main">
+        <div class="col-lg-8" style="float: left;">
+            <!--药嘱-->
+            <div class="row col-lg-12 hos-check-text" id="orderBox">
+                <div class="col-lg-12" *ngFor="let iptOrder of iptOrderList" (click)="changeCheckedOrder(iptOrder)">
+                    <div class="hos-check-table-header-action" style="color:#fff;" [style.background]="checkedRecipe.groupNum==iptOrder.groupNum?'#2FA715':'#ddd'"></div>
+                    <div class="hos-check-table-1st">
+                        <img *ngIf="iptOrder.status==0" style="position: absolute;" src="../../images/back.svg">
+                        <img *ngIf="iptOrder.status==1" style="position: absolute;" src="../../images/audit-has-passed.svg">
+                        <table class="table table-margin ipt-info-table-default">
+                            <thead>
+                                <tr>
+                                    <td>{{iptOrder.drugOrder[0].orderTime | date:"yyyy-MM-dd HH:ss:MM" }}</td>
+                                    <td><span>科室:</span>{{iptOrder.drugOrder[0].orderDeptName}}</td>
+                                    <td><span>医生:</span>{{iptOrder.drugOrder[0].orderDocName}}</td>
+                                    <td><span>医生职称:</span>{{iptOrder.drugOrder[0].orderDocTitle}}</td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table class="table table-bordered text-center ipt-info-table">
+                            <tbody>
+                                <tr>
+                                    <td><b>生效时间</b></td>
+                                    <td><b>医嘱类型</b></td>
+                                    <td><b>组号</b></td>
+                                    <td><b>药品名称</b></td>
+                                    <td><b>规格</b></td>
+                                    <td><b>给药剂量</b></td>
+                                    <td><b>给药途径</b></td>
+                                    <td><b>给药频率</b></td>
+                                    <td><b>数量</b></td>
+                                    <td><b>给药时机</b></td>
+                                    <td><b>备注</b></td>
+                                    <td><b>重点关注</b></td>
+                                </tr>
+                                <tr *ngFor="let drugOrder of iptOrder.drugOrder">
+                                    <td class="hos-check-td">
+                                        {{drugOrder.orderValidTime| date:"yyyy-MM-dd"}}<br> {{drugOrder.orderValidTime| date:"HH:ss:MM"}}
+                                    </td>
+                                    <td>{{drugOrder.orderType}}</td>
+                                    <td>{{iptOrder.groupNum}}</td>
+                                    <td>{{drugOrder.drugName}}</td>
+                                    <td>{{drugOrder.specifications}}</td>
+                                    <td>{{drugOrder.drugDose}}</td>
+                                    <td>{{drugOrder.drugAdminRouteName}}</td>
+                                    <td>{{drugOrder.drugUsingFreq}}</td>
+                                    <td>{{drugOrder.despensingNum}}</td>
+                                    <td>{{drugOrder.drugUsingOpporunity}}</td>
+                                    <td>{{drugOrder.specialPrompt}}</td>
+                                    <td class="pre-ord-check"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!--住院信息汇总-->
+            <div class="row col-lg-12" id="summaryBox" style="display:none;">
+                <!--时间选择轴-->
+                <div class="ipt-info-timeline" id="timeline">
+                    <div class="ipt-info-gridline-1st">
+                        <span>入院</span>
+                    </div>
+                    <div class="ipt-info-gridline-2nd" *ngFor="let value of summaryList.monthList;let i = index;" [style.left]="value.width + '%'">
+                        <span>{{value.month}}月</span>
+                    </div>
+                    <div class="ipt-info-checkbox" [style.width]="handleWidth + 'px'" #handleBlock id="handle" (mousedown)="mouseDown($event)"
+                        (mousemove)="mouseMove($event)" (mouseup)="mouseUp($event,handleBlock,'up')" (mouseleave)="mouseUp($event,handleBlock, 'leave')"></div>
+                </div>
+                <!--住院信息汇总-->
+                <table id="orderTable" #orderTable class="table table-bordered text-center ipt-info-table">
+                    <tbody id="orderTbody" #orderTbody>
+                        <tr id="summaryBoxTR">
+                            <th style="background-color: #f9f9f9;" class="text-center" id="summaryBoxTH">日期</th>
+                            <td style="background-color: #f9f9f9;" *ngFor="let value of summaryList.dateList;let i = index;" [class.ipt-info-position]="i==0||(i+1)==summaryList.dateList.length">
+                                {{value.date}}
+                                <div class="ipt-info-previous" *ngIf="i==0" (click)="leftDateClick()"></div>
+                                <div class="ipt-info-next" *ngIf="(i+1)==summaryList.dateList.length" (click)="rightDateClick()"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center">诊断记录</th>
+                            <td *ngFor="let diagnose of summaryList.diagnoseList">
+                                <div class="ipt-info-content" *ngIf="diagnose.diagDate">
+                                    <i class="ipt-info-img"><img src="../../images/progress0.svg" width="100%"></i>
+                                    <span class="ipt-info-text text-left">
+                                        {{diagnose.diagDate|date:"HH:ss"}}<br>
+                                        {{diagnose.diagName}}
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let vitalSign of summaryList.vitalSignList.vitalSignOptionList;let i = index;">
+                            <th class="text-center ipt-info-vital">
+                                <p>{{vitalSign.series.name}}</p>
+                                <p class="ipt-info-vital-normal">正常{{vitalSign.normal}}</p>
+                            </th>
+                            <td #summaryvsTD>
+                                <div style="position:relative">
+                                    <svg [style.width]="summaryList.vitalSignList.vitalSignWidth-vitalSign.leftPos*summaryvsTD.offsetWidth+20 + 'px'" [style.height]="summaryList.vitalSignList.vitalSignHeight+20"
+                                        version="1.1" style="position: absolute;" [style.left]="15+vitalSign.leftPos*summaryvsTD.offsetWidth+'px'" [style.top]="-4 + 'px'">
+                                        <polyline [attr.points]="vitalSign.positionStr" style="fill:white;stroke-width:2" [style.stroke]="vitalSign.color"/>
+                                        <circle *ngFor="let data of vitalSign.positionArr;let j = index;" [attr.cx]="data.x" [attr.cy]="data.y" r="5" [attr.stroke]="vitalSign.color"
+                                        [style.stroke-width]="2" [attr.fill]="vitalSign.color" (mouseover)="showDetail(vitalSign,data,j)" (mouseout)="hideDetail(vitalSign)"
+                                    />
+                                    </svg>
+                                    <div class="detail-dialog" *ngIf="vitalSign.dialog.show" [style.left]="vitalSign.dialog.x + vitalSign.leftPos * summaryvsTD.offsetWidth + 'px'" [style.top]="vitalSign.dialog.y+'px'">
+                                        <div [style.color]="vitalSign.color">{{vitalSign.dialog.msg1}}{{vitalSign.unit}}</div>
+                                        <div class="detail-dialog-time">{{vitalSign.dialog.msg2|date:"HH:mm"}}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th class="text-center">检验/检查</th>
+                            <td *ngFor="let exam of summaryList.examList">
+                                <div class="ipt-info-content" *ngFor="let item of exam">
+                                    <i class="ipt-info-img">
+                                        <img *ngIf="item.examItemName" src="../../images/exam-normal.svg" width="100%">
+                                        <img *ngIf="!item.examItemName" src="../../images/exam-image.svg" width="100%">
+                                    </i>
+                                    <span class="ipt-info-text text-left">
+                                        {{item.reportTime|date:"HH:ss"}}<br/>
+                                        {{item.examItemName?item.examItemName:item.imageName}}
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr #orderTR *ngFor="let order of summaryList.orderList.orderOptionList;let i = index;">
+                            <th class="text-center">{{order.series.name}}</th>
+                            <td #orderTD>
+                                <div style="position:relative;">
+                                    <svg [style.width]="summaryList.orderList.orderWidth-order.leftPos*orderTD.offsetWidth+20 + 'px'" [style.height]="summaryList.orderList.orderHeight+20"
+                                        version="1.1" style="position: absolute;" [style.left]="16+order.leftPos*orderTD.offsetWidth+'px'" [style.top]="-(orderTD.offsetHeight-summaryList.orderList.orderHeight-20)/2+'px'">
+                                        <polyline [attr.points]="order.positionStr" style="fill:white;stroke:gray;stroke-width:2" />
+                                        <circle *ngFor="let data of order.positionArr;let j = index;" [attr.cx]="data.x" [attr.cy]="data.y" r="5" stroke="gray" stroke-width="2"
+                                        fill="gray" (mouseover)="orderDetail(order,data,j)" (mouseout)="hideDetail(order)" />
+                                    </svg>
+                                    <div style="position: absolute;width: 50px;height: 30px;" class="detail-dialog" *ngIf="order.dialog.show" [style.left]="order.dialog.x+order.leftPos*orderTD.offsetWidth+'px'" [style.top]="order.dialog.y+'px'">
+                                        <p style="color: #fff;">{{order.dialog.msg|date:"HH:ss"}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th class="text-center">护理医嘱</th>
+                            <td *ngFor="let nonOrder of summaryList.nonOrderList">
+                                <div class="ipt-info-content" *ngIf="nonOrder.orderTime">
+                                    <i class="ipt-info-img"><img src="../../images/progress0.svg" width="100%"></i>
+                                    <span class="ipt-info-text text-left">{{nonOrder.orderTime|date:"HH:ss"}}<br/>{{nonOrder.orderName}}</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center">手术</th>
+                            <td *ngFor="let operation of summaryList.operationList">
+                                <div class="ipt-info-content" *ngIf="operation.operationStartTime">
+                                    <i class="ipt-info-img"><img src="../../images/operation.svg" width="100%"></i>
+                                    <span class="ipt-info-text text-left">{{operation.operationStartTime|date:"HH:ss"}}<br/>{{operation.operationName}}</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center">病程记录</th>
+                            <td *ngFor="let progress of summaryList.progressList">
+                                <div class="ipt-info-content" *ngIf="progress.recordTime">
+                                    <i class="ipt-info-img"><img src="../../images/progress0.svg" width="100%"></i>
+                                    <span class="ipt-info-text text-left">{{progress.recordTime|date:"HH:ss"}}<br/>病程记录</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="messageBox" class="col-lg-4" style="float:left;">
+            <div class="col-lg-12" style="padding: 0 10px;" *ngFor="let engineMsgGroup of iptOrderList;let i = index;">
+                <div *ngIf="checkedRecipe.groupNum==engineMsgGroup.groupNum">
+                    <div class="hos-check-record hos-check-table-header-action hos-engine-head" style="color: #2FA715;">警示信息</div>
+                    <div class="hos-check-record-text" style="height: 330px;" *ngIf="engineMsgGroup.engineMsgs.length > 0">
+                        <div class="hos-check-record-drug" style="margin-top: 10px;" *ngFor="let engineMsg of engineMsgGroup.engineMsgs">
+                            <div>
+                                <img src="../../images/menu-audit-a.svg" /> {{engineMsg.drugName}}
+                            </div>
+                            <div *ngFor="let drugMsg of engineMsg.drugMsg">
+                                <input type="checkbox" #recordCheckBox (click)="engineMsgChecked(recordCheckBox.checked, 2, drugMsg, engineMsgGroup)">
+                                <span>{{drugMsg.msg.message}}</span>
+                                <div class="record-drug-inp" *ngIf="recordCheckBox.checked">
+                                    <input type="checkbox" #recordCheckBox2 (click)="engineMsgChecked(recordCheckBox2.checked, 1, drugMsg, engineMsgGroup)">
+                                    <span>建议医生修改或双签名确认</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="check-text" *ngIf="!engineMsgGroup.isChecked">
+                        <span *ngIf="engineMsgGroup.engineMsgs.length<=0">该医嘱无警示信息</span>
+                        <span *ngIf="engineMsgGroup.engineMsgs.length>0&&engineMsgGroup.checkedNum<=0">未选中警示信息</span>
+                        <span *ngIf="engineMsgGroup.checkedNum>0">已经选中<i style="font-style: normal; color: #FF0000;">{{engineMsgGroup.checkedNum}}条警示信息</i></span>
+                        <br/>
+                        <textarea name="a" #recordBox class="check-textarea" (blur)="recordBox.value.trim()==''?(recordBox.value='审核意见...'):''" (focus)="recordBox.value=='审核意见...'?(recordBox.value=''):''">审核意见...</textarea>
+                        <div style="text-align: center;">
+                            <button style="float: initial;margin: 5px 20px;" (click)="saveEngineMsgList(engineMsgGroup, 0, recordBox.value.trim())" type="button" class="btn check-btn-fail">打回</button>
+                            <button style="float: initial;margin: 5px 20px;" (click)="saveEngineMsgList(engineMsgGroup, 1, recordBox.value.trim())" type="button" class="btn check-btn-pass">通过</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup" id="popup" *ngIf="isPopupShow">
+    <!--过敏药物列表-->
+    <div class="popup-allergy" id="popupAllergy" *ngIf="isAllergyShow">
+        <div class="popup-header row">
+            <div class="col-lg-6">过敏信息</div>
+            <div class="col-lg-6 text-right"><img id="closeAllergy" src="../../images/close-1.svg" alt="关闭" (click)="closePopup()" /></div>
+        </div>
+        <div class="popup-body text-center">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td>过敏药物</td>
+                        <td>过敏反应</td>
+                    </tr>
+                    <tr *ngFor="let allergy of allergyList">
+                        <td>{{allergy.allergyDrug}}</td>
+                        <td>{{allergy.anaphylaxis}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="popup-diagnostic" id="popupDiagnostic" *ngIf="isDiagnoseShow">
+        <div class="popup-header row">
+            <div class="col-lg-6">诊断记录</div>
+            <div class="col-lg-6 text-right"><img id="closeDiagnostic" src="../../images/close-1.svg" alt="关闭" (click)="closePopup()" /></div>
+        </div>
+        <div class="popup-body text-center">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td>诊断时间</td>
+                        <td>诊断类型</td>
+                        <td>诊断名称</td>
+                        <td>诊断编码</td>
+                    </tr>
+                    <tr *ngFor="let diagnose of diagnoseList">
+                        <td>{{diagnose.diagDate|date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                        <td>{{diagnose.diagType}}</td>
+                        <td>{{diagnose.diagName}}</td>
+                        <td>{{diagnose.diagCode}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="popup-process" id="popupProcess" *ngIf="isProgressShow">
+        <div>
+            <div class="popup-header row">
+                <div class="col-lg-6">病程记录</div>
+                <div class="col-lg-6 text-right"><img id="closeProcess" src="../../images/close-1.svg" alt="关闭" (click)="closePopup()" /></div>
+            </div>
+            <div class="popup-body text-center">
+                <div *ngFor="let progress of progressList">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>记录时间</td>
+                                <td>病程录类型</td>
+                                <td>记录医生</td>
+                            </tr>
+                            <tr>
+                                <td>{{progress.recordTime|date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                                <td>{{progress.progressNoteType}}</td>
+                                <td>{{progress.recordDocName}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-left popup-process-text">{{progress.progressNoteContent}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="popup-admission" id="popupAdmission" *ngIf="isRecordShow">
+        <div class="popup-header row">
+            <div class="col-lg-6">入院记录</div>
+            <div class="col-lg-6 text-right"><img id="closeAdmission" src="../../images/close-1.svg" alt="关闭" (click)="closePopup()" /></div>
+        </div>
+        <div *ngFor="let record of recordList">
+            <div class="popup-body text-center">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>记录时间</td>
+                            <td>记录类型</td>
+                            <td>记录医生</td>
+                        </tr>
+                        <tr>
+                            <td>{{record.recordTime|date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                            <td>{{record.admissionRecordType}}</td>
+                            <td>{{record.recordDocName}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-left popup-process-text">
+                    <p>主诉：{{record.chiefComplaint?record.chiefComplaint:'无'}}</p>
+                    <span>现病史：{{record.medicalHistory?record.medicalHistory:'无'}}</span>
+                    <span>既往史：{{record.pastHistory?record.pastHistory:'无'}}</span>
+                    <span>个人史：{{record.personalHistory?record.personalHistory:'无'}}</span>
+                    <span>家族史：{{record.familyDiseaseHistory?record.familyDiseaseHistory:'无'}}</span>
+                    <span>月经史：{{record.menstrualHistory?record.menstrualHistory:'无'}}</span>
+                    <span>婚育史：{{record.obstericalHistory?record.obstericalHistory:'无'}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="popup-checklist" id="popupChecklist" *ngIf="isExamShow">
+        <div class="popup-header row">
+            <div class="col-lg-6">化验单</div>
+            <div class="col-lg-6 text-right"><img id="closeChecklist" src="../../images/close-1.svg" alt="关闭" (click)="closePopup()" /></div>
+        </div>
+        <div class="text-center popup-body-nav">
+            <a href="javascript:void(0)" class="col-lg-2" *ngFor="let exam of examList;let i = index;" (click)="changeHash('exam'+i)">{{exam.examItemName}}</a>
+            <a href="javascript:void(0)" (click)="changeHash('B-ultrasonic')" class="col-lg-2" *ngIf="image">{{image.imageName}}</a>
+            <a href="javascript:void(0)" (click)="changeHash('special')" class="col-lg-2" *ngIf="specialExam">{{specialExam.examItemName}}</a>
+        </div>
+        <div class="popup-body text-center">
+            <div class="popup-checklist-table" *ngFor="let exam of examList;let i = index;">
+                <a class="popup-checklist-table-title" name="exam{{i}}">{{exam.examItemName}}</a>
+                <table class="table table-bordered popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>患者号 {{exam.patientId}}</td>
+                            <td>患者姓名 {{exam.patientName}}</td>
+                            <td>性别 {{exam.sex}}</td>
+                            <td>年龄 {{exam.age}}</td>
+                        </tr>
+                        <tr>
+                            <td>科室 {{exam.applicantDeptName}}</td>
+                            <td>送检医生 {{exam.applicantName}}</td>
+                            <td>诊断 {{exam.diagnose}}</td>
+                            <td>样本类型 {{exam.sampleName}}</td>
+                        </tr>
+                        <tr>
+                            <td>检验项目 {{exam.examItemName}}</td>
+                            <td>采样时间 {{exam.sampleCollectTime| date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                            <td>报告时间 {{exam.reportTime| date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table popup-clecklist-font-size" *ngIf="exam.itemList">
+                    <tbody>
+                        <tr>
+                            <td>No.</td>
+                            <td>检验指标</td>
+                            <td>检验结果</td>
+                            <td>单位</td>
+                            <td>参考范围</td>
+                            <td>No.</td>
+                            <td>检验指标</td>
+                            <td>检验结果</td>
+                            <td>单位</td>
+                            <td>参考范围</td>
+                        </tr>
+                        <tr *ngFor="let indicator of (exam.itemList | exampipe);let i = index;">
+                            <td>{{indicator.reportId}}</td>
+                            <td>{{indicator.indicatorName}}</td>
+                            <td>{{indicator.examResult}}</td>
+                            <td>{{indicator.examResultUnit}}</td>
+                            <td>{{indicator.lowerLimit}}-{{indicator.upperLimit}}</td>
+                            <td>
+                                <ng-container *ngIf="(i+1)<exam.itemList.length">{{exam.itemList[i+1].reportId}}</ng-container>
+                            </td>
+                            <td>
+                                <ng-container *ngIf="(i+1)<exam.itemList.length">{{exam.itemList[i+1].indicatorName}}</ng-container>
+                            </td>
+                            <td>
+                                <ng-container *ngIf="(i+1)<exam.itemList.length">{{exam.itemList[i+1].examResult}}</ng-container>
+                            </td>
+                            <td>
+                                <ng-container *ngIf="(i+1)<exam.itemList.length">{{exam.itemList[i+1].examResultUnit}}</ng-container>
+                            </td>
+                            <td>
+                                <ng-container *ngIf="(i+1)<exam.itemList.length">{{exam.itemList[i+1].lowerLimit}}-{{exam.itemList[i+1].upperLimit}}</ng-container>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="popup-checklist-table">
+                <a class="popup-checklist-table-title" name="B-ultrasonic">{{image.imageName}}</a>
+                <table class="table table-bordered popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>患者号 {{patientInfo.patientId}}</td>
+                            <td>患者姓名 {{patientInfo.name}}</td>
+                            <td>性别 {{patientInfo.sex}}</td>
+                            <td>年龄 {{patientInfo.age}}</td>
+                        </tr>
+                        <tr>
+                            <td>科室 {{image.applicantDeptName}}</td>
+                            <td>送检医生 {{image.applicantName}}</td>
+                            <td>检查项目 {{image.imageName}}</td>
+                            <td>样本部位 {{image.imagingPosition}}</td>
+                        </tr>
+                        <tr>
+                            <td>体位 {{image.performSite}}</td>
+                            <td>报告时间 {{image.reportTime | date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-left">
+                    <div>内容：</div>
+                    <div>{{image.imagingPosition}}</div>
+                    <div>{{image.imagingDiagnosis}}</div>
+                </div>
+            </div>
+            <div class="popup-checklist-table">
+                <a class="popup-checklist-table-title" name="special">{{specialExam.examItemName}}</a>
+                <table class="table table-bordered popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>患者号 {{patientInfo.patientId}}</td>
+                            <td>患者姓名 {{patientInfo.name}}</td>
+                            <td>性别 {{patientInfo.sex}}</td>
+                            <td>年龄 {{patientInfo.age}}</td>
+                        </tr>
+                        <tr>
+                            <td>科室 {{specialExam.applicantDeptName}}</td>
+                            <td>送检医生 {{specialExam.applicantName}}</td>
+                            <td>检查项目 {{specialExam.examItemName}}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>报告时间 {{specialExam.reportTime | date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-left">
+                    <div>内容：</div>
+                    <div>{{specialExam.examConclusion}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="popup-operation" id="popupOperation" *ngIf="isOperationShow">
+        <div class="popup-header row">
+            <div class="col-lg-6">手术</div>
+            <div class="col-lg-6 text-right"><img id="closeOperation" src="../../images/close-1.svg" alt="关闭" (click)="closePopup()" /></div>
+        </div>
+        <div class="text-center popup-body-nav">
+            <a href="javascript:void(0)" class="col-lg-4" *ngFor="let operation of operationList;let i = index;" (click)="changeHash('operation'+i)">{{operation.operationName}}</a>
+        </div>
+        <div class="popup-body text-center">
+            <div class="popup-checklist-table" *ngFor="let operation of operationList;let i = index;">
+                <a class="popup-checklist-table-title" name="operation{{i}}">{{operation.operationName}}</a>
+                <table class="table table-bordered popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>患者号 {{patientInfo.patientId}}</td>
+                            <td>患者姓名 {{patientInfo.name}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>手术名称</td>
+                            <td>切口类型</td>
+                            <td>手术开始时间</td>
+                            <td>手术结束时间</td>
+                        </tr>
+                        <tr>
+                            <td>{{operation.operationName}}</td>
+                            <td>{{operation.operationIncisionType}}</td>
+                            <td>{{operation.operationStartTime}}</td>
+                            <td>{{operation.operationEndTime}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="popup-advice" id="popupAdvice" *ngIf="isNonOrderShow">
+        <div class="popup-header row">
+            <div class="col-lg-6">非药医嘱</div>
+            <div class="col-lg-6 text-right"><img id="closeAdvice" src="../../images/close-1.svg" alt="关闭" (click)="closePopup()" /></div>
+        </div>
+        <div class="popup-body text-center">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td>开始时间</td>
+                        <td>结束时间</td>
+                        <td>医嘱类型</td>
+                        <td>医嘱名称</td>
+                        <td>频率</td>
+                        <td>医生</td>
+                        <td>医生职称</td>
+                        <td>科室</td>
+                    </tr>
+                    <tr *ngFor="let nonOrder of nonOrderList">
+                        <td>{{nonOrder.orderValidTime|date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                        <td>{{nonOrder.orderInvalidTime|date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                        <td>{{nonOrder.orderType}}</td>
+                        <td>{{nonOrder.orderName}}</td>
+                        <td>{{nonOrder.orderFreq}}</td>
+                        <td>{{nonOrder.orderDocName}}</td>
+                        <td>{{nonOrder.orderDocTitle}}</td>
+                        <td>{{nonOrder.orderDeptName}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="popup" id="popupVital" style="display:none;">
+    <div class="popup-vital" id="popupVitalBox" style="width: 700px;">
+        <div class="popup-header row">
+            <div class="col-lg-6">生命体征</div>
+            <div class="col-lg-6 text-right">
+                <img id="closeVital" src="../../images/close-1.svg" alt="关闭" (click)="vitalSignHide()" />
+            </div>
+        </div>
+        <div class="popup-body text-center">
+            <div class="popup-checklist-table">
+                <table class="table table-bordered popup-clecklist-font-size">
+                    <tbody class="popup-checklist-table-height">
+                        <tr id="vitalSignTR">
+                            <td id="vitalSignTD">日期</td>
+                            <td *ngFor="let date of vitalSignDate">{{date | date: "MM/dd"}}</td>
+                        </tr>
+                        <tr *ngFor="let vitalSign of vitalSignOptionList;let i = index;">
+                            <td>{{vitalSign.series.name}}</td>
+                            <td #vitalSignTD *ngFor="let date of vitalSignDate;let j = index;">
+                                <div style="position:relative" *ngIf="j == 0">
+                                    <svg [style.width]="vitalSignWidth - vitalSign.leftPos * vitalSignTD.offsetWidth + 20" [style.height]="vitalSignHeight + 20" version="1.1" style="position: absolute;" 
+                                         [style.left]="vitalSignTD.offsetWidth / 2 - 27 + vitalSign.leftPos * vitalSignTD.offsetWidth + 'px'" 
+                                         [style.top]="-vitalSignTD.offsetHeight / 2 - 10 + 'px'">
+                                        <polyline [attr.points]="vitalSign.positionStr" style="fill:white;stroke-width:2" [style.stroke]="vitalSign.color"/>
+                                        <circle *ngFor="let data of vitalSign.positionArr;let j = index;" [attr.cx]="data.x" [attr.cy]="data.y" r="5" 
+                                                stroke-width="2" [attr.stroke]="vitalSign.color" [attr.fill]="vitalSign.color" 
+                                                (mouseover)="vitalSignPopupDetail(vitalSign,data,j)" (mouseout)="hideDetail(vitalSign)" />
+                                    </svg>
+                                    <div class="detail-dialog" *ngIf="vitalSign.dialog.show" [style.top]="vitalSign.dialog.y + 'px'"
+                                         [style.left]="vitalSign.dialog.x + vitalSign.leftPos * vitalSignTD.offsetWidth + 'px'">
+                                        <div [style.color]="vitalSign.color">{{vitalSign.dialog.msg1}}{{vitalSign.unit}}</div>
+                                        <div class="detail-dialog-time">{{vitalSign.dialog.msg2|date:"HH:mm"}}</div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+    弹窗表格
+    popup.css样式添加了一句display:none
+-->
+<!--<div class="popup" id="popup">
+    <div class="popup-process" id="popupProcess">
+        <div class="popup-header">
+            <div class="col-lg-6">病程记录</div>
+            <div class="col-lg-6 text-right"><img id="closeProcess" src="../../images/close-1.svg" alt="关闭"></div>
+        </div>
+        <div class="popup-body text-center">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td>记录时间</td>
+                        <td>病程录类型</td>
+                        <td>记录医生</td>
+                    </tr>
+                    <tr>
+                        <td>2016-09-08 20:45:03</td>
+                        <td>某种类型</td>
+                        <td>张伟</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-left popup-process-text">患者今日在血透室，取仰卧位，于右腹股沟常规消毒铺巾，1%立卡银针局麻，于股动脉内侧定点穿刺，见血后，用穿刺套管针，置入引导钢丝一根，沿钢丝置入临时血透管，回抽见血，通畅后。患者今日在血透室，取仰卧位，于右腹股沟常规消毒铺巾，1%立卡银针局麻，于股动脉内侧定点穿刺，见血后，用穿刺套管针，置入引导钢丝一根，沿钢丝置入临时血透管，回抽见血，通畅后。患者今日在血透室，取仰卧位，于右腹股沟常规消毒铺巾，1%立卡银针局麻，于股动脉内侧定点穿刺，见血后，用穿刺套管针，置入引导钢丝一根，沿钢丝置入临时血透管，回抽见血，通畅后</div>
+        </div>
+    </div>
+    <div class="popup-checklist" id="popupChecklist">
+        <div class="popup-header">
+            <div class="col-lg-6">化验单</div>
+            <div class="col-lg-6 text-right"><img id="closeChecklist" src="../../images/close-1.svg" alt="关闭"></div>
+        </div>
+        <div class="popup-body text-center">
+            <div class="popup-checklist-table">
+                <a class="popup-checklist-table-title" name="blood">血常规检查</a>
+                <table class="table table-bordered popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>患者号 20160703011</td>
+                            <td>患者姓名 范芝</td>
+                            <td>性别 女</td>
+                            <td>年龄 25</td>
+                        </tr>
+                        <tr>
+                            <td>科室 呼吸内科</td>
+                            <td>送检医生 沈晓林</td>
+                            <td>诊断 过敏性鼻炎</td>
+                            <td>样本类型 全血</td>
+                        </tr>
+                        <tr>
+                            <td>检验项目 呼吸内科</td>
+                            <td>采样时间 2016-09-09 10:25:33</td>
+                            <td>报告时间 2016-09-09 10:25:33</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>No.</td>
+                            <td>检验指标</td>
+                            <td>检验结果</td>
+                            <td>单位</td>
+                            <td>参考范围</td>
+                            <td>No.</td>
+                            <td>检验指标</td>
+                            <td>检验结果</td>
+                            <td>单位</td>
+                            <td>参考范围</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>白细胞计数</td>
+                            <td>6.63</td>
+                            <td>10^9g/L</td>
+                            <td>4.00-10.00</td>
+                            <td>8</td>
+                            <td>中性粒细胞</td>
+                            <td>3.83</td>
+                            <td>10^9g/L</td>
+                            <td>2.00-7.00</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>中性粒细胞比率</td>
+                            <td>57.8</td>
+                            <td>%</td>
+                            <td>50.00-70.00</td>
+                            <td>9</td>
+                            <td>中性率细胞比率</td>
+                            <td>57.8</td>
+                            <td>%</td>
+                            <td>50.00-70.00</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>白细胞计数</td>
+                            <td>6.63</td>
+                            <td>10^9g/L</td>
+                            <td>4.00-10.00</td>
+                            <td>10</td>
+                            <td>中性粒细胞</td>
+                            <td>3.83</td>
+                            <td>10^9g/L</td>
+                            <td>2.00-7.00</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>中性粒细胞比率</td>
+                            <td>57.8</td>
+                            <td>%</td>
+                            <td>50.00-70.00</td>
+                            <td>11</td>
+                            <td>中性率细胞比率</td>
+                            <td>57.8</td>
+                            <td>%</td>
+                            <td>50.00-70.00</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>白细胞计数</td>
+                            <td>6.63</td>
+                            <td>10^9g/L</td>
+                            <td>4.00-10.00</td>
+                            <td>12</td>
+                            <td>中性粒细胞</td>
+                            <td>3.83</td>
+                            <td>10^9g/L</td>
+                            <td>2.00-7.00</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>中性粒细胞比率</td>
+                            <td>57.8</td>
+                            <td>%</td>
+                            <td>50.00-70.00</td>
+                            <td>13</td>
+                            <td>中性率细胞比率</td>
+                            <td>57.8</td>
+                            <td>%</td>
+                            <td>50.00-70.00</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>白细胞计数</td>
+                            <td>6.63</td>
+                            <td>10^9g/L</td>
+                            <td>4.00-10.00</td>
+                            <td>14</td>
+                            <td>中性粒细胞</td>
+                            <td>3.83</td>
+                            <td>10^9g/L</td>
+                            <td>2.00-7.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="popup-checklist" id="popupChecklist">
+        <div class="popup-header">
+            <div class="col-lg-6">化验单</div>
+            <div class="col-lg-6 text-right"><img id="closeChecklist" src="../../images/close-1.svg" alt="关闭"></div>
+        </div>
+        <div class="popup-body text-center">
+            <div class="popup-checklist-table">
+                <a class="popup-checklist-table-title" name="urinalysis">尿检检查</a>
+                <table class="table table-bordered popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>患者号 20160703011</td>
+                            <td>患者姓名 范芝</td>
+                            <td>性别 女</td>
+                            <td>年龄 25</td>
+                        </tr>
+                        <tr>
+                            <td>科室 泌尿外科</td>
+                            <td>送检医生 沈晓林</td>
+                            <td>诊断 尿路感染</td>
+                            <td>样本类型 尿</td>
+                        </tr>
+                        <tr>
+                            <td>检验项目 尿液检查</td>
+                            <td>采样时间 2016-09-09 10:25:33</td>
+                            <td>报告时间 2016-09-09 10:25:33</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>No.</td>
+                            <td>检验指标</td>
+                            <td>检验结果</td>
+                            <td>单位</td>
+                            <td>参考范围</td>
+                            <td>No.</td>
+                            <td>检验指标</td>
+                            <td>检验结果</td>
+                            <td>单位</td>
+                            <td>参考范围</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>白细胞计数</td>
+                            <td>6.63</td>
+                            <td>10^9g/L</td>
+                            <td>4.00-10.00</td>
+                            <td>8</td>
+                            <td>中性粒细胞</td>
+                            <td>3.83</td>
+                            <td>10^9g/L</td>
+                            <td>2.00-7.00</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>中性粒细胞比率</td>
+                            <td>57.8</td>
+                            <td>%</td>
+                            <td>50.00-70.00</td>
+                            <td>9</td>
+                            <td>中性率细胞比率</td>
+                            <td>57.8</td>
+                            <td>%</td>
+                            <td>50.00-70.00</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>白细胞计数</td>
+                            <td>6.63</td>
+                            <td>10^9g/L</td>
+                            <td>4.00-10.00</td>
+                            <td>10</td>
+                            <td>中性粒细胞</td>
+                            <td>3.83</td>
+                            <td>10^9g/L</td>
+                            <td>2.00-7.00</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>中性粒细胞比率</td>
+                            <td>57.8</td>
+                            <td>%</td>
+                            <td>50.00-70.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>白细胞计数</td>
+                            <td>6.63</td>
+                            <td>10^9g/L</td>
+                            <td>4.00-10.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>中性粒细胞比率</td>
+                            <td>57.8</td>
+                            <td>%</td>
+                            <td>50.00-70.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>白细胞计数</td>
+                            <td>6.63</td>
+                            <td>10^9g/L</td>
+                            <td>4.00-10.00</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="popup-operation" id="popupOperation">
+        <div class="popup-header">
+            <div class="col-lg-6">手术</div>
+            <div class="col-lg-6 text-right"><img id="closeOperation" src="../../images/close-1.svg" alt="关闭"></div>
+        </div>
+        <div class="popup-body text-center">
+            <div class="popup-checklist-table">
+                <a class="popup-checklist-table-title" name="1st">经皮血管球囊扩张术（左股静脉临时导管拔除+血管造影+长期管置入）</a>
+                <table class="table table-bordered popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>患者号 20160703011</td>
+                            <td>患者姓名 范芝</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>手术名称</td>
+                            <td>切口类型</td>
+                            <td>手术开始时间</td>
+                            <td>手术结束时间</td>
+                        </tr>
+                        <tr>
+                            <td>经皮血管球囊扩张术</td>
+                            <td>I</td>
+                            <td>2016-10-10 09:00:23</td>
+                            <td>2016-10-10 09:00:23</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>-->

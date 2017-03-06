@@ -1,0 +1,10 @@
+.elecrecord{
+    min-width: 660px;
+}
+.elecrecord li{
+    margin-bottom: 15px;
+    color: #999;
+}
+.elecrecord li span{
+    color: #000;
+}

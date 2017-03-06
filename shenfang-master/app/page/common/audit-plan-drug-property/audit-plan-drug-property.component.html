@@ -1,0 +1,21 @@
+<div class="form-group form-inline audit-plan-list" style="position: relative;" (click)="stopPropagation($event)">
+    <label class="f-i-label">药品属性：</label>
+    <div class="audit-plan-property-select" (click)="selectClick($event.target)">
+        <span class="audit-plan-property-name" *ngFor="let resultType of drugPropertyResult">
+            {{resultType}}
+            <span class="audit-plan-X" (click)="deleteDrugProperty($event, resultType)">X</span>
+        </span>
+    </div>
+    <div class="popup-add-choice flex column" *ngIf="isPopupShow">
+        <div class="input-group" style="margin-bottom: 10px;min-height: 38px;">
+            <div class="input-group-addon">@</div>
+            <input type="text" class="form-control form-control-sm" id="inlineFormInputGroup" placeholder="请输入内容" #searchBox (keyup)="searchDrugProperty(searchBox.value)">
+        </div>
+        <ul class="flex1" style="overflow: auto;">
+            <li class="col-lg-12 popup-add-choice-2rd popup-add-choice-2rd-bg" *ngFor="let drugPropertyItem of drugPropertyList" (click)="chooseDrugPropertyItem(drugPropertyItem)">
+                {{drugPropertyItem.name}}
+                <span *ngIf="drugPropertyItem.checked"><img src="../../../images/save-success.svg" alt="关闭"/></span>
+            </li>
+        </ul>
+    </div>
+</div>

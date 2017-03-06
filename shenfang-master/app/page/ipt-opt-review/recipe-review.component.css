@@ -1,0 +1,66 @@
+.recipe-search-form{
+    margin-bottom: 10px;
+    padding: 10px 10px 5px 10px;
+    background: #fff;
+}
+.recipe-search-form-con{
+    align-items: center;
+}
+.recipe-search-form .form-group{
+    margin-bottom: 5px;
+    padding-left: 5px;padding-right: 5px;
+}
+.recipe-search-form label{
+    width: 80px;margin-right: 10px;
+    text-align: right;
+    font-weight: 500;
+}
+.recipe-search-form input, .recipe-search-form select{
+    width: 140px;
+}
+.recipe-list{
+    background: #fff;
+}
+.tips-arrow{
+    margin-left: 5px;
+    vertical-align: 2px;
+    transition: all .5s ease-in-out;
+}
+.uparrow{
+    transform: rotate(-180deg);
+}
+
+
+.dept-program-header {
+    height: 20px;
+    line-height: 20px;
+    display: inline-block;
+    padding: 0 2px;
+    margin: 4px 2px;
+}
+
+.dept-program-header-label {
+    font-size: 12px;
+    color: red
+}
+.dept-program-checked {
+    font-size: 18px;
+    line-height: 1;
+    color: #999;
+    cursor: pointer;
+}
+
+.dept-program-checked:hover{
+    color: #f00;
+}
+.dept-program-checked-select {
+    display: inline-block;
+    width: 140px;height: 28px;padding: 0 4px;
+    border: 1px solid #ccc;border-radius: 3px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.dept-program-checked-select>span {
+    margin-left: 5px;
+}

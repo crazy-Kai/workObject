@@ -1,0 +1,41 @@
+<div class="flex column fillspace-sm">
+    <div class="row audit-setting-header">
+        <form class="col-6 audit-setting-search" role="form">
+            <input type="text" class="audit-setting-search-input" name="keyword" [(ngModel)]="str" placeholder="方案名称、创建人" (keydown)="eKeydown($event)">
+            <button type="button" class="btn audit-setting-search-btn" (click)="search()">搜索</button>
+        </form>
+        <div class="col-6 text-right" style="margin-left: 15px;margin-right: -15px;">
+            <button type="button" class="btn audit-plan-new" routerLink="/audit-plan">+ 新增审方方案</button>
+        </div>
+    </div>
+    <div class="text-center">
+        <my-table [table]="recipeListTable">
+            <template #tableTemplate let-tableinfo>
+                <tr *ngFor="let trow of tableinfo.dataList;let i = index;" (dblclick)="goAuditReview(trow)" [class.selected]="trow === instruction" (mouseover)="touchedTrow = trow" style="height: 40px;" [class.even-tr]="i%2 === 1">
+                    <td style="max-width:200px;">{{trow.name}}</td>
+                    <!--0.全部||1.门诊||2.住院-->
+                    <td>{{trow.category == '1' ? '门诊' : (trow.category == '2' ? '住院' : '全部')}}</td>
+                    <td>{{trow.userName}}</td>
+                    <td>{{trow.createdTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                    <td>{{trow.modifiedTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                    <td>
+                        <span class="audit-setting-operation audit-setting-start-audit" (click)="getAuditPlanSetting(trow.id,trow.category)" #doAudit (mouseover)="doAudit.show = true" (mouseout)="doAudit.show = false">
+                            <mouse-tips [title]="'开始审方'" *ngIf="trow == touchedTrow && doAudit.show"></mouse-tips>
+                        </span>
+                        <a class="audit-setting-operation audit-setting-edit" routerLink="/audit-plan/{{trow.id}}" #edit (mouseover)="edit.show = true" (mouseout)="edit.show = false">
+                            <mouse-tips [title]="'编辑'" *ngIf="trow == touchedTrow && edit.show"></mouse-tips>
+                        </a>
+                        <a class="audit-setting-operation audit-setting-check" routerLink="/audit-review/{{trow.id}}" #review (mouseover)="review.show = true" (mouseout)="review.show = false">
+                            <mouse-tips [title]="'查看'" *ngIf="trow == touchedTrow && review.show"></mouse-tips>
+                        </a>
+                        <a class="audit-setting-operation audit-setting-delete" (click)="deleteAuditPlan(trow.id)" #delete (mouseover)="delete.show = true" (mouseout)="delete.show = false">
+                            <mouse-tips [title]="'删除'" *ngIf="trow == touchedTrow && delete.show"></mouse-tips>
+                        </a>
+                    </td>
+                </tr>
+            </template>
+        </my-table>
+    </div>
+</div>
+
+<prompt-component></prompt-component>

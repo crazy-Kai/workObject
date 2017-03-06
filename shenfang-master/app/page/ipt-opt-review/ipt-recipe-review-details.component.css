@@ -1,0 +1,284 @@
+body {
+    font-size: 13px;
+}
+
+.clear-both {
+    clear: both;
+}
+
+.pre-ckeck {
+    overflow: hidden;   
+}
+.fillspace-15{
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    right: 15px;
+    bottom: 15px;
+}
+.order-info{
+    margin-bottom: 15px;
+    background: #fff;
+}
+.order-info header{
+    border-bottom: 1px solid #ccc;
+}
+.check-return {
+    float: left;
+    background: #fff;
+    border: 1px solid rgb(121, 121, 121);
+    margin: 15px 0 0 15px;
+}
+
+.check-title {
+    display: block;
+    font-size: 14px;
+    line-height: 64px;
+    margin: 0 152px;
+}
+
+.check-header {
+    height: 60px;
+    margin-bottom: 10px;
+    background: #fff;
+    border-top: 1px solid #eee;
+}
+
+.ipt-patient-info-con{
+    border-right: 1px solid #eee;
+    height: 130px;
+}
+.ipt-patient-info{
+    border: 0;border: none;
+    margin-bottom: 0;
+}
+.ipt-patient-info td{
+    height: 30px;
+    padding: 5px 7px;
+    border: 0;
+    color: #999;
+}
+.ipt-patient-info td span{
+    margin-left: 5px;
+    color: #000;
+}
+.pre-ord-check {
+    color: red!important;
+    cursor: pointer;
+}
+.ipt-record{
+    height: 30px;
+}
+.ipt-record a{
+    padding: 5px 15px;
+    float: right;
+}
+.diagnosis-result{
+    height: 40px;
+    padding: 10px 7px;
+    color: #999;
+    background: #fcfcfc;
+}
+.diagnosis-result span{
+    color: #000;
+    margin: 0 15px;
+}
+.ipt-checks{
+    padding: 5px;
+}
+.ipt-checks > div{
+    width: 50%;height: 60px;
+    padding-left: 10%;
+    float: left;
+    line-height: 60px;
+}
+.ipt-checks img{
+    vertical-align: -3px;
+}
+
+
+.ipt-patient-data{
+    background: #fff;
+}
+.ipt-patient-data-nav{
+
+}
+.ipt-patient-data-nav > div{
+    float: left;
+    width: 120px;
+    padding: 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background: #f2f2f2;
+    text-align: center;
+    cursor: pointer;
+}
+.ipt-patient-data-nav .action{
+    background: #4EB7E0;
+    color: #fff;
+}
+.hos-check-table-header{
+    min-height: 20px;
+    padding-left: 8px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    background: rgb(200, 200, 200, 1);
+}
+.hos-check-table-header.action{
+    background: rgba(255, 153, 102, 1);
+}
+.order-table-list{
+    padding: 10px;
+    overflow: auto;
+}
+.order-table-list .table-header{
+    margin-bottom: 0;
+}
+.order-table-list .table-header, .order-table-list .table-header td{
+    border: none;
+    color: #999;
+}
+.order-table-list .table-header span{
+    margin-left: 5px;
+    color: #000;
+}
+.order-table{
+    margin-bottom: 15px;
+}
+.order-table-con{
+    padding:5px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+/*时间轴*/
+.ipt-info-timeline {
+    position: relative;
+    width: 100%;
+    height: 10px;
+    background: #ccc;
+    margin: 30px;
+    border-radius: 10px;
+}
+
+.ipt-info-gridline-1st,
+.ipt-info-gridline-2nd,
+.ipt-info-gridline-3rd,
+.ipt-info-gridline-4th {
+    position: absolute;
+    top: -12px;
+    width: 2px;
+    height: 22px;
+    background: #000;
+}
+
+.ipt-info-gridline-1st {
+    left: 5px;
+}
+
+.ipt-info-gridline-2nd {
+    left: 25%;
+}
+
+.ipt-info-gridline-3rd {
+    left: 50%;
+}
+
+.ipt-info-gridline-4th {
+    left: 75%;
+}
+
+.ipt-info-gridline-1st>span,
+.ipt-info-gridline-2nd>span,
+.ipt-info-gridline-3rd>span,
+.ipt-info-gridline-4th>span {
+    position: absolute;
+    top: 25px;
+    left: -20px;
+    width: 40px;
+    text-align: center;
+}
+
+.ipt-info-checkbox {
+    position: absolute;
+    top: -10px;
+    left: 5px;
+    width: 60px;
+    height: 30px;
+    border: 2px solid #FF66FF;
+}
+.ipt-info-position {
+    position: relative;
+}
+
+.ipt-info-previous,
+.ipt-info-next {
+    position: absolute;
+    top: 50%;
+    margin-top: -10px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    cursor: pointer;
+}
+
+.ipt-info-previous {
+    left: 0;
+    border-right: 10px solid #999;
+}
+
+.ipt-info-next {
+    right: 0;
+    border-left: 10px solid #999;
+}
+
+.ipt-info-drug,
+.ipt-info-heat,
+.ipt-info-SBP,
+.ipt-info-DBP,
+.ipt-info-pulse,
+.ipt-info-RR,
+.ipt-info-HR,
+.ipt-info-SPOZ {
+    position: relative;
+    cursor: pointer;
+}
+
+.ipt-info-drug-hover {
+    position: absolute;
+    top: -210%;
+    left: -50%;
+    width: 200%;
+    padding: 5% 0;
+    background: #fff;
+    box-shadow: 0 0 10px 2px #888888; 
+    border-radius: 5px;
+    z-index: 999;
+    visibility: hidden;
+}
+
+.ipt-info-heat-hover,
+.ipt-info-SBP-hover,
+.ipt-info-DBP-hover,
+.ipt-info-pulse-hover,
+.ipt-info-RR-hover,
+.ipt-info-HR-hover,
+.ipt-info-SPOZ-hover {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 30%;
+    border: 1px solid #999;
+    border-radius: 5px;
+    visibility: hidden;
+}
+
+.ipt-info-drug:hover .ipt-info-drug-hover,
+.ipt-info-heat:hover .ipt-info-heat-hover,
+.ipt-info-SBP:hover .ipt-info-SBP-hover,
+.ipt-info-DBP:hover .ipt-info-DBP-hover,
+.ipt-info-pulse:hover .ipt-info-pulse-hover,
+.ipt-info-RR:hover .ipt-info-RR-hover,
+.ipt-info-HR:hover .ipt-info-HR-hover,
+.ipt-info-SPOZ:hover .ipt-info-SPOZ-hover {
+    visibility: visible;
+}

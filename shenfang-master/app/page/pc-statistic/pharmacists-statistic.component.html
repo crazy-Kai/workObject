@@ -1,0 +1,61 @@
+<div class="flex column fillspace">
+    <div class="searchform form-inline">
+        <div class="form-group">
+            <label>日期：</label>
+            <time-interval [startTime]="searchParams.startTime" [endTime]="searchParams.endTime" (timeSetted)="updateSearchTime($event)"></time-interval>
+        </div>
+        <div class="form-group">
+            <label>药师：</label>
+            <associated-input [itemsList]="pharmacistsList" (propertyUpdate)="updatePharmacist($event)"></associated-input>
+        </div>
+        <div class="form-group">
+            <label>来源：</label>
+            <select class="form-control form-control-sm" [(ngModel)]="searchParams.source">
+                <option value="0">全部</option>
+                <option value="1">门诊</option>
+                <option value="2">急诊</option>
+                <option value="3">住院</option>
+                <option value="4">门/急诊</option>
+            </select>
+        </div>
+        <button class="btn btn-primary btn-sm" (click)="getWorkStatistics()">搜索</button>
+    </div>
+    <div class="flex1 ps-content">
+        <div class="psc-topbar">
+            <button class="btn">导出报表</button>
+        </div>
+        <table width="">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>药师</th>
+                    <th *ngFor="let title of titles">
+                        <div class="order-header">
+                            {{title.title}}
+                            <span style="position: relative" #tipsId>
+                                <mouse-tips [posInfo]="posInfo" [title]="title.tips" [conW]="'200px'" *ngIf="title.tips && tipsId.show"></mouse-tips>
+                                <img src="../../images/question-1.svg" alt="" (mouseover)="showTips($event, tipsId)" (mouseout)="hideTips(tipsId)">
+                            </span>
+                            <div class="order-btns">
+                                <span class="order-asc" [class.current]="searchParams.sortBy == title.sortBy && searchParams.order == 'asc'" (click)="reloadByOrder(title, 'asc')"></span>
+                                <span class="order-desc" [class.current]="searchParams.sortBy == title.sortBy && searchParams.order == 'desc'" (click)="reloadByOrder(title, 'desc')"></span>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of pharmacistStatisticList; let i = index">
+                    <td>{{i}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.presNumber}}</td>
+                    <td>{{item.orderNumber}}</td>
+                    <td>{{item.reviewNumber}}</td>
+                    <td>{{item.gyNumber}}</td>
+                    <td>{{item.docTakeNumber}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <pagination [pageInfo]="pageInfo" (changePage)="setPage($event)" (changePageSize)="setPageSize($event)"></pagination>
+    </div>
+</div>

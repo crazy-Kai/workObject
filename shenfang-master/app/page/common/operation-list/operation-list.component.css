@@ -1,0 +1,22 @@
+.popup-operation{
+    min-width: 660px;
+}
+.patient-info{margin: 0 0 5px 10px;}
+.patient-info:after{
+    content: " ";display: block;visibility: hidden;clear: both;
+}
+.patient-info li{
+    float: left;margin-right: 20px;
+    color: #999;line-height: 20px;
+}
+.patient-info li span{
+    margin-left: 5px;
+    color: #000;
+}
+.operation-main-con{
+    margin-bottom: 0;
+}
+.operation-main-con td, .operation-main-con th{
+    text-align: left;
+    padding: 5px 7px;
+}

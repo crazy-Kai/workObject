@@ -1,0 +1,135 @@
+<div class="flex column fillspace container-fluid">
+    <div class="pre-ckeck">
+        <button type="button" class="btn check-return" (click)="history.back()">
+            <img src="../../images/arrows-down.svg">
+            返回任务清单
+        </button>
+        <span class="check-title text-center">处 方 审 核</span>
+    </div>
+    <div class="check-header row">
+        <div class="check-header-patient col-8">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>患者号：<span>{{patientInfo.patientId}}</span></td>
+                        <td>姓名：<span>{{patientInfo.name}}</span></td>
+                        <td>年龄：<span>{{patientInfo.age}}</span></td>
+                        <td>性别：<span>{{patientInfo.sex}}</span></td>
+                        <td>身高：<span>{{patientInfo.height}}</span></td>
+                        <td>体重：<span>{{patientInfo.weight}}</span></td>
+                    </tr>
+                    <tr>
+                        <td>体表面积：<span>{{patientInfo.bsa}}</span></td>
+                        <td>是否怀孕：<span>{{patientInfo.isPregnant}}</span></td>
+                        <td>孕期：<span>{{patientInfo.pregWeeks}}</span></td>
+                        <td>是否哺乳：<span>{{patientInfo.isLactation}}</span></td>
+                        <td colspan="2">过敏药品列表：<span>{{patientAllergy}}</span></td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="check text-center col-4 row">
+            <div class="check-list col-4" (click)="showElecRecord()">
+                <img src="../../images/menu-audit-a.svg">
+                查看电子病历
+            </div>
+            <div class="check-list col-4" (click)="showExam()">
+                <img src="../../images/menu-audit-a.svg">
+                查看检验单
+            </div>
+            <div class="check-list col-4" (click)="showOperation()">
+                <img src="../../images/menu-audit-a.svg">
+                查看手术
+            </div>
+        </div>
+    </div>
+    <!--<div class="clear-both"></div>-->
+    <div class="flex1 row" style="overflow: auto;">
+        <div class="pre-ord-list pre-patient col-8">
+            <div class="pre-ord" *ngFor="let optRecipe of optRecipeList;let i = index;" (click)="checkRecipe(optRecipe)">
+                <div class="pre-ord-num" [class.pre-ord-action]="optRecipe==checkedRecipe">处方号：{{optRecipe.recipeDetails.recipeNo}}</div>
+                <div class="pre-ord-table">
+                    <table class="table-header">
+                        <thead>
+                            <tr>
+                                <td><span>{{optRecipe.recipeDetails.keyDate|date:"yyyy-MM-dd HH:ss:MM"}}</span></td>
+                                <td>科室：<span>{{optRecipe.recipeDetails.deptName}}</span></td>
+                                <td>医生：<span>{{optRecipe.recipeDetails.recipeDocName}}</span></td>
+                                <td>医生职称：<span>{{optRecipe.recipeDetails.recipeDocTitle}}</span></td>
+                                <td>诊断：<span>{{optRecipe.recipeDetails.diagnose}}</span></td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <table class="table-body">
+                        <tbody>
+                            <tr>
+                                <td><b>组号</b></td>
+                                <td><b>药品名称</b></td>
+                                <td><b>规格</b></td>
+                                <td><b>给药剂量</b></td>
+                                <td><b>给药途径</b></td>
+                                <td><b>给药频率</b></td>
+                                <td><b>数量</b></td>
+                                <td><b>给药时机</b></td>
+                                <td><b>备注</b></td>
+                                <td><b>重点关注</b></td>
+                            </tr>
+                            <tr *ngFor="let recipeDrug of optRecipe.recipeDrugList">
+                                <td>{{recipeDrug.groupNo}}</td>
+                                <td>{{recipeDrug.drugName}}</td>
+                                <td>{{recipeDrug.specification}}</td>
+                                <td>{{recipeDrug.drugDose}}</td>
+                                <td>{{recipeDrug.drugAdminrouteName}}</td>
+                                <td>{{recipeDrug.drugUsingFreq}}</td>
+                                <td>{{recipeDrug.despensingNum}}</td>
+                                <td>{{recipeDrug.drugUsingTimePoint}}</td>
+                                <td>{{recipeDrug.specialPrompt}}</td>
+                                <td class="pre-ord-check">查看</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="pre-suggest-list col-4">
+            <div class="pre-suggest flex column" name="recipe-warning">
+                <div class="pre-suggest-num"><span class="green-dot-icon"></span>处方号 : {{curRecipeNo}} 警示信息</div>
+                <div class="pre-suggest-text flex1" style="overflow: auto;">
+                    <div class="audit-info-list">
+                        <div class="audit-info" *ngFor="let result of auditResultList">
+                            <div class="blue-circle"></div>
+                            <div class="pre-suggest-time">{{result.apothecaryName!=''?result.apothecaryName:result.doctorName}}{{result.auditStatus=='1（通过）'?'通过':''}}{{result.auditStatus=='2（打回）'?'打回':''}}{{result.auditStatus=='3（医生修改处方）'?'修改':''}}处方 {{result.operateTime}}</div>
+                            <div class="pre-suggest-info clear-both" *ngIf="result.auditResult!=''">{{result.apothecaryName!=''?'评审意见':'回复'}}：{{result.auditResult}}</div>
+                        </div>
+                    </div>
+                    <div class="pre-suggest-drug" *ngFor="let record of recordMap">
+                        <div class="drug-name">
+                            <img src="../../images/menu-audit-a.svg">
+                            {{record.drugName}}
+                        </div>
+                        <div *ngFor="let message of record.messageList" class="drug-warning-sug">
+                            <div class="warning-msg">
+                                <!--<input type="checkbox" #recordCheckBox (click)="recordChecked(recordCheckBox.checked, message)">-->
+                                <span>{{message.advice}}</span>
+                                <span class="warning-level">{{message.severity}}</span>
+                            </div>
+                            <div *ngFor="let opt of message.msgOperationRecordList" class="phar-suggestion">
+                                <span *ngIf="opt.operateStatus==1">{{opt.operateType==1?'药师':'医生'}}{{opt.operatePeopleName}}勾选该条警示信息将处方打回，要求医生修改或双签名确认</span>
+                                <span *ngIf="opt.operateStatus==2">{{opt.operateType==1?'药师':'医生'}}{{opt.operatePeopleName}}勾选该条警示信息将处方打回</span>
+                                <span *ngIf="opt.isNeglect==1">{{opt.operateType==1?'药师':'医生'}}{{opt.operatePeopleName}}忽略该条警示信息</span>
+                                <span class="doctor-opinion-first" *ngIf="opt.isDoubledSign==1">{{opt.operateType==1?'药师':'医生'}}{{opt.operatePeopleName}}双签名确认</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pre-suggest-handler">
+                    <button class="btn btn-sm" [class.btn-secondary]="!aroundIdx.previousId" [class.btn-primary]="aroundIdx.previousId" [disabled]="!aroundIdx.previousId" (click)="checkOptRecipe(aroundIdx.previousId);">上一次审核记录</button>
+                    <button class="btn btn-sm" [class.btn-secondary]="!aroundIdx.nextId" [class.btn-primary]="aroundIdx.nextId" [disabled]="!aroundIdx.nextId" (click)="checkOptRecipe(aroundIdx.nextId);">下一次审核记录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<laboratory-sheet [options]="sheetOptions" [recipeId]="recipeId" [patientInfo]="patientInfo" #sheets></laboratory-sheet>
+<operation-list [options]="operationOptions" [recipeId]="recipeId" [patientInfo]="patientInfo" #operation></operation-list>
+<elec-med-record [options]="elecMedOptions" [recipeId]="recipeId" [patientInfo]="patientInfo" #elecMedRecord></elec-med-record>

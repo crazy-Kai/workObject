@@ -1,0 +1,53 @@
+<div class="form-group form-inline audit-plan-list">
+    <label class="f-i-label" *ngIf="searchType == 1">医生：</label>
+    <label class="f-i-label" *ngIf="searchType == 2">医疗组：</label>
+    <div class="audit-plan-doc-select">
+        <span *ngFor="let doctorResult of doctorResultList" class="audit-plan-doc-name">
+            {{doctorResult.name}}
+            <span class="audit-plan-X" (click)="doctorResultDelete(doctorResult)">X</span>
+        </span>
+    </div>
+    <button type="button" id="openDoctor" class="audit-plan-btn" (click)="isPopupShow=!isPopupShow">+ 添加</button>
+</div>
+<div class="popup-add" id="popupAdd" *ngIf="isPopupShow">
+    <div class="popup-add-doctor flex column" id="popupDoctor">
+        <div class="popup-add-header" *ngIf="searchType == 1">选择医生</div>
+        <div class="popup-add-header" *ngIf="searchType == 2">选择医疗组</div>
+        <div class="popup-add-body flex1 flex">
+            <div class="flex1 flex column" style="padding: 10px;">
+                <div class="form-inline"  style="margin-bottom: 10px;">
+                    <label>选择院区</label>
+                    <select class="form-control form-control-sm ml-1" [(ngModel)]="zoneId" (change)="zoneChange($event.target.value)">
+                        <option *ngFor="let zone of zoneList" value="{{zone.id}}">{{zone.name}}</option>
+                    </select>
+                </div>
+                <div class="flex1 flex column popup-add-body-left">
+                    <div class="input-group" style="margin-bottom: 10px;">
+                        <div class="input-group-addon">@</div>
+                        <input type="text" class="form-control form-control-sm" id="inlineFormInputGroup" #doctorSearchBox (keyup)="searchDoctor(doctorSearchBox.value)">
+                    </div>
+                    <ul class="flex1" style="overflow: auto;">
+                        <li class="form-check" *ngFor="let doctor of doctorList">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" name="type" value="{{doctor.name}}" (click)="doctorClick(doctor)" [checked]="doctor.checked">
+                                {{doctor.name}}
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="flex1 flex column" style="padding: 10px;">
+                <div class="add-program-header" style="margin-bottom: 10px;">已经选择</div>
+                <div class="flex1 popup-add-body-right">
+                    <div *ngFor="let doctorChoose of doctorChooseList">
+                        <div class="">{{doctorChoose.name}}<span class="" (click)="doctorDelete(doctorChoose)"><img src="../../../images/close-1.svg" alt="关闭"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="popup-add-footer">
+            <button type="button" id="closeDoctor1" class="btn btn-secondary audit-plan-btn" style="border: 1px solid #DFDFDF;background-color: #F1F1F1;" (click)="canclePopup()">取消</button>
+            <button type="button" id="closeDoctor2" class="btn btn-primary audit-plan-btn" (click)="submitPopup()">确定</button>
+        </div>
+    </div>
+</div>

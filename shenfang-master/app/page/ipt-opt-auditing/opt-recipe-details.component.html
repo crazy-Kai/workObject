@@ -1,0 +1,407 @@
+<div class="pre-ckeck">
+    <!--<a class="btn check-return" routerLink="/opt-recipe-audit">
+        <img class="left-arrow" src="../../images/left-arrow.png">
+        <span>返回任务清单</span>
+    </a>-->
+    <a class="btn check-return" [routerLinkActive]="['active']" (click)="returnTaskList()">
+        <img class="left-arrow" src="../../images/left-arrow.png">
+        <span>返回任务清单</span>
+    </a>
+    <span class="check-title text-center">处 方 审 核</span>
+</div>
+<div class="check-header row">
+    <div class="check-header-patient col-8">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>患者号： {{patientInfo.patientId}}</td>
+                    <td>姓名： {{patientInfo.name}}</td>
+                    <td>年龄： {{patientInfo.age}}</td>
+                    <td>性别： {{patientInfo.sex}}</td>
+                    <td>身高： {{patientInfo.height}}</td>
+                    <td>体重： {{patientInfo.weight}}</td>
+                </tr>
+                <tr>
+                    <td>体表面积： {{patientInfo.bsa}}</td>
+                    <td>是否怀孕： {{patientInfo.isPregnant=='0'?'否':'是'}}</td>
+                    <td>孕期： {{patientInfo.pregWeeks}}</td>
+                    <td>是否哺乳： {{patientInfo.isLactation=='0'?'否':'是'}}</td>
+                    <td *ngIf="patientAllergyList.length>0">
+                        <span id="openAllergy" (click)="isAllergyListShow=true">查看</span>
+                    </td>
+                    <td></td>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="check text-center col-4 row">
+        <div class="check-list col-4" (click)="isElectronicMedicalShow=true">
+            <img src="../../images/menu-audit-a.svg"> 查看电子病例
+        </div>
+        <div class="check-list col-4" (click)="isCheckListShow=true">
+            <img src="../../images/menu-audit-a.svg"> 查看检验单
+        </div>
+        <div class="check-list col-4" (click)="isOperationListShow=true">
+            <img src="../../images/menu-audit-a.svg"> 查看手术
+        </div>
+    </div>
+</div>
+<div class="flex1 row">
+    <div class="pre-ord-list pre-patient col-8">
+        <div class="pre-ord" *ngFor="let optRecipe of optRecipeList;let i = index;" (click)="optRecipeChecked(optRecipe, i)">
+            <div class="pre-ord-num" [class.pre-ord-action]="optRecipe==checkedRecipe">处方号：{{optRecipe.recipeDetails.recipeNo}}
+                <img *ngIf="optRecipe.recipeDetails.auditStatus=='4'" src="../../images/review-fail.svg" />
+            </div>
+            <table class="table">
+                <!--通过打回水印-->
+                <!--<img *ngIf="optRecipe.recipeDetails.auditStatus=='1'" class="audit-not-through" src="../../images/audit-not-through.svg">
+                <img *ngIf="optRecipe.recipeDetails.auditStatus=='2'" class="audit-not-through" src="../../images/hang.svg">-->
+                <img *ngIf="optRecipe.recipeDetails.auditStatus=='1'" class="audit-not-through" src="../../images/audit-has-passed.svg">
+                <img *ngIf="optRecipe.recipeDetails.auditStatus=='2'" class="audit-not-through" src="../../images/back.svg">
+                <!--<img *ngIf="auditResult == '门诊审核打回操作成功！'" class="audit-not-through" src="../../images/back.svg">
+                <img *ngIf="auditResult == '门诊审核通过操作成功！'" class="audit-not-through" src="../../images/audit-has-passed.svg">-->
+                <thead>
+                    <tr>
+                        <td>{{optRecipe.recipeDetails.keyDate|date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                        <td>科室：{{optRecipe.recipeDetails.deptName}}</td>
+                        <td>医生：{{optRecipe.recipeDetails.recipeDocName}}</td>
+                        <td>医生职称：{{optRecipe.recipeDetails.recipeDocTitle}}</td>
+                        <td>诊断：{{optRecipe.recipeDetails.diagnose}}</td>
+                    </tr>
+                </thead>
+            </table>
+            <table class="table table-bordered text-center">
+                <tbody>
+                    <tr>
+                        <td><b>组号</b></td>
+                        <td><b>药品名称</b></td>
+                        <td><b>规格</b></td>
+                        <td><b>厂家</b></td>
+                        <td><b>给药剂量</b></td>
+                        <td><b>给药途径</b></td>
+                        <td><b>给药频率</b></td>
+                        <td><b>数量</b></td>
+                        <td><b>给药时机</b></td>
+                        <td><b>备注</b></td>
+                        <td><b>重点关注</b></td>
+                    </tr>
+                    <tr *ngFor="let recipeDrug of optRecipe.recipeDrugList">
+                        <td>{{recipeDrug.groupNo}}</td>
+                        <td>{{recipeDrug.drugName}}</td>
+                        <td>{{recipeDrug.specification}}</td>
+                        <td>{{recipeDrug.manufacturerName}}</td>
+                        <td>{{recipeDrug.drugDose}}</td>
+                        <td>{{recipeDrug.drugAdminrouteName}}</td>
+                        <td>{{recipeDrug.drugUsingFreq}}</td>
+                        <td>{{recipeDrug.despensingNum}}</td>
+                        <td>{{recipeDrug.drugUsingTimePoint}}</td>
+                        <td>{{recipeDrug.specialPrompt}}</td>
+                        <td class="pre-ord-check" (click)="isFocusShow=true">查看</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="pre-suggest-list col-4">
+        <div class="pre-suggest-question">
+            <!--<img src="../../images/question-1.svg" alt="?">
+            <span>审核操作说明</span>-->
+            <!--<div class="audit-instructions">
+                <span>1)若您认为处方正确合理，请点击“通过”按钮。所有的警示<wbr>信息被自动忽略，处方通过审核;</span>
+                <span>2)若您认为处方不合理，请勾选需要打回给医生处理的警示<wbr>信息，或在下方输入审核意见后，点击“打回”按钮；</span>
+                <span>3)被打回的处方将回到医生工作站，医生可以查看到您勾选<wbr>的警示信息和审核意见，未被勾选的警示信息被自动忽略，<br/>不显示给医生</span>
+            </div>-->
+            <button type="button" class="btn btn-default audit-instructions" data-toggle="tooltip" data-placement="left" title="1)若您认为处方正确合理，请点击“通过”按钮。所有的警示信息被自动忽略，处方通过审核; 
+2)若您认为处方不合理，请勾选需要打回给医生处理的警示信息，或在下方输入审核意见后，点击“打回”按钮；
+3)被打回的处方将回到医生工作站，医生可以查看到您勾选的警示信息和审核意见，未被勾选的警示信息被自动忽略，不显示给医生">
+            <img src="../../images/question-1.svg" alt="?">
+            <span>审核操作说明</span>
+            </button>
+        </div>
+        <div class="pre-suggest" name="recipe-warning" *ngFor="let record of recordMap">
+            <!--<div class="recipe-number">
+                <a class="pre-suggest-num pre-suggest-action" name="#{{record.recipeNo}}"><span class="recipe-font">处方号 : {{record.recipeNo}}</span></a>
+            </div>-->
+            <div class="pre-suggest-num"><span class="green-dot-icon"></span><span class="recipe-font">处方号 : {{record.recipeNo}}  警示信息</span></div>
+            <div class="pre-suggest-text">
+                <div *ngFor="let result of record.auditResultList">
+                    <div class="blue-circle"></div>
+                    <div class="pre-suggest-time">{{result.apothecaryName!=''?result.apothecaryName:result.doctorName}}{{result.auditStatus=='1（通过）'?'通过':''}}{{result.auditStatus=='2（打回）'?'打回':''}}{{result.auditStatus=='3（医生修改处方）'?'修改':''}}处方 {{result.operateTime}}</div>
+                    <div class="pre-suggest-info clear-both" *ngIf="result.auditResult!=''">{{result.apothecaryName!=''?'评审意见':'回复'}}：{{result.auditResult}}</div>
+                </div>
+                <div class="pre-suggest-drug">
+                    <div>
+                        <img src="../../images/menu-audit-a.svg"> {{record.drugName}}
+                    </div>
+                    <div *ngFor="let message of record.messageList">
+                        <input type="checkbox" #recordCheckBox (click)="recordChecked(recordCheckBox.checked, message, record)">
+                        <span>{{message.message}}</span>
+                        <div *ngIf="record.recordCheckedMap.indexOf(message) != -1">
+                            <input type="checkbox" [(ngModel)]="message.operateStatus">
+                            <span>建议医生修改或双签名确认</span>
+                        </div>
+                        <div *ngFor="let opt of message.msgOperationRecordList">
+                            <div *ngIf="opt.operateStatus==1">{{opt.operateType==1?'药师':'医生'}}{{opt.operatePeopleName}}勾选该条警示信息将处方打回，要求医生修改或双签名确认</div>
+                            <div *ngIf="opt.operateStatus==2">{{opt.operateType==1?'药师':'医生'}}{{opt.operatePeopleName}}勾选该条警示信息将处方打回</div>
+                            <div *ngIf="opt.isNeglect==1">{{opt.operateType==1?'药师':'医生'}}{{opt.operatePeopleName}}忽略该条警示信息</div>
+                            <span class="doctor-opinion-first" *ngIf="opt.isDoubledSign==1">{{opt.operateType==1?'药师':'医生'}}{{opt.operatePeopleName}}双签名确认</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="check-text">
+                <span *ngIf="record.messageList.length<=0">该处方无警示信息</span>
+                <span *ngIf="record.messageList.length>0">已经选中{{record.recordCheckedMap.length}}条警示信息</span>
+                <br>
+                <textarea *ngIf="!isAllRecipeChecked" name="a" #recordBox class="check-textarea" (blur)="recordBox.value.trim()==''?(recordBox.value='审核意见...'):''" (focus)="recordBox.value=='审核意见...'?(recordBox.value=''):''" [(ngModel)]="record.auditResult"></textarea>
+                <button *ngIf="!isAllRecipeChecked" (click)="rejectRecipe(record)" type="button" class="btn check-btn-fail">打回</button>
+                <button *ngIf="!isAllRecipeChecked" (click)="resolveRecipe(record)" type="button" class="btn check-btn-pass">通过</button>
+                <button *ngIf="isAllRecipeChecked" type="button" class="btn check-btn-pass" (click)="getNextRecipe()">下一张处方</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup" *ngIf="isCheckListShow">
+    <div class="popup-checklist" id="popupChecklist">
+        <div class="popup-header">
+            <a class="popup-close" (click)="isCheckListShow=false"></a>
+            化验单
+        </div>
+        <div class="text-center popup-body-nav">
+            <a *ngFor="let exam of examList;let i = index;" href="javascript:void(0)" (click)="changeHash('exam'+i)" class="col-lg-2">{{exam.examItemName}}</a>
+            <a href="javascript:void(0)" (click)="changeHash('B-ultrasonic')" class="col-lg-2" *ngIf="image">B超检查</a>
+            <a href="javascript:void(0)" (click)="changeHash('special')" class="col-lg-2" *ngIf="specialExam">特殊检查</a>
+        </div>
+        <div class="popup-body text-center">
+            <div class="popup-checklist-table" *ngFor="let exam of examList;let i = index;">
+                <a class="popup-checklist-table-title" name="exam{{i}}">{{exam.examItemName}}</a>
+                <table class="table table-bordered popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>患者号 {{patientInfo.patientId}}</td>
+                            <td>患者姓名 {{patientInfo.name}}</td>
+                            <td>性别 {{patientInfo.sex}}</td>
+                            <td>年龄 {{patientInfo.age}}</td>
+                        </tr>
+                        <tr>
+                            <td>科室 {{patientInfo.applicantDeptName}}</td>
+                            <td>送检医生 {{patientInfo.applicantName}}</td>
+                            <td>诊断 {{patientInfo.examConclusion}}</td>
+                            <td>样本类型 {{patientInfo.sampleName}}</td>
+                        </tr>
+                        <tr>
+                            <td>检验项目 {{exam.examItemName}}</td>
+                            <td>采样时间 {{exam.sampleCollectTime | date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                            <td>报告时间 {{exam.reportTime | date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>No.</td>
+                            <td>检验指标</td>
+                            <td>检验结果</td>
+                            <td>单位</td>
+                            <td>参考范围</td>
+                            <td>No.</td>
+                            <td>检验指标</td>
+                            <td>检验结果</td>
+                            <td>单位</td>
+                            <td>参考范围</td>
+                        </tr>
+                        <tr *ngFor="let indicator of (exam.indicatorList | exampipe);let i = index;">
+                            <td>{{indicator.reportId}}</td>
+                            <td>{{indicator.indicatorName}}</td>
+                            <td>{{indicator.examResult}}</td>
+                            <td>{{indicator.examResultUnit}}</td>
+                            <td>{{indicator.lowerLimit}}-{{indicator.upperLimit}}</td>
+                            <td>
+                                <ng-container *ngIf="(i+1)<exam.indicatorList.length">{{exam.indicatorList[i+1].reportId}}</ng-container>
+                            </td>
+                            <td>
+                                <ng-container *ngIf="(i+1)<exam.indicatorList.length">{{exam.indicatorList[i+1].indicatorName}}</ng-container>
+                            </td>
+                            <td>
+                                <ng-container *ngIf="(i+1)<exam.indicatorList.length">{{exam.indicatorList[i+1].examResult}}</ng-container>
+                            </td>
+                            <td>
+                                <ng-container *ngIf="(i+1)<exam.indicatorList.length">{{exam.indicatorList[i+1].examResultUnit}}</ng-container>
+                            </td>
+                            <td>
+                                <ng-container *ngIf="(i+1)<exam.indicatorList.length">{{exam.indicatorList[i+1].replowerLimitortId}}-{{exam.indicatorList[i+1].upperLimit}}</ng-container>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="popup-checklist-table">
+                <a class="popup-checklist-table-title" name="B-ultrasonic">B超检查</a>
+                <table class="table table-bordered popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>患者号 {{patientInfo.patientId}}</td>
+                            <td>患者姓名 {{patientInfo.name}}</td>
+                            <td>性别 {{patientInfo.sex}}</td>
+                            <td>年龄 {{patientInfo.age}}</td>
+                        </tr>
+                        <tr>
+                            <td>科室 {{patientInfo.applicantDeptName}}</td>
+                            <td>送检医生 {{patientInfo.applicantName}}</td>
+                            <td>检查项目 {{patientInfo.examItemName}}</td>
+                            <td>样本部位 {{patientInfo.sampleName}}</td>
+                        </tr>
+                        <tr>
+                            <td>体位 {{image.performSite}}</td>
+                            <td>报告时间 {{image.reportTime | date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-left">
+                    <div>内容：</div>
+                    <div>{{image.imagingPosition}}</div>
+                    <div>{{image.imagingDiagnosis}}</div>
+                </div>
+            </div>
+            <div class="popup-checklist-table">
+                <a class="popup-checklist-table-title" name="special">特殊检查</a>
+                <table class="table table-bordered popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>患者号 {{patientInfo.patientId}}</td>
+                            <td>患者姓名 {{patientInfo.name}}</td>
+                            <td>性别 {{patientInfo.sex}}</td>
+                            <td>年龄 {{patientInfo.age}}</td>
+                        </tr>
+                        <tr>
+                            <td>科室 {{patientInfo.applicantDeptName}}</td>
+                            <td>送检医生 {{patientInfo.applicantName}}</td>
+                            <td>检查项目 {{patientInfo.examItemName}}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>报告时间 {{specialExam.reportTime | date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-left">
+                    <div>内容：</div>
+                    <div>{{specialExam.examConclusion}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup" *ngIf="isOperationListShow">
+    <div class="popup-operation" id="popupOperation">
+        <div class="popup-header">
+            <a class="popup-close" (click)="isOperationListShow=false"></a>
+            手术
+        </div>
+        <div class="text-center popup-body-nav">
+            <a *ngFor="let operator of operationList;let i = index;" (click)="changeHash('operator'+i)" class="col-lg-4">{{operator.operationName}}</a>
+        </div>
+        <div class="popup-body text-center">
+            <div class="popup-checklist-table" *ngFor="let operator of operationList;let i = index;">
+                <a class="popup-checklist-table-title" name="operator{{i}}">{{operator.operationName}}</a>
+                <table class="table table-bordered popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>患者号 {{patientInfo.patientId}}</td>
+                            <td>患者姓名 {{patientInfo.name}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>手术名称</td>
+                            <td>切口类型</td>
+                            <td>手术开始时间</td>
+                            <td>手术结束时间</td>
+                        </tr>
+                        <tr>
+                            <td>{{operator.operationName}}</td>
+                            <td>{{operator.operationIncisionType}}</td>
+                            <td>{{operator.operationStartTime|date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                            <td>{{operator.operationEndTime|date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup" *ngIf="isAllergyListShow">
+    <div class="popup-allergy" id="popupAllergy">
+        <div class="popup-header">
+            <div class="col-lg-6">过敏信息</div>
+            <div class="col-lg-6 text-right"><img (click)="isAllergyListShow=false" id="closeAllergy" src="../../images/close-1.svg" alt="关闭"></div>
+        </div>
+        <div class="popup-body text-center">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td>过敏药物</td>
+                        <td>过敏反应</td>
+                    </tr>
+                    <tr *ngFor="let allergy of allergyList">
+                        <td>{{allergy.allergyDrug}}</td>
+                        <td>{{allergy.anaphylaxis}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="popup" *ngIf="isElectronicMedicalShow">
+    <div class="popup-case electronic-medical-record" id="popupCase">
+        <div class="popup-header">
+            <div class="col-lg-6">电子病例</div>
+            <div class="text-right"><img (click)="isElectronicMedicalShow=false" id="closeCase" class="closeCase" src="../../images/close-1.svg" alt="关闭"></div>
+        </div>
+        <div class="">
+            <div class="popup-body text-left popup-case-text">
+                <div>主诉：{{electronicMedical.chiefComplaint?electronicMedical.chiefComplaint:'无'}}</div>
+                <div>现病史：{{electronicMedical.medicalHistory?electronicMedical.medicalHistory:'无'}}</div>
+                <div>既往史：{{electronicMedical.pastHistory?electronicMedical.pastHistory:'无'}}</div>
+                <div>个人史：{{electronicMedical.personalHistory?electronicMedical.personalHistory:'无'}}</div>
+                <div>家族史：{{electronicMedical.familyDiseaseHistory?electronicMedical.familyDiseaseHistory:'无'}}</div>
+                <div>月经史：{{electronicMedical.menstrualHistory?electronicMedical.menstrualHistory:'无'}}</div>
+                <div>婚育史：{{electronicMedical.obstericalHistory?electronicMedical.obstericalHistory:'无'}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup" *ngIf="isFocusShow">
+    <div class="popup-focus" id="popupFocus">
+        <div class="popup-header">
+            <div class="col-lg-6">重点关注</div>
+            <div class="col-lg-6 text-right"><img (click)="isFocusShow=false" id="closeFocus" src="../../images/close-1.svg" alt="关闭"></div>
+        </div>
+        <div class="popup-body text-center">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td>No.</td>
+                        <td>检验指标</td>
+                        <td>结果</td>
+                        <td>单位</td>
+                        <td>参考范围</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>白细胞计数</td>
+                        <td>6.63</td>
+                        <td>10^9 g/l</td>
+                        <td>4.00-10.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

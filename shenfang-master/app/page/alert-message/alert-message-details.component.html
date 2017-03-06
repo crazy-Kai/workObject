@@ -1,0 +1,112 @@
+<div class="row">
+    <div class="col-12 row" style="margin-bottom: 40px;">
+        <div class="col-3 title">
+            <span>药品名称：</span>
+            <span>{{msg.drugId}}</span>
+            <!-- <button type="button" class="btn btn-primary btn-sm" style="margin-left: 40px;">查看规则</button> -->
+        </div>
+        <div class="col-3 title">
+            <span>分析类型：</span>
+            <span>{{msg.analysisType}}</span>
+        </div>
+        <div class="col-3 title">
+            <span>提示类型：</span>
+            <span>{{msg.analysisResultType}}</span>
+        </div>
+        <div class="col-3 title">
+            <span>警示等级：</span>
+            <span>{{msg.severity}}</span>
+        </div>
+        <div class="col-3 title">
+            <span>建议：</span>
+            <span>{{msg.advice}}</span> 
+        </div>
+        <div class="col-3 title">
+            <span>警示内容：</span>
+            <span>{{msg.message}}</span>
+        </div>
+        <div class="col-3 title">
+            <span>警示状态：</span>
+            <span>{{status}}</span>
+        </div>
+        <div class="col-3 title">
+            <span>申请状态：</span>
+            <span>{{msg.applyStatus}}</span>
+            <span *ngIf="status == 0">
+                <span *ngIf="msg.applyStatus == 0">
+                    <button type="button" class="btn btn-primary btn-sm" (click)="alertMssageStatus(1)">申请确认</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="alertMssageStatus(2)">申请待查</button>
+                </span>
+                <span *ngIf="msg.applyStatus == 1">
+                    <span>已申请确认</span>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="alertMssageStatus(2)">申请待查</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="describe()">描述</button>
+                </span>
+                <span *ngIf="msg.applyStatus == 2">
+                    <span>已申请待查</span>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="alertMssageStatus(1)">申请确认</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="describe()">描述</button>
+                </span>
+            </span>
+            <span *ngIf="status == 1">
+                <span *ngIf="msg.applyStatus == 0">
+                    <button type="button" class="btn btn-primary btn-sm" (click)="alertMssageStatus(2)">申请待查</button>
+                </span>
+                <span *ngIf="msg.applyStatus == 2">
+                    <span>已申请待查</span>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="describe()">描述</button>
+                </span>
+                <span *ngIf="msg.applyStatus == 1">
+                    <span>已申请确认</span>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="alertMssageStatus(2)">申请待查</button>
+                </span>
+            </span>
+            <span *ngIf="status == 2">
+                <span *ngIf="msg.applyStatus == 0">
+                    <button type="button" class="btn btn-primary btn-sm" (click)="alertMssageStatus(1)">申请确认</button>
+                </span>
+                <span *ngIf="msg.applyStatus == 2">
+                    <span>已申请待查</span>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="alertMssageStatus(1)">申请确认</button>
+                </span>
+                <span *ngIf="msg.applyStatus == 1">
+                    <span>已申请确认</span>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="describe()">描述</button>
+                </span>
+            </span>
+        </div>
+    </div>
+    <div class="col-12">
+        <my-table [table]="recipeListTable">
+            <template #tableTemplate let-tableinfo>
+                <tr *ngFor="let trow of tableinfo.dataList" [class.selected]="trow === instruction" (mouseover)="touchedTrow = trow">
+                    <td>{{trow.zoneName}}</td>
+                    <td *ngIf="param.auditObject == 1">{{trow.recipeId}}</td>
+                    <td *ngIf="param.auditObject == 1">{{trow.recipeTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                    <td *ngIf="param.auditObject == 2">{{trow.patientId}}</td>
+                    <td *ngIf="param.auditObject == 2">{{trow.recipeTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                    <td *ngIf="param.auditObject == 3">{{trow.patientId}}</td>
+                    <td *ngIf="param.auditObject == 3">{{trow.orderDate | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                    <td>
+                        <a (click)="goRecipeDetail(trow)"><img src="../../images/check.svg"></a>
+                    </td>
+                </tr>
+            </template>
+        </my-table>
+    </div>
+    <!--弹窗表格-->
+    <div class="popup" *ngIf="!isDescribe">
+        <!--描述-->
+        <div class="popup-describe row">
+            <div class="col-12 popup-header row">
+                <div class="col-6">申请描述</div>
+                <div class="col-6 text-right"><img src="../../images/close-1.svg" alt="关闭" (click)="isDescribe = true"></div>
+            </div>
+            <div class="col-12 popup-body row">
+                <textarea class="col-12" style="width:100%; height:90%; border: 1px solid;" #textarea></textarea>
+                <div class="col-2 offset-4"><button type="button" class="btn" (click)="isDescribe = true">取消</button></div>
+                <div class="col-2"><button type="button" class="btn btn-primary" (click)="saveDescribe(textarea)">保存</button></div>
+            </div>
+        </div>
+    </div>
+</div>

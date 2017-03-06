@@ -1,0 +1,34 @@
+<div class="main-content flex">
+    <div class="public-menu">
+        <div class="menu-button">
+            <span class="menu-button-bar"></span>
+            <span class="menu-button-bar" style="margin: 3px 0;"></span>
+            <span class="menu-button-bar"></span>
+        </div>
+        <ul class="menu-content">
+            <li class="menu-content-item" *ngFor="let menu of menuService.menus" [class.menu-content-item-action]="selectMenu && selectMenu.title == menu.title">
+                <div (click)="selectMenu = menu;">
+                    <img class="menu-content-img text-center" src="{{menu.iconSrc}}" *ngIf="!selectMenu || selectMenu.title != menu.title"/>
+                    <img class="menu-content-img text-center" src="{{menu.iconActionSrc}}" *ngIf="selectMenu && selectMenu.title == menu.title" />
+                    <span class="menu-ceontert-text">{{menu.title}}</span>
+                    <img class="menu-content-arrows" src="./images/arrows-right.svg" [class.uparrow]="selectMenu == menu" />
+                    <!--<img class="menu-content-arrows" src="./images/arrows-right-a.svg" [class.uparrow]="selectMenu == menu" />-->
+                </div>
+                <ul *ngIf="selectMenu == menu">
+                    <li class="menu-content-items" *ngFor="let subMenu of menu.subMenus" (click)="selectMenu = menu;selectMenu.selectSubmenu = subMenu;"
+                        [class.menu-content-items-action]="selectMenu && selectMenu.selectSubmenu == subMenu">
+                        <i *ngIf="selectMenu && selectMenu.selectSubmenu == subMenu" class="menu-content-items-action-ico"></i>
+                        <span routerLink={{subMenu.resource}}>{{subMenu.title}}</span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <img class="menu-logo" src="images/logo.svg" alt="logo" width="60%" />
+    </div>
+    <div class="goto flex1">
+        <!--<div style="min-width: 1100px;">-->
+        <router-outlet></router-outlet>
+        <!--</div>-->
+    </div>
+</div>
+<!-- <router-outlet></router-outlet> -->

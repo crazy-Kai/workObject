@@ -1,0 +1,140 @@
+/**** end reset ****/
+.main-content{
+    position: absolute;
+    left: 0;top: 0;right: 0;bottom: 0;
+}
+/**** start menu stylesheet ****/
+.public-menu {
+    position: relative;
+    float: left;
+    font-size: 13px;
+    min-width: 175px;
+    background: #394B55;
+    padding: 15px 0 128px;
+}
+
+.menu-button {
+    width: 24px;
+    height: 24px;
+    background: #3A6264;
+    border-radius: 2px;
+    padding: 6px;
+    margin: 0 0 15px 140px;
+    cursor: pointer;
+}
+
+.menu-button-bar {
+    display: block;
+    width: 12px;
+    height: 2px;
+    background: #fff;
+    border-radius: 1px;
+}
+
+.menu-content-item {
+    min-height: 50px;
+    background: #394B55;
+}
+
+.menu-content-item>div {
+    height: 50px;
+    line-height: 50px;
+    color: #fff ;
+    cursor: pointer;
+}
+
+.menu-content-item>div:hover {
+    background: #202B2F;
+}
+
+.menu-content-item-action>div {
+    color: #4EB7E0;
+    background-color: #1D272B;
+}
+
+.menu-content-items {
+    font-size: 12px;
+    color: #C9CBCD;
+    padding-left: 38px;
+    background-color: #202B2F;
+    cursor: pointer;
+}
+
+.menu-content-items>span {
+    line-height: 50px;
+}
+
+.menu-content-items:hover {
+    color: #FFF !important;
+    background-color: #1D272B;
+}
+
+.menu-content-items>span:hover {
+    
+}
+
+.menu-content-items-action {
+    background: #1D272B;
+    padding-left: 0px;
+}
+
+.menu-content-items-action>span {
+    line-height: 50px;
+    color: #4EB7E0;
+}
+
+.menu-content-items-action-ico {
+    display: block;
+    float: left;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #4EB7E0;
+    margin: 23px 17px;
+}
+
+.menu-content-item-i {
+    display: block;
+    transform: rotate(-90deg);
+    color: #BEC0C7;
+}
+
+.menu-content-img {
+    float: left;
+    width: 16px;
+    height: 16px;
+    margin: 16px 11px;
+}
+
+.menu-ceontert-text {
+    float: left;
+    width: 100px;
+    height: 50px;
+    line-height: 50px;
+}
+
+.menu-content-arrows {
+    float: right;
+    /*width: 8px;
+    height: 8px;*/
+    margin: 20px 20px 20px 10px;
+    transition: all .5s ease-in-out;
+}
+
+.uparrow{
+    transform: rotate(90deg);
+}
+
+.menu-logo {
+    position: absolute;
+    left: 17px;
+    bottom: 17px;
+}
+
+.goto {
+    position: relative;
+    min-width: 1100px;
+    font-size: 13px;
+    background: #F5F7F9;
+}
+/**** end menu stylesheet ****/

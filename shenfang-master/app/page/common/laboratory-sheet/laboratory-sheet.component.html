@@ -1,0 +1,169 @@
+<div class="popup" id="popup" *ngIf="showSheet">
+    <div class="popup-checklist" id="popupChecklist">
+        <div class="popup-header">
+            <a class="popup-close" (click)="hide()"></a>
+            化验单
+        </div>
+        <div class="text-center popup-body-nav">
+            <a *ngFor="let exam of examList;let i = index;" href="javascript:void(0)" (click)="changeHash('exam'+i)" class="col-lg-2" >{{exam.examItemName}}</a>
+            <a *ngFor="let image of images;let i = index;" href="javascript:void(0)" (click)="changeHash('image'+i)" class="col-lg-2" >{{image.imageName}}</a>
+            <a *ngFor="let specialExam of specialExams;let i = index;" href="javascript:void(0)" (click)="changeHash('specialExam'+i)" class="col-lg-2" >{{specialExam.examItemName}}</a>
+        </div>
+        <div class="popup-body text-center">
+            <div class="popup-checklist-table" *ngFor="let exam of examList;let i = index;">
+                <a class="popup-checklist-table-title" name="exam{{i}}">{{exam.examItemName}}</a>
+                <table class="table sheet-main-header">
+                    <tbody>
+                        <tr>
+                            <td>患者号 <span>{{patientInfo.patientId}}</span></td>
+                            <td>患者姓名 <span>{{patientInfo.name}}</span></td>
+                            <td>性别 <span>{{patientInfo.sex}}</span></td>
+                            <td>年龄 <span>{{patientInfo.age}}</span></td>
+                        </tr>
+                        <tr>
+                            <td>科室 <span>{{exam.applicantDeptName}}</span></td>
+                            <td>送检医生 <span>{{exam.applicantName}}</span></td>
+                            <td>诊断 <span>{{exam.diagnose}}</span></td>
+                            <td>样本类型 <span>{{exam.sampleName}}</span></td>
+                        </tr>
+                        <tr>
+                            <td>检验项目 <span>{{exam.examItemName}}</span></td>
+                            <td>采样时间 <span>{{exam.sampleCollectTime | date:"yyyy-MM-dd HH:ss:MM"}}</span></td>
+                            <td>报告时间 <span>{{exam.reportTime | date:"yyyy-MM-dd HH:ss:MM"}}</span></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table sheet-main-con">
+                    <tbody>
+                        <tr>
+                            <th width="4%">No.</th>
+                            <th width="15%">检验指标</th>
+                            <th width="6%">结果</th>
+                            <th width="10%">单位</th>
+                            <th width="10%" class="space-line">参考范围</th>
+                            <th width="5%">No.</th>
+                            <th width="15%">检验指标</th>
+                            <th width="5%">结果</th>
+                            <th width="10%">单位</th>
+                            <th width="10%">参考范围</th>
+                        </tr>
+                        <tr *ngFor="let indicator of (exam.indicatorList | exampipe);let i = index;">
+                            <td>{{indicator.reportId}}</td>
+                            <td>{{indicator.indicatorName}}</td>
+                            <td>{{indicator.examResult}}</td>
+                            <td>{{indicator.examResultUnit}}</td>
+                            <td class="space-line">{{indicator.lowerLimit}}-{{indicator.upperLimit}}</td>
+                            <td><ng-container *ngIf="(i+1)<exam.indicatorList.length">{{exam.indicatorList[i+1].reportId}}</ng-container></td>
+                            <td><ng-container *ngIf="(i+1)<exam.indicatorList.length">{{exam.indicatorList[i+1].indicatorName}}</ng-container></td>
+                            <td><ng-container *ngIf="(i+1)<exam.indicatorList.length">{{exam.indicatorList[i+1].examResult}}</ng-container></td>
+                            <td><ng-container *ngIf="(i+1)<exam.indicatorList.length">{{exam.indicatorList[i+1].examResultUnit}}</ng-container></td>
+                            <td><ng-container *ngIf="(i+1)<exam.indicatorList.length">{{exam.indicatorList[i+1].replowerLimitortId}}-{{exam.indicatorList[i+1].upperLimit}}</ng-container></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="popup-checklist-table" *ngFor="let image of images;let i = index">
+                <a class="popup-checklist-table-title" name="image{{i}}">{{image.imageName}}</a>
+                <table class="table sheet-main-header">
+                    <tbody>
+                        <tr>
+                            <td>患者号 <span>{{patientInfo.patientId}}</span></td>
+                            <td>患者姓名 <span>{{patientInfo.name}}</span></td>
+                            <td>性别 <span>{{patientInfo.sex}}</span></td>
+                            <td>年龄 <span>{{patientInfo.age}}</span></td>
+                        </tr>
+                        <tr>
+                            <td>科室 <span>{{image.applicantDeptName}}</span></td>
+                            <td>送检医生 <span>{{image.applicantName}}</span></td>
+                            <td>检查项目 <span>{{image.imageName}}</span></td>
+                            <td>样本部位 <span>{{image.performSite}}</span></td>
+                        </tr>
+                        <tr>
+                            <td>体位 <span>{{image.performSite}}</span></td>
+                            <td>报告时间 <span>{{image.reportTime | date:"yyyy-MM-dd HH:ss:MM"}}</span></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="sheet-result">
+                    <h4>内容：</h4>
+                    <div style="padding: 0 40px;">
+                        <p>{{image.imagingPosition}}</p>
+                        <p>{{image.imagingDiagnosis}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-checklist-table" *ngFor="let specialExam of specialExams;let i = index">
+                <a class="popup-checklist-table-title" name="specialExam{{i}}">{{specialExam.examItemName}}</a>
+                <table class="table sheet-main-header">
+                    <tbody>
+                        <tr>
+                            <td>患者号 <span>{{patientInfo.patientId}}</span></td>
+                            <td>患者姓名 <span>{{patientInfo.name}}</span></td>
+                            <td>性别 <span>{{patientInfo.sex}}</span></td>
+                            <td>年龄 <span>{{patientInfo.age}}</span></td>
+                        </tr>
+                        <tr>
+                            <td>科室 <span>{{specialExam.applicantDeptName}}</span></td>
+                            <td>送检医生 <span>{{specialExam.applicantName}}</span></td>
+                            <td>检查项目 <span>{{specialExam.examItemName}}</span></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>报告时间 <span>{{specialExam.reportTime | date:"yyyy-MM-dd HH:ss:MM"}}</span></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="sheet-result">
+                    <h4>内容：</h4>
+                    <div style="padding: 0 40px;">
+                        <p>{{specialExam.examConclusion}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div class="popup" id="popup" *ngIf="operation">
+    <div class="popup-operation" id="popupOperation">
+        <div class="popup-header">
+            <a class="popup-close" (click)="isOperationListShow=false"></a>
+            手术
+        </div>
+        <div class="text-center popup-body-nav">
+            <a *ngFor="let operator of operationList;let i = index;" (click)="changeHash('operator'+i)" class="col-lg-4">{{operator.operationName}}</a>
+        </div>
+        <div class="popup-body text-center">
+            <div class="popup-checklist-table" *ngFor="let operator of operationList;let i = index;">
+                <a class="popup-checklist-table-title" name="operator{{i}}">{{operator.operationName}}</a>
+                <table class="table table-bordered popup-clecklist-font-size">
+                    <tbody>
+                        <tr>
+                            <td>患者号 {{patientInfo.patientId}}</td>
+                            <td>患者姓名 {{patientInfo.name}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>手术名称</td>
+                            <td>切口类型</td>
+                            <td>手术开始时间</td>
+                            <td>手术结束时间</td>
+                        </tr>
+                        <tr>
+                            <td>{{operator.operationName}}</td>
+                            <td>{{operator.operationIncisionType}}</td>
+                            <td>{{operator.operationStartTime|date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                            <td>{{operator.operationEndTime|date:"yyyy-MM-dd HH:ss:MM"}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>-->

@@ -1,0 +1,56 @@
+<div class="flex column fillspace-sm">
+    <div class="ipt-order-audit-header">
+        <button type="button" class="btn btn-agree" [hidden]="!hasChecked()" (click)="bacthAgree()">批量通过</button>
+        <button type="button" class="btn btn-refuse" [hidden]="!hasChecked()" (click)="bacthRefuse()">批量打回</button>
+        <button type="button" class="btn btn-close" title="确定结束审方？" (handler)="endAudit($event);" confirm-direc>{{receiveOrder ? '结束审方' : '已停止接受任务'}}</button>
+    </div>
+    <div class="flex1 flex column">
+        <table class="table ipt-order-audit-table">
+            <tbody>
+                <tr style="height: 45px;">
+                    <th width="3%">
+                        <input type="checkbox" [checked]="isAllChecked()" (click)="isAllCheck($event)">
+                    </th>
+                    <th width="10%">复核时间</th>
+                    <th width="10%">入院科室</th>
+                    <th width="10%">医生</th>
+                    <th width="10%">患者号</th>
+                    <th>警示信息</th>
+                    <th width="17%">操作</th>
+                </tr>
+            </tbody>
+        </table>
+        <div class="flex1" style="overflow-y: scroll;margin-right: -17px;">
+            <table class="table" style="margin: 0;">
+                <tbody>
+                    <tr *ngFor="let trow of waitAuditIptList;let i = index" (click)="putInCheckList(trow)" (dblclick)="onDblClick(trow)" style="height: 40px;border-bottom: 1px solid #DFDFDF;" [class.even-tr]="i%2 === 1">
+                        <td width="3%" align="center">
+                            <input type="checkbox" [checked]="isChecked(trow) >= 0">
+                        </td>
+                        <td width="10%">
+                            {{trow.receiveTime | date:"yyyy-MM-dd HH:mm:ss"}}
+                        </td>
+                        <td width="10%">{{trow.inDeptName}}</td>
+                        <td width="10%">{{trow.doctorName}}</td>
+                        <td width="10%">{{trow.patientId}}</td>
+                        <td class="warning-msg text-left">
+                            <div *ngFor="let infos of trow.engineMsg" [style.color]="infos.severity >= 5 ? '#f00' : (infos.severity == 4 ? '#000' : '#999')" style=" margin: 5px 0;">
+                                <div class="text-right" style="display: inline-block;width: 30%;">{{infos.analysisResultType}}</div>：
+                                <div class="text-left" style="display: inline-block;width: 60%;">{{infos.message}}<span>{{infos.severity}}</span></div>
+                            </div>
+                        </td>
+                        <td width="17%" align="center">
+                            <a [routerLink]="['/ipt-order-details', trow.id]" style="margin: 0 5px;">查看</a> |
+                            <a (click)="refuseIptOrderAudit(trow);$event.stopPropagation()" style="margin: 0 5px;">打回</a> |
+                            <a (click)="agreeIptOrderAudit(trow);$event.stopPropagation()" style="margin: 0 5px;">通过</a>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!(waitAuditIptList && waitAuditIptList.length)" class="text-center" style="border-bottom: 1px solid #DFDFDF;">
+                        <td colspan="100" style="padding: 20px 0;">当前暂无待审处方</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <audit-tips [options]="auditOptions"></audit-tips>
+</div>

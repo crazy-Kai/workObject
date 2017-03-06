@@ -1,0 +1,382 @@
+body {
+    font-size: 13px;
+}
+
+.clear-both {
+    clear: both;
+}
+
+.pre-ckeck {
+    overflow: hidden;
+}
+
+.check-return {
+    float: left;
+    background: #fff;
+    /*border: 1px solid rgb(121, 121, 121);*/
+    margin: 15px;
+}
+
+.left-arrow {
+    width: 18px;
+    height: 18px;
+}
+
+.check-return span {
+    font-family: STHeitiSC-Medium;
+    font-size: 12px;
+    color: #515253;
+}
+
+.check-title {
+    display: block;
+    font-size: 14px;
+    line-height: 64px;
+    margin: 0 152px;
+}
+
+.check-header {
+    /*border-top: 1px solid rgba(121, 121, 121, 1);*/
+    height: 60px;
+    margin-bottom: 10px;
+    margin-left: 0;
+    background: #fff;
+    border-top: 1px solid #ccc;
+}
+
+.check-header-patient table {
+    border: none;
+    margin: 0;
+}
+
+table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 1rem;
+    float: left;
+}
+
+thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+.check-header-patient td {
+    padding: 5px 7px;
+    height: 30px;
+    font-size: 12px;
+    color: #999;
+    border: none;
+}
+
+
+/*.check-header-patient>thead>tr>td {*/
+
+
+/*border: none;*/
+
+
+/*margin: 0;*/
+
+
+/*}*/
+
+.check {
+    /*float: left;*/
+    /*width: 40%;*/
+    /*height: 60px;*/
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.check-list {
+    /*display: inline-block;*/
+    /*width: 49.5%;*/
+    /*height: 85px;*/
+    height: 60px;
+    padding: 0 5px;
+    line-height: 60px;
+    vertical-align: initial;
+    cursor: pointer;
+}
+
+.check-list>img {
+    width: 25px;
+    height: 25px;
+}
+
+.flex1 {
+    overflow: hidden;
+    border: 0;
+    margin-left: 0;
+    float: left;
+}
+
+.audit-instructions {
+    width: 132px;
+    height: 55px;
+    float: left;
+    background-color: #fff;
+}
+
+.audit-instructions span {
+    float: left;
+    white-space: normal;
+    word-break: break-all;
+    overflow: hidden;
+}
+
+.audit-instructions img {
+    float: left;
+}
+
+.audit-instructions span {
+    font-family: STHeitiSC-Medium;
+    font-size: 13px;
+    color: #515253;
+    float: right;
+}
+
+.pre-ord-list {
+    float: left;
+    /*width: 60%;*/
+    /*border: 1px solid rgba(121, 121, 121, 1);*/
+    padding: 0;
+    border: 1px solid #ccc;
+    background: #fff;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+}
+
+.pre-ord {
+    width: 100%;
+    height: 200px;
+    margin: 15px;
+    display: block;
+}
+
+.pre-ord-num,
+.pre-suggest-num {
+    /*border-top-left-radius: 6px;*/
+    /*border-top-right-radius: 6px;*/
+    padding-left: 8px;
+    background: rgb(200, 200, 200);
+}
+
+.pre-ord-num {
+    height: 36px;
+    line-height: 36px;
+}
+
+.pre-ord-action {
+    height: 36px;
+    line-height: 36px;
+    background-color: #2FA715;
+}
+
+.pre-old-num {
+    height: 24px;
+    line-height: 24px;
+}
+
+.pre-suggest-num {
+    height: 30px;
+    line-height: 30px;
+}
+
+
+/*.pre-ord-action,*/
+
+.pre-suggest-action {
+    /*background: rgba(255, 153, 102, 1);*/
+    background-color: #FBFBFB;
+}
+
+.recipe-font {
+    /*font-family: STHeitiSC-Medium;*/
+    font-size: 14px;
+    color: #2FA715;
+    line-height: 22px;
+    float: left;
+    margin-left: 12px;
+}
+
+.pre-ord-check {
+    color: red;
+    cursor: pointer;
+}
+
+.pre-suggest-list {
+    float: left;
+    width: 300px;
+    /*margin-left: 15px;*/
+    /*border-top: 1px solid rgba(121, 121, 121, 1);*/
+    text-align: center;
+    background-color: #fff;
+}
+
+.pre-suggest-question {
+    /*margin-left: 60%;*/
+    float: right;
+    margin-right: 30px;
+}
+
+.pre-suggest-num {
+    width: 100%;
+    height: 30px;
+    float: left;
+    padding: 5px 8px;
+    background: #f2f3f4;
+    color: #00a82e;
+    border-bottom: 1px solid #ccc;
+}
+
+.green-dot-icon {
+    float: left;
+    padding: 6px;
+    border-radius: 6px;
+    background: #00a82e;
+    font-size: 0;
+    vertical-align: middle;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+.pre-suggest {
+    background-color: #fff;
+}
+
+.recipe-number {
+    width: 100%;
+    height: 36px;
+    border-bottom: 1px solid #D9E4E7;
+    background-color: #FBFBFB;
+}
+
+.pre-suggest-text {
+    height: 333px;
+    line-height: 35px;
+    padding: 0 13px;
+    overflow-y: scroll;
+}
+
+.blue-circle {
+    float: left;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #4EB7E0;
+    border-radius: 50%;
+    margin: 13px 8px 11px 5px;
+}
+
+.pre-suggest-time {
+    float: left;
+}
+
+.pre-suggest-info {
+    margin-left: 23px;
+}
+
+.pre-suggest-drug {
+    border: 1px solid rgba(121, 121, 121, 1);
+    border-bottom: none;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.pre-suggest-drug>div {
+    padding-left: 23px;
+    border-bottom: 1px solid rgba(121, 121, 121, 1);
+}
+
+.doctor-opinion-first {
+    border-radius: 5px;
+    padding: 5px;
+    background: #FFCCCC;
+}
+
+.doctor-opinion-second {
+    border-radius: 5px;
+    padding: 5px;
+    background: #BBFF66;
+}
+
+.check-textarea {
+    width: 100%;
+    height: 65px;
+    color: rgb(153, 153, 153);
+}
+
+.check-text {
+    border-top: 1px solid rgba(121, 121, 121, 1);
+    padding: 5px 15px;
+}
+
+.check-text>span {
+    font-size: 12px;
+}
+
+.check-btn-fail {
+    float: left;
+    color: #535353;
+    margin: 5px 40px;
+    background: #fff;
+    border: 1px solid #E1E1E1;
+    border-radius: 5px;
+}
+
+.check-btn-pass {
+    float: right;
+    color: #fff;
+    margin: 5px 40px;
+    background: #4EB7E0;
+    border-radius: 5px;
+}
+
+.electronic-medical-record {
+    width: 600px;
+    height: 400px;
+    overflow: hidden;
+    /* text-align: center; */
+    margin: 0 auto;
+    margin-top: 100px;
+}
+
+.closeCase {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-top: -77px;
+}
+
+.popup-case-text {
+    border: 2px solid #ccc;
+}
+
+.popup-operation {
+    width: 600px;
+    height: 400px;
+    overflow: hidden;
+    /* text-align: center; */
+    margin: 0 auto;
+    margin-top: 100px;
+}
+
+.audit-not-through {
+    position: absolute;
+    right: 92px;
+    /*display: none;*/
+}
+
+
+/*.check-operation {
+    display: inline-block;
+    width: 175px;
+    height: 85px;
+    line-height: 85px;
+    vertical-align: initial;
+}*/
