@@ -15,16 +15,16 @@ export class LoginComponent {
      * 登录框中，密码输入后的回车事件
      */
     onEnterPressed($event:any) {
-        if ( !this.username ) {
-            this.userNameTip = '请输入用户名';
-            return;
-        }
+    //     if ( !this.username ) {
+    //         this.userNameTip = '请输入用户名';
+    //         return;
+    //     }
 
-        if ( !this.password ) {
-            this.passwordTip = '请输入密码';
-            return;
-        }
+    //     if ( !this.password ) {
+    //         this.passwordTip = '请输入密码';
+    //         return;
+    //     }
 
-        this.onSubmit();
-    }
+    //     this.onSubmit();
+     }
 }
