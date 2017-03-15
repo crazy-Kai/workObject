@@ -1,0 +1,30 @@
+<div class="container">
+    <div class="modal" style="display:block;">
+        <!-- 隐藏class fade-->
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">
+                    <span (click)="close()">x</span>
+                    <span class="sr-only" (click)="close()">关闭</span>
+                </button>
+                    <h4 class="modal-title">{{title}}</h4>
+                </div>
+                <div class="modal-body"  style="overflow-y: scroll; max-height: 500px;">
+                    <Tree #tree [nodes]="drugGroup" [options]="options.options" class="my-tree">
+                        <template #treeNodeTemplate let-node>
+                            <input type='checkbox' class='treenode-checkbox' name='checkbox' [checked]='isChecked(node)' [class.halfChecked]='isHalfChecked(node)'>
+                            <span class='treenode-checkbox' (click)='changeChecked(node,$event)'></span>
+                            <span class='my-tree-node '>{{ node.data.name }}</span>
+                        </template>
+                    </Tree>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" (click)="close()">关闭</button>
+                    <button class="btn btn-primary" (click)="save()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade"></div>
+</div>

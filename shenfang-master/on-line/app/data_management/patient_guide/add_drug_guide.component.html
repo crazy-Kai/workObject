@@ -1,0 +1,18 @@
+<!--添加药品相关指导获得药品树组件-->
+
+<div *ngIf="drugGroup" class="bg-white single-padding max-height700 relative">
+    <form class="gray-underline" (ngSubmit)="searchByDrugName()">
+        <label>药品名称：</label>
+        <input type="text" [(ngModel)]="drugService.searchText" name="searchText">
+        <button class="btn btn-sm btn-primary" type="submit" >搜索</button>
+    </form>
+    <div id="dragDiv"></div>
+    <div class="tree-list" style="max-height:650px;">
+        <Tree #tree [nodes]="drugGroup" class="my-tree" [options]="customTemplateStringOptions">
+            <template #treeNodeTemplate let-node>
+                <span id={{node.data.id}}  (dblclick)="gotoDrugDetail(node.data.name)">{{ node.data.name }}</span>
+            </template>
+        </Tree>
+    </div>
+    <!--(onDoubleClick)="gotoDrugDetail($event)"-->
+</div>

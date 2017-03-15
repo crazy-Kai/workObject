@@ -1,0 +1,193 @@
+<div class="product-management column" [class.flex]="!handler" [hidden]="handler == 'modify' || handler == 'review'">
+    <div class="row form-inline search-panel" role="form">
+        <div class="flex">
+            <label>名称/ID：</label>
+            <input type="text" class="form-control" name="productName" [(ngModel)]="searchQuery.productName" (keyup.enter)="searchInputEntered()"
+                [autoSuggestion] (select)="searchQuery.productName=$event.name" [url]="productSuggestionAPI">
+        </div>
+        <div class="flex">
+            <label>生产厂家：</label>
+            <input method="getProducerList" type="text" class="form-control" name="manufactureName" [(ngModel)]="searchQuery.manufactureName"
+                [autoSuggestion] (select)="searchQuery.manufactureName=$event.name" [url]="producerSuggestionAPI" (keyup.enter)="searchInputEntered()">
+        </div>
+        <div class="flex">
+            <label>知识分类：</label>
+            <select id="searchDrugCode" class="form-control" [(ngModel)]="searchQuery.drugRootCode">
+                <option value="001" selected="selected">药品</option>
+                <option value="002">分析</option>
+                <option value="003">其他</option>
+                <option value="005">医保药品</option>
+                <option value="004">管理</option>
+            </select>
+        </div>
+        <div class="flex">
+            <label>产品状态：</label>
+            <select id="searchStatus" class="form-control" [(ngModel)]="searchQuery.status">
+                <option value="0" selected="selected">全部</option>
+                <option value="-1">启用</option>
+                <option value="1">禁用</option>
+            </select>
+        </div>
+        <div class="flex">
+            <label>剂型：</label>
+            <input type="text" class="form-control" name="formulation" [(ngModel)]="searchQuery.formulation" (keyup.enter)="searchInputEntered()">
+        </div>
+        <div class="flex">
+            <label>规格：</label>
+            <input type="text" class="form-control" name="specification" [(ngModel)]="searchQuery.specification" (keyup.enter)="searchInputEntered()">
+        </div>
+        <div class="flex">
+            <label>产品属性：</label>
+            <input type="text" class="form-control" name="chooseDrugPropertyDictCodes" (click)="addFlArtt()" readonly [(ngModel)]="chooseDrugPropertyDictName"
+                (keyup.enter)="searchInputEntered()">
+        </div>
+        <div class="flex">
+            <label>产品类别：</label>
+            <select id="searchProducType" class="form-control" [(ngModel)]="searchQuery.productType">
+                <option value="0" selected="selected">全部</option>
+                <option value="1">化学药品</option>
+                <option value="2">生物药品</option>
+                <option value="3">中药</option>
+            </select>
+        </div>
+        <div class="flex">
+            <label>说明书映射：</label>
+            <select class="form-control" [(ngModel)]="searchQuery.instructionStatus">
+                <option value="0" selected="selected">全部</option>
+                <option value="1">有映射</option>
+                <option value="2">无映射</option>
+            </select>
+        </div>
+        <div class="flex" style="justify-content: flex-end;">
+            <button type="submit" class="btn btn-primary btn-sm" (click)="search(true)">搜索</button>
+            <button type="reset" class="btn btn-danger btn-sm" (click)="resetAll()">重置</button>
+        </div>
+    </div>
+    <div class="quick-handler">
+        <button class="btn btn-primary" (click)="gotoMaintainLogs()">维护日志</button>
+        <button class="btn btn-success" (click)="gotoImport()">产品导入</button>
+    </div>
+    <!--<button (click)="gotoImport()">产品导入</button> <button (click)="gotoDetail(true)" *ngIf="selectedProduct">修改</button>-->
+    <div class="product-list flex1 flex column">
+        <table #tableHeader>
+            <thead>
+                <tr>
+                    <th width="10%">产品id</th>
+                    <th width="8%">产品名称</th>
+                    <th width="8%">商品名称</th>
+                    <th width="6%">字典剂型</th>
+                    <th width="6%">剂型</th>
+                    <th width="6%">规格</th>
+                    <th width="6%">转换规格</th>
+                    <th width="6%">规格单位</th>
+                    <th width="6%">规格单位数量</th>
+                    <th width="8%">批准文号</th>
+                    <th width="15%">生产企业</th>
+                    <th width="6%">是否映射说明书</th>
+                    <th width="">操作</th>
+                </tr>
+            </thead>
+        </table>
+        <div class="flex1" style="margin-right: -17px;overflow-y: scroll;">
+            <table #tableContent [style.width]="tableWidth">
+                <tbody *ngFor="let trow of productList;let i = index;">
+                    <tr (click)="onClick(trow)" (dblclick)="gotoDetail(trow, false)" [class.checked]="trow == selectedProduct">
+                        <td width="10%">{{trow.id}}</td>
+                        <td width="8%">{{trow.chineseproductname}}</td>
+                        <td width="8%">{{trow.goodsname}}</td>
+                        <td width="6%">{{trow.dictformulation}}</td>
+                        <td width="6%">{{trow.formulation}}</td>
+                        <td width="6%">{{trow.chinesespecification}}</td>
+                        <td width="6%">{{trow.transspecification}}</td>
+                        <td width="6%">{{trow.enspecunit}}</td>
+                        <td width="6%">{{trow.specquantity}}</td>
+                        <td width="8%">{{trow.registerno}}</td>
+                        <td width="15%">{{trow.chinesemanufacturename}}</td>
+                        <td width="6%"><a (click)="showInsMap(trow)" [class.undo]="trow.instructionId == null">{{trow.instructionId == null ? "否" : "是"}}</a></td>
+                        <td>
+                            <a (click)="gotoDetail(trow, true)">修改</a> | <a (click)="trow.hidden = !trow.hidden;getDetail(trow);$event.stopPropagation();">{{trow.hidden ? "收起" : "展开"}}</a>
+                        </td>
+                    </tr>
+                    <tr [hidden]="!trow.hidden">
+                        <td colspan="13" class="minor-prop">
+                            <ul class="row">
+                                <li class="col-md-2 col-lg-2">DDD：<span>{{trow.ddd}}</span></li>
+                                <li class="col-md-2 col-lg-2">DDD单位：<span>{{trow.dddunit}}</span></li>
+                                <li class="col-md-4 col-lg-4">产品属性：<span>{{trow.extraInfo?.dictValues}}</span></li>
+                                <li class="col-md-2 col-lg-2">药品类别：<span>{{trow.extraInfo?.productDto.productcategory}}</span></li>
+                                <li class="col-md-2 col-lg-2">药理分类：<span>{{trow.drugcategoryname}}</span></li>
+                            </ul>
+                            <ul class="row">
+                                <li class="col-md-2 col-lg-4">已映射分类：<span>{{trow.extraInfo?.drugList}}</span></li>
+                                <li class="col-md-2 col-lg-2">拼音：<span>{{trow.pinyin}}</span></li>
+                                <li class="col-md-2 col-lg-2">制剂单位：<span>{{trow.prepunit}}</span></li>
+                                <li class="col-md-2 col-lg-2">包装规格：<span>{{trow.packagespec}}</span></li>
+                                <li class="col-md-2 col-lg-2">包装单位：<span>{{trow.packageunit}}</span></li>
+                            </ul>
+                            <ul class="row">
+                                <li class="col-md-2 col-lg-2">规格国际单位：<span>{{trow.enspecunit}}</span></li>
+                                <li class="col-md-2 col-lg-2">转换比：<span>{{trow.convertpercent}}</span></li>
+                                <li class="col-md-2 col-lg-2">状态：<span>{{trow.status == 1 ? '禁用' : '启用'}}</span></li>
+                                <li class="col-md-2 col-lg-2">药品名称：<span>{{trow.chinesemedname}}</span></li>
+                                <li class="col-md-2 col-lg-2">本位码：<span>{{trow.standardcode}}</span></li>
+                                <li class="col-md-2 col-lg-2">药品编码：<span>{{trow.medicinecode}}</span></li>
+                            </ul>
+                            <ul class="row">
+                                <li class="col-md-4 col-lg-4">产品编码：<span>{{trow.productcode}}</span></li>
+                                <li class="col-md-2 col-lg-2">主要成分编码：<span>{{trow.medcode}}</span></li>
+                                <li class="col-md-2 col-lg-2">创建时间：<span>{{trow.createdate | date:"yyyy-MM-dd"}}</span></li>
+                                <li class="col-md-2 col-lg-2">修改人：<span>{{trow.modifyuser}}</span></li>
+                                <li class="col-md-2 col-lg-2">最后修改时间：<span>{{trow.modifydate | date:"yyyy-MM-dd"}}</span></li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="pageBreak">
+            <span>
+                显示
+                <select class="input-sm" [(ngModel)]="pageSize" (ngModelChange)="onChangePageSize()">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                </select>
+                条/页,
+            </span>
+            <span>共 {{totalCount}} 条</span>
+            <div style="float: right;">
+                <a class="btn btn-default btn-sm" (click)="firstPage()">首页</a>
+                <button class="btn btn-default btn-sm" (click)="prePage()" [disabled]="currentPage == 1">上一页</button>
+                <span class="curpage">{{currentPage}}</span>
+                <button class="btn btn-default btn-sm" (click)="nextPage()" [disabled]="currentPage >= totalPageCount">下一页</button>
+                <a class="btn btn-default btn-sm" (click)="lastPage()">尾页</a>
+            </div>
+        </div>
+    </div>
+</div>
+<product-detail [productId]="productId" [operate]="operate" (editComplete)="complete($event)" *ngIf="handler == 'modify' || handler == 'review'"></product-detail>
+
+
+<div id="productManage" class="modal" style="display:block;" *ngIf="insMap">
+    <!-- 隐藏class fade-->
+    <div class="modal-dialog" style="z-index: 1050;">
+        <div class="modal-content">
+            <div class="modal-header">
+                该产品已映射说明书
+                <button class="close" data-dismiss="modal" (click)="insMap = null">x</button>
+            </div>
+            <div class="modal-body" style="max-height: 500px;">
+                <p><label>通用名：</label>{{insMap.chineseproductname}}</p>
+                <p><label>生产厂家：</label>{{insMap.chinesemanufacturename}}</p>
+                <p><label>剂型：</label>{{insMap.formulation}}</p>
+                <p><label>规格：</label>{{insMap.chinesespecification}}</p>
+                <p><label>批准文号：</label>{{insMap.registerno}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade"></div>
+</div>
+
+<add_drug [drugGroup]="propertyGroup" [options]="options" (onClose)="onDrugClose()" *ngIf="isAddDrugDialog" (getCheckedNodes)="getCheckedNode($event)"></add_drug>

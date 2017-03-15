@@ -1,0 +1,103 @@
+/**
+ *  @author: anwen
+ *  @Description:TODO(患者用药指导目录下通用CSS)     
+ */
+.tab1{
+     overflow: scroll;
+ }
+.row-group{
+    margin:16px 0px;
+}
+    .row-group .row * {
+        vertical-align: top;
+    }
+    .row-group .row .row-sec{
+        position: absolute;
+        left:150px;
+    }
+    .row-group .row textarea{
+        width: 70%;
+        height: 100px;
+    }
+.row-insec .row-group2 .row2{
+    left:150px;
+}
+
+.table-drug tr.selected{
+    background: #61bbe2;
+    color: white;
+}
+.table-drug tr:hover{
+    cursor: pointer;
+}
+.scrollY{
+    overflow-y: scroll;
+}
+    .scrollY .row .row-sec{
+        position: static;
+    }
+/**详情页**/
+.tab{
+    padding: 5px 0px 0px 0px;
+}
+    .tab a{
+        /*border: 1px solid #dfdfdf;*/
+        display: inline-block;
+        padding:5px;
+        margin:0px;
+    }
+    .tab .active{
+        border: 1px solid #dfdfdf;
+        border-bottom: 1px solid #fff;
+        border-style: inset;
+    }
+.top-ver-align *{
+    vertical-align: top;
+}
+.part-title{
+    padding:10px;
+    text-align: center;
+    background-color: #eee;
+}
+.block-textarea textarea{
+    /*display: block;*/
+    width: 99%;
+    margin: 3px;
+}
+.table-input input{
+    width: 80%;
+    border: 0;
+    padding: 10px;
+    outline: none;
+}
+.table-input textarea{
+    width: 80%;
+    border: 0;
+    padding: 10px;
+    outline: none;
+}
+.table-input td{
+    text-align: center;
+    padding:0px;
+}
+#dragDiv {
+    position: absolute;
+    display: none;
+    background-color: #3366cc;
+    color: #ffffff;
+}
+.textarea-div{
+    border: 1px solid;
+    border-color: rgb(169, 169, 169);
+    min-height: 50px;
+    padding: 0px 10px;
+}
+.textarea-div:hover{
+    cursor: text;
+}
+/**详情页**/
+.basedrug-tree{
+    height: 350px;
+    overflow-y: auto;
+    padding-top: 16px;
+}

@@ -1,0 +1,57 @@
+<!--药品相关指导页 single-margin relative -->
+<div class="flex column flexbox">
+    <!-- 表头: gray-border bg-white single-padding height500  -->
+    <div class="form-inline search-panel fixed-header">
+        <div class="form-inline content-search gray-underline">
+            <div class="form-group">
+                <label class="control-label">药品名称：</label>
+                <input type="text" class="form-control input-sm" [(ngModel)]="searchParams.name"
+                    [autoSuggestion] (select)="searchParams.name=$event.name" [url]="drugSuggestionAPI">
+            </div>
+            <div class="form-group">
+                <label class="control-label">添加人：</label>
+                <input type="text" class="form-control input-sm" [(ngModel)]="searchParams.createdBy">
+            </div>
+            <div class="form-group">
+                <label class="control-label">审核人：</label>
+                <input type="text" class="form-control input-sm" [(ngModel)]="searchParams.auditBy">
+            </div>
+            <div class="form-group">
+                <label class="control-label">审核状态:</label>
+                <select [(ngModel)]="searchParams.status" class="form-control input-sm">
+                    <option value="0">全部</option>
+                    <option value="1">已审核</option>
+                    <option value="2">未审核</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-sm" (click)="search(true)">搜索</button>
+            </div>
+        </div>
+
+        <div class="gray-underline bottom-single-padding">
+            <!--跳转至药品树页面-->
+            <button class="btn btn-sm btn-primary" (click)="addDrugGuide()">添加</button>
+            <button class="btn btn-sm btn-primary" (click)="gotoDetail(true)" *ngIf="selectedDrugList">审核</button>
+            <button class="btn btn-sm btn-primary" (click)="gotoDetail(false)" *ngIf="selectedDrugList">修改</button>
+            <button class="btn btn-sm btn-danger" (click)="delete()" *ngIf="selectedDrugList">删除</button>
+        </div>
+    </div>
+
+    <div class="flex1 elastictable">
+        <my-table [table]="table" [isFixedHeader]="true" [notInit]="true" (emitPagination)="getPagination($event)">
+            <template #tableTemplate let-tableinfo>
+                <tr *ngFor="let trow of tableinfo.dataList" (click)="selectedDrugList = trow" (dblclick)="editDrugGuide(trow)" class="table-body" [class.selected]='trow == selectedDrugList'>
+                    <td width="20%">{{trow.id}}</td>
+                    <td width="20%">{{trow.drugId}}</td>
+                    <td width="10%">{{trow.createdName}}</td>
+                    <td width="15%">{{trow.createdTime|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                    <td width="10%" [style.color]="trow.status == '未审核' ? 'red' : '#26a69a'">{{trow.status}}</td>
+                    <td width="10%" [style.color] = "trow.auditName == userService.user.realname ? 'red': 'black'">{{trow.auditName}}</td>
+                    <td width="15%">{{trow.auditTime|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                </tr>
+            </template>  
+        </my-table>
+    </div>
+    <my-dialog></my-dialog>
+</div>

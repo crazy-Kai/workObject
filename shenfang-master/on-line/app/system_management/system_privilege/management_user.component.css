@@ -1,0 +1,122 @@
+/*
+* management_user @CSS
+* this module's CSSRule with prefix "mu-"
+*/
+.mu-container{
+    margin: 10px;
+}
+.mu-search-bar{
+    height: 30px;box-sizing: content-box;
+    line-height: 30px;
+}
+.mu-search-bar > div{
+    float: left;
+    margin-right: 10px;
+}
+.mu-search-bar input[type='text']{
+    width: 200px;height: 30px;
+    padding: 0 5px;
+    border: 1px solid #ccc;
+}
+.mu-search-bar input[type='radio']{
+    margin-right:5px;
+    vertical-align: -2px;
+}
+.mu-search-bar label{
+    margin: 0;
+    font-weight: 400;
+}
+.mu-search-bar:after{
+    content: ".";display: block;height:0;clear: both;visibility: hidden;
+}
+.mu-handle-bar{
+    margin: 5px;
+}
+/** management-user form @CSS */
+.wrapper-gray66{
+    position: fixed;left: 0;top: 0;z-index: 9999;
+    width: 100%;height: 100%;
+    background: rgba(0, 0, 0, .66);
+}
+.mu-edit-form{
+    position: fixed;left: 50%;top: 50%;
+    padding: 20px;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    width: 550px;
+    background: #fff;outline: 8px solid rgba(0, 0, 0, .5);
+}
+.mu-edit-form textarea {
+    border: 1px solid #ccc;
+}
+.mu-edit-btngroup{
+    margin-bottom: 10px;padding-bottom: 5px;
+    border-bottom: 1px solid #ccc;
+}
+.mu-form-item{
+    height:26px;
+    margin-bottom:10px;
+    line-height: 26px;
+}
+.mu-form-item input[type='text'], .mu-form-item input[type='password']{
+    width: 200px;height: 26px;
+    padding: 0 5px;
+    border: 1px solid #ccc;
+}
+.mu-form-item .role-contain span{
+    margin-left:5px;float:left;
+}
+.mu-form-item input[type='checkbox']{
+    margin-right:5px;
+    vertical-align: -2px;
+}
+.mu-form-item textarea{
+    width:300px;height:150px;resize: none;
+}
+
+/**/
+.drugChoosen{
+    position: fixed;left: 50%;top: 50%;z-index: 10000;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    width: 800px;
+    background: #fff;outline: 8px solid rgba(0, 0, 0, .5);
+}
+.dC-header{
+    height: 40px;
+}
+.dC-header h3{
+    margin: 0;padding: 5px 10px;
+    font: 18px/30px "Microsoft YaHei";
+    border: 1px solid #ccc;
+    background: #f3f3f3;
+}
+.dC-header h3 a{
+    float: right;
+}
+.dC-content{
+    height: 400px;
+}
+.dC-content .dC-slide{
+    float: left;
+    padding: 10px;
+    width: 400px;height: 400px;
+    border-right: 1px solid #ccc;
+}
+.dC-content .form-group{
+    padding-bottom:10px;
+    font-family: "Microsoft YaHei";
+    border-bottom: 1px solid #ccc;
+}
+.dC-content .tree-content, .dC-content .chooosens-content{
+    height: 330px;overflow:auto;
+    padding-bottom:10px;
+}
+.dC-content .form-group label{
+    font-size: 16px;
+}
+.dC-content .dC-choosen{
+    float: left;
+    padding: 10px;
+    width: 400px;height: 400px;
+}

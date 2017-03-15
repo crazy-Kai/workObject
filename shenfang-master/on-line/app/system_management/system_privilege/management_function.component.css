@@ -1,0 +1,39 @@
+/*
+* management_function @CSS
+* this module's CSSRule with prefix "mf-"
+*/
+.mf-module{
+    
+}
+.mf-list-module{
+    height:35px;padding:10px;
+    border-bottom:1px solid #ccc;
+    box-sizing:content-box;
+}
+
+.mf-module .mf-tree{
+    float:left;border-right:1px solid #ccc;
+    width: 300px;min-height:500px;padding:10px;
+}
+.mf-handle-module{
+    margin-left: 310px;min-height: 500px;
+    padding: 10px;
+}
+.mf-handle-module .mf-handle-item{
+    margin-bottom: 10px;height: 26px;line-height: 26px;
+}
+.mf-handle-module .mf-handle-item span{
+    display: inline-block;
+    width: 100px;
+}
+.mf-handle-module .mf-handle-item input[type='text']{
+    width: 200px;height: 26px;padding: 0 5px;
+    border: 1px solid #ccc;
+    line-height: 26px;
+}
+.mf-handle-module .mf-handle-item label{
+    font-weight: 400;margin: 0 20px 0 0;
+}
+.mf-handle-module .mf-handle-item input[type='radio']{
+    vertical-align: -2px;margin-right: 5px;
+}

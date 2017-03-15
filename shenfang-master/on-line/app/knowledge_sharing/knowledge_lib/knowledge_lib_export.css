@@ -1,0 +1,69 @@
+.export-package-home{
+    margin: 10px;
+}
+.form-horizontal .form-group{
+    margin-left: 0;margin-right: 0;
+}
+.export-package-home .title{
+    padding-bottom: 10px;
+    font-size: 18px;font-weight: 600;
+    border-bottom: 1px solid #e9e9e9;
+}
+.export-package-home .title span{
+    font-size: 12px;color: #f00;
+}
+
+.last-update-table th, .last-update-table td{
+    padding: 5px;
+    text-align: center;
+}
+
+.export-package{
+    position: absolute;left: 0; top: 0;right: 0;bottom: 0;
+    overflow: auto;margin: 10px;
+}
+.export-package .heard-bar{
+    position: absolute;left: 0;top: 0;
+    height: 40px;width: 100%;
+    border-bottom: 1px solid #e9e9e9;
+}
+.export-package .heard-bar .goback{
+    display: inline-block;line-height: 35px;
+    padding-left: 25px;padding-right: 5px;
+    background: url('../../images/commonicons/arrow-left.png') 5px center no-repeat;
+    background-size: 20px 20px;
+    border-radius: 5px;
+}
+.export-package .heard-bar .goback:hover{
+    background-color: #e9e9e9;
+    color: #26a69a;
+    text-decoration: none;
+}
+.btn-history{
+    float: right;
+    border: 1px solid #e9e9e9;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 500;
+}
+.btn-history input[type='checkbox']{
+    margin-right: 5px;
+}
+.export-package .export-form, .export-package .export-list{
+    margin-top: 45px;
+}
+.export-package .form-inline span{
+    line-height: 30px;
+}
+.export-package .input-sm{
+    width: 200px;
+}
+.export-progress{
+    width: 500px;margin:0 auto;margin-top: 200px;
+}
+.export-progress .tips{
+    text-align: center;
+}
+    

@@ -1,0 +1,101 @@
+<div class="">
+    <div class="form-inline knowledges-search-bar" fole="form">
+        <div class="headline">
+            <h3>回收日志</h3>
+            <p style="color:#f00;">（注：记录用户知识导入操作的详情）</p>
+        </div>
+        <div class="form-group">
+            <label>机构：</label>
+            <input type="text" class="form-control input-sm" placeholder="选择机构" [(ngModel)]="orgsStr" (click)="checkOrgs()" readonly>
+        </div>
+        <div class="form-group">
+            <label>导入日期：</label>
+            <input class="form-control timeipt input-sm" placeholder="yyyy-mm-dd" (click)="startDateforSearch.toggle()" (ngModelChange)="setEndInterval($event)" [maxDate]="maxStartDate" name="startDateforSearch" [(ngModel)]="startDate"  tabIndex="-1" ngbDatepicker #startDateforSearch="ngbDatepicker">
+            -
+            <input class="form-control timeipt input-sm" placeholder="yyyy-mm-dd" (click)="endDateforSearch.toggle()" (ngModelChange)="setStrartInterval($event)" [minDate]="minEndDate" [maxDate]="maxEndDate" name="endDateforSearch" [(ngModel)]="endDate"  tabIndex="-1" ngbDatepicker #endDateforSearch="ngbDatepicker">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-sm" (click)="search()">搜索</button>
+        </div>
+    </div>
+    <div class="importLogs">
+        <table>
+            <tr>
+                <th>序号</th>
+                <th>机构</th>
+                <th>回收知识类型</th>
+                <th>详情</th>
+                <th>回收时间</th>
+                <th>导入结果</th>
+            </tr>
+            <tbody *ngFor="let trow of logLists;let i = index;">
+                <tr>
+                    <td rowspan="4">{{i + 1}}</td>
+                    <td rowspan="4">{{trow.name}}</td>
+                    <td>用户资料</td>
+                    <td>{{trow.countData ? trow.countData : 0}}</td>
+                    <td rowspan="4">{{trow.importedDate | date: "yyyy-MM-dd HH:mm:ss"}}</td>
+                    <td rowspan="4">{{trow.importErrorMsg ? trow.importErrorMsg : '导入成功'}}</td>
+                </tr>
+                <tr>
+                    <td>用户字典</td>
+                    <td>{{trow.countDict ? trow.countDict : 0}}</td>
+                </tr>
+                <tr>
+                    <td>用户规则</td>
+                    <td>{{trow.countRule ? trow.countRule : 0}}</td>
+                </tr>
+                <tr>
+                    <td>用户应用数据</td>
+                    <td>{{trow.countApplicationData ? trow.countApplicationData : 0}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="pageBreak">
+            <span>
+                显示
+                <select [(ngModel)]="pageSize" (ngModelChange)="onChangePageSize()">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                </select>
+                条/页,
+            </span>
+            <span>共 {{totalCount}} 条</span>
+            <a (click)="firstPage()">首页</a>
+            <button [disabled]="currentPage == 1" (click)="prePage()">上一页</button>{{currentPage}}
+            <button [disabled]="currentPage >= totalPageCount" (click)="nextPage()">下一页</button>
+            <a (click)="lastPage()">尾页</a>
+        </div>
+    </div>
+</div>
+<div class="modal" style="display:block;" *ngIf="!isHideDialog">
+    <!-- 隐藏class fade-->
+    <div class="modal-dialog" style="z-index: 1050;">
+        <div class="modal-content">
+            <div class="modal-header">
+                选择机构分支
+                <button class="close" data-dismiss="modal">
+                <span (click)="isHideDialog = true">x</span>
+                <span class="sr-only" (click)="isHideDialog = true">关闭</span>
+            </button>
+            </div>
+            <div class="modal-body" style="max-height: 500px;">
+                <div class="form-inline form-group">
+                    <input class="form-control input-sm" style="width: 350px;" [(ngModel)]="searchOrgText" (change)="mapResult(searchOrgText)">
+                    <button class="btn btn-primary btn-sm" (click)="mapResult(searchOrgText)">搜索</button>
+                </div>
+                <ul class="orgs-list">
+                    <li *ngFor="let item of filterOrgs;" [title]="item.name" (click)="selectOrg(item)" [class.checked]="isChecked(item)">{{item.name}}</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" (click)="isHideDialog = true; checkedOrgs=[];">关闭</button>
+                <button class="btn btn-primary" (click)="submitOrgs()">提交</button>
+            </div>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade"></div>
+</div>

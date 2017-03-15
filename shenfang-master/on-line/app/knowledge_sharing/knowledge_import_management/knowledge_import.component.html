@@ -1,0 +1,42 @@
+<div class="knowledge-import">
+    <div class="headline">
+        <h3>用户知识导入<button style="margin-left: 6px;" class="btn btn-info" (click)="goBack()">返回</button></h3>
+        <p style="color:#f00;">（注：将用户的知识导入到知识管理平台）</p>
+    </div>
+    <div class="basic-info">
+        <div class="row">
+            <label class="col-md-2">机构名称：</label>
+            <div class="col-md-10">
+                {{curOrg?.name}}
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-md-2">文件导入：</label>
+            <div class="col-md-10 uploadComponent">
+                <button class="btn btn-default btn-sm btn-choose" [disabled]="uploading">{{uploadfile?.name ? uploadfile?.name : '选择文件'}}</button>
+                <input type="file" #file (change)="readFile(file)" class="uploadFile" [disabled]="uploading">
+                <!--<span>{{uploadfile?.name ? uploadfile?.name : '未选择文件'}}</span>-->
+                <button class="btn btn-primary btn-sm" (click)="addFile()" [disabled]="uploading">{{uploading ? '导入中...' : '开始导入'}}</button>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-md-2">导入进度：</label>
+            <div class="col-md-10">
+                <div class="progress-bar" *ngIf="uploading || uploaded">
+                    <span class="active-slide"></span>
+                    <span class="progress" [class.faild]="faild" [style.width]="progress"></span>
+                </div>
+                <span *ngIf="faild">失败</span>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-md-2">导入结果：</label>
+            <div class="col-md-10">
+                <ul>
+                    <li *ngFor="let item of result">{{item}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<my-dialog></my-dialog>

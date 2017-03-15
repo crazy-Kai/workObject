@@ -1,0 +1,69 @@
+<style>
+	.control-label{font-weight: 500;text-align: right;}
+	.control-label em{color: #f00;padding: 0 5px;}
+	.single-margin{margin: 5px;}
+	.left{margin-right: 10px;}
+	.form-horizontal .form-group{margin-left: 0;margin-right: 0;}
+</style>
+<!-- 按钮 -->
+<div class="flex flexbox column">
+	<div class="single-margin gray-border bg-white single-padding">
+		<label>字典名称:</label> <input type="text" [(ngModel)]="dictValue" (key.enter)="seachInputEntered()">
+		<button class="btn btn-sm btn-primary" (click)="searchDictionaryData()">搜索</button>
+	</div>
+
+	<div class="single-margin gray-border bg-white single-padding">
+		<button class="btn btn-sm btn-primary" (click)="dictionaryDataAdd()">添加字典</button>
+		<button class="btn btn-sm btn-danger" (click)="dictionaryDataDelete()">删除</button>
+	</div>
+
+	<div class="single-margin relative flex1 flex" style="overflow:auto">
+		<div class="gray-border bg-white left single-padding" style="overflow: auto;">
+			<Tree #tree [nodes]="dictionaryGroup" class="my-tree" [options]="options" (onActivate)="onClickDictionaryData($event)"></Tree>
+		</div>
+		<form class="gray-border bg-white flex1 single-padding" (ngSubmit)="onSubmit()">
+			<div>
+				<div class="gray-underline">
+					<button class="btn btn-sm btn-primary" type="submit">保存</button>
+				</div>
+				<div class="row-group2 relative form-horizontal">
+					<div class="form-group" *ngIf="dictionaryData.showLevel">
+						<label class="col-md-3 control-label"><em>*</em>层级关系：</label>
+						<div class="col-md-9 form-inline">
+							<label for="bro" class="radio-inline"><input type="radio" id="bro" name="level" (change)="dictionaryData.addChildren=$event.target.value" value="false" checked>兄弟</label>
+							<label for="sub" class="radio-inline"><input type="radio" id="sub" name="level" (change)="dictionaryData.addChildren=$event.target.value" value="true">下级</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label"><em>*</em>字典编码：</label>
+						<div class="form-inline">
+							<input type="text" class="form-control input-sm" name="code" [(ngModel)]="dictionaryData.code">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label"><em>*</em>字典名称：</label>
+						<div class="form-inline">
+							<input type="text" class="form-control input-sm" name="dicValue" [(ngModel)]="dictionaryData.dictValue">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">字典备注：</label>
+						<div class="form-inline">
+							<textarea class="form-control" rows="4" name="remark" [(ngModel)]="dictionaryData.remark"></textarea>
+						</div>
+					</div>
+
+					<div class="form-group" *ngIf="isShow">
+						<label class="col-md-3 control-label">有效时间：</label>
+						<div class="form-inline">
+							<input type="date" [(ngModel)]="extend.startTime" id="startTime" name="startTime">
+							-
+							<input type="date" [(ngModel)]="extend.endTime" id="endTime" name="endTime">
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<my-dialog></my-dialog>

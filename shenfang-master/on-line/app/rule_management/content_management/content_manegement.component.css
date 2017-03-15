@@ -1,0 +1,68 @@
+/*药品配伍管css */
+.form-horizontal .form-group {
+    margin-right: 0;
+    margin-left: 0;
+}
+.pw-searchbar{
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+.pw-setting{
+    padding: 10px;
+    text-align: right;
+}
+.pw-setting a{margin: 0 10px;}
+
+.pw-edit-header{
+    padding:15px;margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+.pw-edit-header > h3{
+    margin: 0;padding: 0;
+    font: 24px/35px 'MicroSoft YaHei';
+}
+
+.pw-dt-drugChoosen{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    width: 400px;
+    background: #fff;
+    outline: 8px solid rgba(0, 0, 0, .5);
+}
+.pw-dt-header{
+    height: 40px;
+}
+.pw-dt-header h3{
+    margin: 0;padding: 5px 10px;
+    font: 18px/30px "Microsoft YaHei";
+    border: 1px solid #ccc;
+    background: #f3f3f3;
+}
+.pw-dt-header h3 a{
+    float: right;
+}
+.pw-dt-content{
+    height: 400px;
+}
+.pw-dt-content .pw-dt-slide{
+    float: left;
+    padding: 10px;
+    width: 400px;height: 400px;
+    border-right: 1px solid #ccc;
+}
+.pw-dt-content .form-group{
+    padding-bottom:10px;
+    font-family: "Microsoft YaHei";
+    border-bottom: 1px solid #ccc;
+}
+.pw-dt-content .tree-content, .pw-dt-content .chooosens-content{
+    height: 330px;overflow:auto;
+    padding-bottom:10px;
+}
+.pw-dt-content .form-group label{
+    font-size: 16px;
+}

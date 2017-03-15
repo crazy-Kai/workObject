@@ -1,0 +1,119 @@
+<div class="mg-container">
+    <!--用户组列表-->
+    <div class="mg-list-module flex column">
+        <div class="mg-list-handle btn-group">
+            <button class="btn btn-primary" (click)="addNewGroup()" *ngIf="userService.hasJurisdiction('group:post')">添加</button>
+            <button class="btn btn-danger" (click)="deleteAuthGroup()" *ngIf="userService.hasJurisdiction('group:delete')">删除</button>
+        </div>
+        <ul class="mg-list flex1">
+            <li *ngFor="let authgroup of authGroup" [class.selected]="authgroup.id==authInfo.id" (click)="getAuth(authgroup)">{{authgroup.name}}</li>
+        </ul>
+    </div>
+    <!--用户组操作-->
+    <div class="mg-handle-module flex column" *ngIf="authInfo">
+        <ul class="mg-handle-nav">
+            <li [class.active]="handleType == 0" (click)="handleType=0;">基本信息</li>
+            <li [class.active]="handleType == 1" (click)="handleType=1;">功能授权</li>
+            <li [class.active]="handleType == 2" (click)="handleType=2;">用户授权</li>
+        </ul>
+        <div class="mg-handle-container flex1">
+            <!--基本信息-->
+            <div class="mg-handle-model column" [class.flex]="handleType == 0" [hidden]="handleType != 0">
+                <div class="mg-handle-bar">
+                    <button class="btn btn-primary" (click)="saveAuthInfo()" *ngIf="authInfo.id || userService.hasJurisdiction('group:put')">保存</button> <!-- 回退: {{authInfo.type == '01' ? '添加' : '保存'}} -->
+                </div>
+                <div class="mg-handle-content form-horizontal flex1">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>名称：</label>
+                        <div class="col-md-10 form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="authInfo.name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>状态：</label>
+                        <div class="col-md-10 form-inline">
+                            <label for="enable-role" class="radio-inline"><input id="enable-role" name="group-role-status" type="radio" value="1" [checked]="authInfo.state==1" (click)="authInfo.state=1">启用</label>
+                            <label for="disable-role" class="radio-inline"><input id="disable-role" name="group-role-status" type="radio" value="3" [checked]="authInfo.state==3" (click)="authInfo.state=3">停用</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">备注：</label>
+                        <div class="col-md-10 form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="authInfo.remark">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--功能授权-->
+            <div class="mg-handle-model column" [class.flex]="handleType == 1" [hidden]="handleType != 1">
+                <div class="mg-handle-bar">
+                    <button class="btn btn-default" (click)="isChooseFromOtherAuth=true;">从角色拷贝权限</button>
+                    <button class="btn btn-primary" (click)="saveAuthGroupMenu()">保存</button>
+                </div>
+                <div class="mg-handle-content flex1">
+                    <Tree #tree [nodes]="authResource" [options]="options" class="my-tree" (onActivate)='changeChecked($event.node)'>
+                        <template #treeNodeTemplate let-node>
+                            <input type='checkbox' class='treenode-checkbox' name='checkbox' [checked]='isChecked(node)' [class.halfChecked]='isHalfChecked(node)'>
+                            <span class='treenode-checkbox'></span>
+                            <span class='my-tree-node'>{{ node.data.name }}</span>
+                        </template>
+                    </Tree>
+                </div>
+            </div>
+            <!--用户授权-->
+            <div class="mg-handle-model column" [class.flex]="handleType == 2" [hidden]="handleType != 2">
+                <div class="mg-handle-bar">
+                    <button class="btn btn-primary" (click)="isAddUser=true">添加用户</button>
+                    <button class="btn btn-danger" (click)="deleteUser()">删除用户</button>
+                </div>
+                <div class="mg-handle-content flex1">
+                    <my-table [table]="table" (onClick)="selectUserTr($event)"></my-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<my-dialog></my-dialog>
+
+<div class="container" *ngIf="isChooseFromOtherAuth">
+    <div id="mymodel">
+        <div class="model-header">
+            从角色拷贝权限
+        </div>
+        <div class="model-content">
+            <ul class="copy-author-list">
+                <li *ngFor="let auth of authGroup" (click)="selectAuth=auth" [class.selected]="auth == selectAuth">{{auth.name}}</li>
+            </ul>
+            <div class="btn-panel mt10">
+                <button type="submit" class="btn btn-default" (click)="closeDialog()">关闭</button>
+                <button type="submit" class="btn btn-primary" (click)="getOtherAuthBase(selectAuth.id)">保存</button>
+            </div>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade"></div>
+</div>
+<div class="container" *ngIf="isAddUser">
+    <div id="mymodel" class="multitable">
+        <div class="model-header">
+            添加用户
+        </div>
+        <div class="model-content">
+            <div class="search-panel form-inline mb15">
+                <div class="form-group">
+                    <label class="control-label">用户名/姓名：</label>
+                    <input class="form-control" type="text" placeholder="请输入关键字" [(ngModel)]="searchName">
+                </div>
+                <button class="btn btn-primary btn-sm" (click)="search()">搜索</button>
+            </div>
+            <div class="multitable-container">
+                <my-table [table]="userTable" (onClick)="chooseUser($event)"></my-table>       
+            </div>
+        </div>
+        <div class="btn-panel mt10">
+            <button type="submit" class="btn btn-default" (click)="closeUserDialog()">取消</button>
+            <button type="submit" class="btn btn-primary" (click)="addUser()">确定</button>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade"></div>
+</div>

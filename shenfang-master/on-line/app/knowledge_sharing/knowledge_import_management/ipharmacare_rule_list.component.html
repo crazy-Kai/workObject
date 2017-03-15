@@ -1,0 +1,57 @@
+<div class="knowledge-import-list">
+    <div class="form-inline knowledges-search-bar" fole="form">
+        <div class="form-group">
+            <label>日期：</label>
+            <input class="form-control timeipt input-sm" placeholder="yyyy-mm-dd" (click)="startDateforSearch.toggle();" (ngModelChange)="setEndInterval($event)" [maxDate]="maxStartDate" name="startDateforSearch" [(ngModel)]="startDate"  tabIndex="-1" ngbDatepicker #startDateforSearch="ngbDatepicker">
+            -
+            <input class="form-control timeipt input-sm" placeholder="yyyy-mm-dd" (click)="endDateforSearch.toggle();" (ngModelChange)="setStrartInterval($event)" [minDate]="minEndDate" [maxDate]="maxEndDate" name="endDateforSearch" [(ngModel)]="endDate"  tabIndex="-1" ngbDatepicker #endDateforSearch="ngbDatepicker">
+        </div>
+        <div class="form-group">
+            <label>药品名称：</label>
+            <input type="text" [(ngModel)]="searchQuery.drugId" class="form-control input-sm">
+        </div>
+        <div class="form-group">
+            <label>包含分支：</label>
+            <input type="text" [(ngModel)]="searchQuery.branch" class="form-control input-sm">
+        </div>
+        <!--
+        <div class="form-group">
+            <label>规则类型：</label>
+            <select class="form-control input-sm" [(ngModel)]="searchQuery.applyType">
+                <option value="">全部</option>
+                <option value="1">药品</option>
+                <option value="2">产品</option>
+            </select>
+        </div>
+        -->
+        <div class="form-group">
+            <label>审核状态：</label>
+            <select class="form-control input-sm" [(ngModel)]="searchQuery.status">
+                <option value="">全部</option>
+                <option value="0">已审核</option>
+                <option value="2">未审核</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-sm" (click)="search()">搜索</button>
+        </div>
+    </div>
+    <my-table [table]="ipharmacareTable" >
+        <template #tableTemplate let-tableinfo>
+            <tr *ngFor="let trow of tableinfo.dataList;let i = index;" (click)="choose(trow)" [class.selected]="trow === rule">
+                <td width="5%">{{i + 1}}</td>
+                <td width="20%">{{trow.drugId}}</td>
+                <!--<td width="15%">{{trow.productId}}</td>-->
+                <td [innerHTML]="trow.branch"></td>
+                <td width="6%">{{trow.applyType == 1 ? '药品' : '产品'}}</td>
+                <td width="6%">{{trow.userRuleStatus == 0 ? '已审核' : (trow.userRuleStatus == 1 ? '未审核' : '未定义')}}</td>
+                <td width="10%">{{trow.userLastUserid}}</td>
+                <td width="14%">{{trow.userLastAudtime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                <td width="7%"><a (click)="goEdit(trow)">查看规则</a></td>
+            </tr>
+        </template>
+    </my-table>
+</div>
+
+
+

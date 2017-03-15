@@ -1,0 +1,96 @@
+<div class="pw-edit-header">
+    <div style="float: right;">
+        <button class="btn btn-primary" (click)="saveDrugMatch()">保存</button>
+        <button class="btn btn-default" (click)="cancel()">取消</button>
+    </div>
+    <h3>药品配伍关系设置</h3>
+</div>
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-md-2 control-label">药品A：</label>
+        <div class="col-md-10 form-inline">
+            <input type="text" class="form-control input-sm" [(ngModel)]="pwInfo.drug1" placeholder="请选择药品" readonly>
+            <button class="btn btn-primary btn-sm" (click)="getDrugs(0)">点击选择</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">药品B：</label>
+        <div class="col-md-10 form-inline">
+            <input type="text" class="form-control input-sm" [(ngModel)]="pwInfo.drug2" placeholder="请选择药品" readonly>
+            <button class="btn btn-primary btn-sm" (click)="getDrugs(1)">点击选择</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">配伍标识：</label>
+        <div class="col-md-10 form-inline">
+            <select class="form-control" [ngModel]="pwInfo.pwMessageDto.flag" (change)="setPwLevel(pwSel.value)" #pwSel>
+                <option *ngFor="let pwItem of pwList" value={{pwItem.flag}}>{{pwItem.flag}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">配伍警示信息：</label>
+        <div class="col-md-10">
+            <input type="text" class="form-control input-sm col-md-10" [ngModel]="pwInfo.pwMessageDto.message" readonly>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">警示级别：</label>
+        <div class="col-md-10 form-inline">
+            <input type="text" class="form-control input-sm" [ngModel]="pwInfo.pwMessageDto.level" readonly>
+        </div>
+    </div>
+</div>
+
+<!--关联药品-->
+<!--<div class="wrapper-gray66" *ngIf="isShowDrugTree">
+    <div class="pw-dt-drugChoosen">
+        <div class="pw-dt-header">
+            <h3><a href="javascript:;" (click)="quitChoose()">x</a>双击选择关联药品</h3>
+        </div>
+        <div class="pw-dt-content">
+            <div class="pw-dt-slide">
+                <div class="form-group form-inline">
+                    <label for="">药品名称：</label><input type="text" class="form-control" [(ngModel)]="searchWord">
+                    <button class="btn btn-primary" (click)="getByValue()" style="margin-left:10px;">搜索</button>
+                </div>
+                <div class="tree-content">
+                    <h3 *ngIf="noResult">暂无药品</h3>
+                    <Tree #tree class="my-tree" [nodes]="nodes" [options]="options"></Tree>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+<div class="container" *ngIf="isShowDrugTree">
+    <div id="mymodel" class="singletree">
+        <div class="model-header">
+            双击选择关联药品
+        </div>
+        <div class="model-content">
+            <div class="search-panel form-inline mb15">
+                <div class="form-group">
+                    <label class="control-label">药品名称：</label>
+                    <div class="input-group">
+                        <div class="input-group-addon"></div>
+                        <input class="form-control" type="text" placeholder="请输入关键字" [(ngModel)]="searchWord">
+                    </div>
+                    <button class="btn btn-primary" (click)="getByValue()" style="margin-left:10px;">搜索</button>
+                </div>
+            </div>
+            <div class="singletree-container">
+                <h3 *ngIf="noResult">暂无药品</h3>
+                <Tree #tree class="my-tree" [nodes]="nodes" [options]="options" (onActivate)="chooseDrug($event)"></Tree>
+            </div>
+            <div class="btn-panel mt10">
+                <button type="submit" class="btn btn-default" (click)="close()">取消</button>
+                <button type="submit" class="btn btn-primary" (click)="saveChoose()">确定</button>
+            </div>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade"></div>
+</div>
+
+
+<my-dialog></my-dialog>

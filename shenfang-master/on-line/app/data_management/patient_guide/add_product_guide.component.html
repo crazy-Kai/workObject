@@ -1,0 +1,65 @@
+<!--添加产品相关指导获得产品列表-->
+
+<!--<div class="single-margin relative full-height">
+    <div class="gray-border bg-white single-padding">
+        <div class="gray-underline">
+            <label>药品名称:</label><input type="text" [(ngModel)]="productName">
+            <label>生产厂家:</label><input type="text" [(ngModel)]="producerName">
+            <button (click)="search()">搜索</button>
+        </div>
+        <my-table [table]="table" (onDblClick)="onDblClick($event)" (getCurrentPage)="getCurrentPage($event)"></my-table>
+    </div>
+
+
+</div>-->
+<my-dialog></my-dialog>
+
+<div class="container">
+    <div class="modal" style="display:block;">
+        <!-- 隐藏class fade-->
+        <div class="modal-dialog" style="width: 1000px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">
+                        <span (click)="close()">x</span>
+                        <span class="sr-only" (click)="close()">关闭</span>
+                    </button>
+                    <h4 class="modal-title">知识管理平台</h4>
+                </div>
+                <div class="modal-body" style="overflow-y: scroll; max-height: 500px;">
+                    <div class="form-inline content-search gray-underline" *ngIf="!isGuideList">
+                        <div class="form-group">
+                            <label class="control-label">药品名称：</label>
+                            <input type="text" class="form-control input-sm" name="productName" [(ngModel)]="productName">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">生产厂家</label>
+                            <input type="text" class="form-control input-sm" name="producerName" [(ngModel)]="producerName">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-sm" (click)="search()">搜索</button>
+                        </div>
+                    </div>
+                    <div class="form-inline content-search gray-underline" *ngIf="isGuideList">
+                        <div class="form-group">
+                            <label class="control-label">药品/产品名称：</label>
+                            <input type="text" class="form-control input-sm" name="productName" [(ngModel)]="productName">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-sm"  (click)="search()">搜索</button>
+                        </div>
+                    </div>
+                    <div id="dragDiv"></div>
+                    <div style="max-height:650px;">
+                        <my-table [table]="table" (onDblClick)="onDblClick($event)" (onClick)="onClick($event)" (getCurrentPage)="getCurrentPage($event)"></my-table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" (click)="close()">关闭</button>
+                    <button class="btn btn-primary" (click)="addProduct()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade"></div>
+</div>

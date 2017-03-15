@@ -1,0 +1,38 @@
+<div class="pw-edit-header">
+    <div style="float: right;">
+        <button class="btn btn-primary" (click)="savePwDic()">保存</button>
+        <button class="btn btn-default" (click)="cancel()">取消</button>
+    </div>
+    <h3>配伍标志字典</h3>
+</div>
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-md-2 control-label">配伍标识：</label>
+        <div class="col-md-10 form-inline">
+            <input type="text" class="form-control input-sm" [(ngModel)]="pwInfo.flag" readonly>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">配伍警示信息：</label>
+        <div class="col-md-10">
+            <input type="text" class="form-control input-sm" [(ngModel)]="pwInfo.message">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">警示级别：</label>
+        <div class="col-md-10 form-inline">
+            <select class="form-control" [(ngModel)]="pwInfo.level">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+            </select>
+        </div>
+    </div>
+</div>
+<my-dialog></my-dialog>

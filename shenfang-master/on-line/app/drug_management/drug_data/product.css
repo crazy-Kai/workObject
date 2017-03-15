@@ -1,0 +1,124 @@
+.dialog-info{
+    height:400px;
+}
+
+.jix-info{
+    margin: 10px;
+    height: 400px;
+}
+.m-info-layout{
+    height: 350px;
+    overflow-y: auto;
+}
+
+.dialog-template{
+    background: white;
+    border: 1px solid #000;
+    position: fixed;
+    width:1000px;
+    left: 50%;
+    margin-left: -500px;
+    top: 20%;
+    z-index: 10002;
+    overflow-y: auto;
+}
+.row{
+    margin:5px 0px;
+}
+.detail-footer{
+    position: fixed;
+    bottom: 0px;
+    background: white;
+    width: 80%;
+    text-align: center;
+    padding: 5px 0px;
+}
+
+/*产品管理*/
+.product-management{
+    position: absolute;left: 0;top: 0;right: 0;bottom: 0;
+    overflow: hidden;
+    margin: 0 10px;
+}
+.product-management .search-panel{
+    padding: 5px;padding-bottom: 0;
+    border: 1px solid #ddd;
+}
+.product-management .search-panel > div{
+    width: 20%;float: left;
+    height: 30px;margin-bottom: 5px;
+}
+.product-management .search-panel label{
+    width: 80px;margin: 0;
+    text-align: right;line-height: 30px;
+    font-size: 13px;
+}
+.product-management .search-panel input{
+    padding: 0 5px;height: 30px;
+    -webkit-box-flex:1;-moz-box-flex:1;-webkit-flex:1 1 0;flex:1 1 0;overflow: hidden;
+}
+.product-management .search-panel select{
+    padding: 0 5px;height: 30px;
+}
+.product-management .search-panel button{
+    margin-left: 10px;
+}
+
+.product-management .quick-handler{
+    margin-bottom: 10px;
+}
+.product-management .quick-handler:after{
+    content: " ";display: block;visibility: hidden;clear: both;
+}
+.product-management .quick-handler button{
+    float: right;margin-left: 10px;
+}
+
+.product-list{}
+.product-list th, .product-list td{
+    padding: 7px;
+}
+.product-list tr.checked{
+    background: #e3f2ff;
+}
+.product-list .minor-prop{
+    padding: 5px;
+    background: #eee;
+    font-size: 12px!important;
+}
+.product-list .minor-prop li{
+    padding: 0 5px;
+    word-break:break-all;word-wrap:break-word;
+    color: #000;
+}
+.product-list .minor-prop li span{
+    color: #666;
+}
+/*.product-list a{
+    color: #286090;
+}*/
+.product-list a.undo{
+    color: #f00;cursor: default;
+}
+
+#productManage .modal-dialog{
+    width: 300px;
+}
+#productManage .modal-header{
+    font-size: 16px;
+}
+#productManage .modal-dialog .close:hover{
+    color: #f00;
+}
+
+/*回收日志*/
+.maintainlogs{
+    margin: 0 10px;
+}
+.maintainlogs-search-bar{
+    margin-bottom: 10px;
+}
+.maintainlogs-search-bar h3{
+    margin: 0;padding: 0;
+    margin-bottom: 10px;
+}

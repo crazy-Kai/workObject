@@ -1,0 +1,83 @@
+<div class="knowledges-lib-log-list lib-release-log">
+    <div class="headline">
+        <h3>知识库发布（发布日志）</h3>
+    </div>
+    <div class="basic-info">
+        <div class="form-inline knowledges-search-bar" fole="form">
+            <div class="form-group">
+                <label>知识库发布ID：</label>
+                <input [(ngModel)]="publishId" />
+            </div>
+
+            <div class="form-group">
+                <label>提交发布时间：</label>
+                <input ngbDatepicker name="fromPublishedTime" class="form-control timeipt input-sm" placeholder="yyyy-mm-dd"
+                    #fromPublishedTime="ngbDatepicker" (click)="fromPublishedTime.toggle();" 
+                    [(ngModel)]="startPublishedDate" (ngModelChange)="datePickerChange($event, fromPublishedTime)"
+                />
+            </div>
+            <div class="form-group">
+                <label>-</label>
+                <input ngbDatepicker name="toPublishedTime" class="form-control timeipt input-sm" placeholder="yyyy-mm-dd" 
+                    #toPublishedTime="ngbDatepicker" (click)="toPublishedTime.toggle();"
+                    [(ngModel)]="endPublishedDate" (ngModelChange)="datePickerChange($event, toPublishedTime)"
+                />
+            </div>
+
+            <div class="form-group">
+                <label>审核发布时间：</label>
+                <input ngbDatepicker name="fromAuditedTime" class="form-control timeipt input-sm" placeholder="yyyy-mm-dd"
+                    #fromAuditedTime="ngbDatepicker" (click)="fromAuditedTime.toggle();"
+                    [(ngModel)]="startAuditedDate" (ngModelChange)="datePickerChange($event, fromAuditedTime)" 
+                   
+                />
+            </div>
+            <div class="form-group">
+                <label>-</label>
+                <input ngbDatepicker name="toAuditedTime" class="form-control timeipt input-sm" placeholder="yyyy-mm-dd"
+                    #toAuditedTime="ngbDatepicker" (click)="toAuditedTime.toggle();"
+                    [(ngModel)]="endAuditedDate" (ngModelChange)="datePickerChange($event, toAuditedTime)"
+                />
+            </div>
+
+            <div class="form-group">
+                <label>审核人：</label>
+                <input [(ngModel)]="auditedByName" />
+            </div>
+
+            <div class="form-group">
+                <label>审核发布结果：</label>
+                <select name="auditedStatus" [(ngModel)]="auditedStatus">
+                    <option value="105" selected="selected">全部</option>
+                    <option value="101">待审核</option>
+                    <option value="103">审核通过</option>
+                    <option value="104">审核不通过</option>
+                </select>
+            </div>
+
+             <div class="form-group">
+                <button class="btn btn-primary btn-sm" (click)="queryPublishLog();">搜索</button>
+            </div>
+            
+        </div>
+    </div>
+
+    <my-table [table]="knowledgeLibPublishLogListTable">
+        <template #tableTemplate let-tableinfo>
+            <tr *ngFor="let trow of tableinfo.dataList; let i = index;" 
+            >
+            <!--(click)="choosedLogRow = trow" [class.selected]="trow === choosedLogRow"-->
+                <td width="5%">{{i + 1}}</td>
+                <td width="12%">{{trow.id}}</td>
+                <td width="10%">{{trow.publishedTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                <td width="10%">{{trow.publishedName}}</td>
+                <td width="16%">{{trow.publishContent}}</td>
+                <td width="17%">{{trow.confirmInfo}}</td>
+                <td width="10%">{{trow.auditedTime | date:"yyyy-MM-dd HH:mm:ss" }}</td>
+                <td width="10%">{{trow.auditedName}}</td>
+                <td width="10%">{{ publishedStatusMap[trow.status]}}</td>
+            </tr>
+        </template>
+    </my-table>
+</div>
+<my-dialog></my-dialog>

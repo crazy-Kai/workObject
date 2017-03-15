@@ -1,0 +1,62 @@
+<style>
+	.control-label{font-weight: 500;text-align: right;}
+	.control-label em{color: #f00;padding: 0 5px;}
+	.single-margin{margin: 5px;}
+	.left{margin-right: 10px;}
+	.form-horizontal .form-group{margin-left: 0;margin-right: 0;}
+</style>
+<div class="flex flexbox column">
+	<!-- 疾病分类管理 -->
+	<form class="single-margin gray-border bg-white single-padding" (ngSubmit)="search()">
+		<label>分类名称:</label> <input type="text" name="searchText" [(ngModel)]="searchService.diseaseCategoryName">
+		<button  class="btn btn-sm btn-primary" type="submit" >搜索</button>
+		<!--<label>分类编号:</label> <input type="text" name="searchText" [(ngModel)]="searchService.diseaseCategoryCode">-->
+	</form>
+
+	<div class="single-margin gray-border bg-white single-padding">
+		<button  class="btn btn-sm btn-primary" (click)="addChildCategory()">添加子分类</button>
+		<button  class="btn btn-sm btn-danger" (click)="delete()">删除</button>
+	</div>
+
+	<div class="single-margin relative flex1 flex" style="overflow:auto">
+		<div class="gray-border bg-white left single-padding" style="overflow:auto">
+			<Tree #tree [nodes]="nodes" [options]="options" (onActivate)="onClickDictionaryData($event)"></Tree>
+		</div>
+		<div class="gray-border bg-white flex1 single-padding">
+			<div>
+				<div class="gray-underline">
+					<button  class="btn btn-sm btn-primary" type="button" (click)="saveDisease()">保存</button>
+				</div>
+				<div class="row-group2 relative">
+					<div class="form-group" *ngIf="isAddCategory">
+						<label class="col-md-3 control-label">层级关系：</label>
+						<div class="form-inline">
+							<label for="bro" class="radio-inline"><input type="radio" id="bro" name="level" (click)="clickBrother()" [checked]="diseaseData.addChildren==false" value="false">兄弟</label>
+							<label for="sub" class="radio-inline"><input type="radio" id="sub" name="level" (click)="diseaseData.addChildren=true;" [checked]="diseaseData.addChildren==true" value="true">下级</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">疾病编码：</label>
+						<div class="form-inline">
+							<input type="text" class="form-control input-sm" name="code" [(ngModel)]="diseaseData.code" [readonly]="!isAddCategory">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label"><em>*</em>分类名称：</label>
+						<div class="form-inline">
+							<textarea class="form-control" rows="4" name="name" [(ngModel)]="diseaseData.dictValue"></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">分类编码：</label>
+						<div class="form-inline">
+							<input type="text" class="form-control input-sm" name="categoryCode" [(ngModel)]="diseaseData.categoryCode">
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<my-dialog></my-dialog>

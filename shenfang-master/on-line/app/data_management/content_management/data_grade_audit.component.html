@@ -1,0 +1,44 @@
+<button class="btn btn-sm btn-primary" (click)="back()">返回</button>
+<div class="m-hr"></div>
+<div><label>资料名称：</label>{{docInfo.docName}}</div>
+<div><label>关联药品：</label>{{drugService.backDrugName}}</div>
+<div><label>作者：</label>{{docInfo.sourceFrom}}</div>
+<div><label>发表期刊：</label>{{dataDetailService.periodicalName}}</div>
+<div><label>年，卷(期)：</label>{{docInfo.yearVolume}}</div>
+<div><label>页码：</label>{{docInfo.numPage}}</div>
+<div><label>关联科室：</label>{{docInfo.provenance}}</div>
+<div><label>关键词：</label>{{docInfo.keyWord}}</div>
+<div><label>摘要：</label><span [innerHtml]="docInfo.content"></span></div>
+
+
+<div>
+    <label>文献类型：{{gradeTypes[literatureType]}}</label>
+</div>
+<div *ngIf="!isAudit">
+    <label>评分：</label>
+    <input [ngModel]="auditScore" readonly>
+    <button class="btn btn-sm btn-primary" (click)="showMessage()">评分详情</button>
+</div>
+<div *ngIf="isAudit">
+    <div><label>1号评分人结果：</label>{{scoreService.ScoreLevel_1}}</div>
+    <div><label>2号评分人结果：</label>{{scoreService.ScoreLevel_2}}</div>
+    <div *ngIf="scoreService.ScoreLevel_1!=scoreService.ScoreLevel_2">
+        <div *ngIf="scoreService.ScoreLevel"><label>审核结果：</label>{{scoreService.ScoreLevel}}</div>
+        <div *ngIf="!scoreService.ScoreLevel"><label>审核状态：</label>
+            <span>两评分人结果不一致，待审核</span>
+
+            <div><label>审核结果：</label>
+                <input readonly></div>
+            <button (click)="showMessage()">点击审核</button>
+        </div>
+    </div>
+    <div *ngIf="scoreService.ScoreLevel_1==scoreService.ScoreLevel_2">
+        <div><label>审核状态：</label>
+            <span>已审核</span>
+        </div>
+        <div><label>审核结果：</label>两评分人结果一致，已自动审核</div>
+    </div>
+</div>
+
+<!--<my-dialog [title]="gradeTitle"></my-dialog>-->
+<data-grade-audit-content [literatureType]="literatureType" [handler]='handler' [isAudited]='isAudited' [isShowMessage]='isShowMessage' (setScore)="getScore($event)" (onClose)="onClose()"></data-grade-audit-content>

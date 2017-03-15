@@ -1,0 +1,84 @@
+<div class="export-package-home" [hidden]="isExport">
+    <div class="">
+        <h3 class="title">基础知识更新包数据来源<span>（注：本页面只展示最新的知识库更新情况，导出记录请到具体的下载页面查看）</span></h3>
+        <table class="last-update-table">
+            <tr>
+                <th>知识库发布ID</th>
+                <th>提交发布时间</th>
+                <th>提交发布人</th>
+                <th>本次发布更新内容</th>
+                <th>审核发布时间</th>
+                <th>审核发布人</th>
+            </tr>
+            <tr>
+                <td>{{latestSucess.id}}</td>
+                <td>{{latestSucess.publishedTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                <td>{{latestSucess.publishedName}}</td>
+                <td>{{latestSucess.confirmInfo}}</td>
+                <td>{{latestSucess.auditedTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                <td>{{latestSucess.auditedName}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="">
+        <h3 class="title">导出更新包<span>（注：请选择所需医院，导出更新包）</span></h3>
+        <div class="">
+            <div class="search-panel form-inline mb15">
+                <div class="form-group">
+                    <label class="control-label">机构名称：</label>
+                    <input class="form-control" type="text" placeholder="请输入关键字" [(ngModel)]="searchQuery.name">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">区域：</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" [(ngModel)]="hosName"placeholder="点击选择区域" (click)=" this.isHideDialog = false;this.checkedArea = null;" readonly>
+                        <a class="input-group-addon" *ngIf="hosName" (click)="resetRegion()">x</a>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" (click)="search(true)">搜索</button>
+            </div>
+            <my-table [table]="table" >
+            <template #tableTemplate let-tableinfo>
+                <tr *ngFor="let trow of tableinfo.dataList;let i = index;" (click)="onClick(trow)" [class.checked]="trow == curOrg">
+                    <td>{{i + 1}}</td>
+                    <td>{{trow.name}}</td>
+                    <td>{{trow.level}}</td>
+                    <td>{{trow.area}}</td>
+                    <td>{{trow.currentStatus}}</td>
+                    <td>{{trow.implementTime | date:"yyyy-MM-dd"}}</td>
+                    <td>{{trow.onlineTime | date:"yyyy-MM-dd"}}</td>
+                    <td>{{trow.checkTime | date:"yyyy-MM-dd"}}</td>
+                    <td>{{trow.updateTime | date:"yyyy-MM-dd"}}</td>
+                    <td><a (click)="goExport(trow)">导出更新包</a></td>
+                </tr>
+            </template>
+        </my-table>
+        </div>
+    </div>
+</div>
+<div class="container" *ngIf="!isHideDialog">
+    <div class="modal" style="display:block;">
+        <!-- 隐藏class fade-->
+        <div class="modal-dialog" style="z-index: 1050;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">
+                    <span (click)="isHideDialog = true">x</span>
+                    <span class="sr-only" (click)="isHideDialog = true">关闭</span>
+                </button>
+                    <h4 class="modal-title">区域选择</h4>
+                </div>
+                <div class="modal-body" style="max-height: 500px;overflow-y: auto;">
+                    <Tree #tree [nodes]="regionGroup" [options]="optionsRegion" (onActivate)="getRegionNodeData($event)"></Tree>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" (click)="isHideDialog = true">关闭</button>
+                    <button class="btn btn-primary" (click)="onSubmit()">提交</button>
+                </div>
+            </div>
+        </div>
+        <div class="in modal-backdrop fade"></div>
+    </div>
+</div>
+<my-dialog></my-dialog>
+<export-package [org]="curOrg" [dateToTime]="latestSucess.publishedTime" (destoryComponent)="desSubComponent($event)" *ngIf="isExport"></export-package>

@@ -1,0 +1,283 @@
+<!--添加药品detail-->
+
+<div class="bg-white single-padding">
+    <div class="tb-single-margin">
+        <input type="text" placeholder="审核人" [(ngModel)]="auditByModel" [ngbTypeahead]="searchAuditBy" [resultTemplate]="searchAuditByTemplate" [inputFormatter]="searchAuditByFormatter" />
+        <template #searchAuditByTemplate let-r="result" let-t="term">
+            {{ r.realname}}
+        </template>
+        <button class="ng-saveDrugInfo btn btn-sm btn-primary" *ngIf="params=='false'" type="submit" (click)="onSubmit()">保存</button>
+        <button class="btn btn-sm btn-primary" *ngIf="params=='true'" type="button" (click)="auditSubmit()">保存并审核</button>
+        <button class="btn btn-sm btn-danger" (click)="onCancel()" type="button">取消</button>
+    </div>
+    <div class="tab ">
+        <a (click)="goToTab(1)" [class.active]="selectedTab==1">指导信息</a>
+        <a (click)="goToTab(2)" [class.active]="selectedTab==2">前台预设</a>
+        <a (click)="goToTab(3)" [class.active]="selectedTab==3">给药时间设置</a>
+    </div>
+    <hr class="gray-line">
+
+    <div>
+        <div [hidden]="selectedTab!==1">
+            <div class="">
+                <div class="drugInfo">
+                    <div class="tb-single-margin">
+                        <label for="">药品：</label>{{nodeName}}<a style="margin-left:10px;" (click)="chooseBaseDrugDialog()">获取已有指导单</a></div>
+                    <div class="tb-single-margin">
+                        <label for="">常用商品名：</label>
+                        <span *ngFor="let name of goodsname;let i = index">
+                            <span *ngIf="i!=0">、</span>{{name}}
+                        </span>
+                    </div>
+                    <div class="tb-single-margin top-ver-align">
+                        <label for="">本药是什么：</label>
+                        <div [hidden]="isDrugDes" row="3" (click)="getEditor(drugDes.id)" [innerHtml]="des.drugDes" class="textarea-div"></div>
+                        <textarea #drugDes [hidden]="!isDrugDes" row="3" id="ue-drug-des"></textarea>
+                    </div>
+                </div>
+
+                <div class="ng-drugNote-1 block-textarea">
+                    <div class="ng-drugTitle part-title">用药前需要注意些什么。（参照Carenotes、说明书）</div>
+                    <div class="tb-single-margin top-ver-align">
+                        <label for="">在哪些情况下不能使用本药：</label>
+                        <div [hidden]="isForbiddenUseDrugDes" row="3" (click)="getEditor(forbiddenUseDrugDes.id)" [innerHtml]="des.forbiddenUseDrugDes"
+                            class="textarea-div"></div>
+                        <textarea [hidden]="!isForbiddenUseDrugDes" #forbiddenUseDrugDes row="3" id="ue-forbidden-use-drug-des"></textarea>
+                    </div>
+                    <div class="tb-single-margin">
+                        <label for="">哪些药物会影响本药的作用：</label><span class="icon-add" (click)="addPatientDrugInfluence()">+</span>
+                        <table class="table-input">
+                            <thead>
+                                <tr>
+                                    <th>类别</th>
+                                    <th>药物</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let item of patientDrugInfluenceDto;let i = index">
+                                <tr>
+                                    <td><input [(ngModel)]="item.drugCategory"></td>
+                                    <td><input [(ngModel)]="item.drugNames"></td>
+                                    <td (click)="deleteFromTable('influenceId',patientDrugInfluenceDto,i)">删除</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <div [hidden]="isRecentSituation" row="3" (click)="getEditor(recentSituation.id)" [innerHtml]="des.recentSituation" class="textarea-div"></div>
+                        <textarea [hidden]="!isRecentSituation" #recentSituation id="ue-recent-situation" row="2" placeholder="请给您的医生一份您正在服用的所有药品、草药、非处方药或其他保健品的清单。若您吸烟、喝酒也请告诉医生。"
+                            [(ngModel)]="des.recentSituation"></textarea>
+                    </div>
+                </div>
+
+                <div class="ng-drugNote-2 block-textarea">
+                    <div class="ng-drugTitle part-title">用药时需要了解什么。（参照Carenotes、说明书）</div>
+                    <div class="tb-single-margin">
+                        <label for="">使用方法：</label>
+                        <div [hidden]="isUseMethod" row="3" (click)="getEditor(useMethod.id)" [innerHtml]="des.useMethod" class="textarea-div"></div>
+                        <textarea [hidden]="!isUseMethod" #useMethod row="3" id="ue-use-method" [(ngModel)]="des.useMethod"></textarea>
+                    </div>
+                    <div class="tb-single-margin">
+                        <label for="">{{misstake}}</label>
+                        <div [hidden]="isMissTakeDeal" row="3" (click)="getEditor(missTakeDeal.id)" [innerHtml]="des.missTakeDeal" class="textarea-div"></div>
+                        <textarea [hidden]="!isMissTakeDeal" #missTakeDeal row="3" id="ue-miss-take-deal" [(ngModel)]="des.missTakeDeal"></textarea>
+                    </div>
+                    <div class="tb-single-margin">
+                        <label for="">注意事项：</label>
+                        <div [hidden]="isAttention" row="3" (click)="getEditor(attention.id)" [innerHtml]="des.attention" class="textarea-div"></div>
+                        <textarea [hidden]="!isAttention" #attention row="3" id="ue-attention" [(ngModel)]="des.attention"></textarea>
+                    </div>
+                </div>
+
+                <div class="ng-drugNote-3 ">
+                    <div class="ng-drugTitle part-title">用药后需要了解什么。（参照Carenotes、说明书）</div>
+                    <div class="tb-single-margin">
+                        <label for="">副作用：</label><span class="icon-add" (click)="addPatientDrugEffectDto()">+</span>
+                        <table class="table-input">
+                            <thead>
+                                <tr>
+                                    <th>严重程度</th>
+                                    <th>症状</th>
+                                    <th>解决方法</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let item of patientDrugEffectDto;let i = index">
+                                <tr>
+                                    <td>
+                                        <select [(ngModel)]="item.level" #drugEffectDto (change)="setDefaultEffectLevelText(i,drugEffectDto.value)">
+                                            <option value="较重">较重</option>
+                                            <option value="较轻">较轻</option>
+                                        </select>
+                                    </td>
+                                    <td><textarea [(ngModel)]="item.symptom" placeholder="不同的症状请用分号隔开"></textarea></td>
+                                    <td><textarea [(ngModel)]="item.solution"></textarea></td>
+                                    <td (click)="deleteFromTable('effectId',patientDrugEffectDto,i)">删除</td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <div class="tb-single-margin block-textarea">
+                        <div [hidden]="isOtherEffect" row="3" (click)="getEditor(otherEffect.id)" [innerHtml]="des.otherEffect" class="textarea-div"></div>
+                        <textarea [hidden]="!isOtherEffect" #otherEffect row="3" id="ue-other-effect" [(ngModel)]="des.otherEffect"></textarea>
+                    </div>
+                    <div class="tb-single-margin block-textarea">
+                        <label for="">请关注病情变化：</label>
+                        <div [hidden]="isCenditionChange" row="3" (click)="getEditor(cenditionChange.id)" [innerHtml]="des.cenditionChange" class="textarea-div"></div>
+                        <textarea [hidden]="!isCenditionChange" #cenditionChange row="3" id="ue-cendition-change" [(ngModel)]="des.cenditionChange"></textarea>
+                    </div>
+                </div>
+
+                <div class="ng-drugNote-4 block-textarea">
+                    <div class="ng-drugTitle part-title">儿童、孕妇、哺乳期妇女等特殊人群用药需要注意哪些问题。（参照Carenotes、说明书）</div>
+                    <div class="tb-single-margin">
+                        <label for="">儿童：</label>
+                        <div [hidden]="isChildrenAttention" row="3" (click)="getEditor(childrenAttention.id)" [innerHtml]="des.childrenAttention"
+                            class="textarea-div"></div>
+                        <textarea [hidden]="!isChildrenAttention" #childrenAttention row="3" id="ue-children-attention" [(ngModel)]="des.childrenAttention"></textarea>
+                    </div>
+                    <div class="tb-single-margin">
+                        <label for="">备孕期：</label>
+                        <div [hidden]="isGetGestationAttention" row="3" (click)="getEditor(getGestationAttention.id)" [innerHtml]="des.getGestationAttention"
+                            class="textarea-div"></div>
+                        <textarea [hidden]="!isGetGestationAttention" #getGestationAttention row="3" id="ue-get-gestation-attention" [(ngModel)]="des.getGestationAttention"></textarea>
+                    </div>
+                    <div class="tb-single-margin">
+                        <label for="">孕期：</label>
+                        <div [hidden]="isGestationAttention" row="3" (click)="getEditor(gestationAttention.id)" [innerHtml]="des.gestationAttention"
+                            class="textarea-div"></div>
+                        <textarea [hidden]="!isGestationAttention" #gestationAttention row="3" id="ue-gestation-attention" [(ngModel)]="des.gestationAttention"></textarea>
+                    </div>
+                    <div class="tb-single-margin">
+                        <label for="">运动员：</label>
+                        <div [hidden]="isAthleteAttention" row="3" (click)="getEditor(athleteAttention.id)" [innerHtml]="des.athleteAttention" class="textarea-div"></div>
+                        <textarea [hidden]="!isAthleteAttention" #athleteAttention row="3" id="ue-athlete-attention" [(ngModel)]="des.athleteAttention"></textarea>
+                    </div>
+                    <div class="tb-single-margin">
+                        <label for="">哺乳期：</label>
+                        <div [hidden]="isLactationAttention" row="3" (click)="getEditor(lactationAttention.id)" [innerHtml]="des.lactationAttention"
+                            class="textarea-div"></div>
+                        <textarea [hidden]="!isLactationAttention" #lactationAttention row="3" id="ue-lactation-attention" [(ngModel)]="des.lactationAttention"></textarea>
+                    </div>
+                    <div class="tb-single-margin">
+                        <label for="">手术：</label>
+                        <div [hidden]="isOperationAttention" row="3" (click)="getEditor(operationAttention.id)" [innerHtml]="des.operationAttention"
+                            class="textarea-div"></div>
+                        <textarea [hidden]="!isOperationAttention" #operationAttention row="3" id="ue-operation-attention" [(ngModel)]="des.operationAttention"></textarea>
+                    </div>
+                    <div class="tb-single-margin">
+                        <label for="">遗传：</label>
+                        <div [hidden]="isHeredityAttention" row="3" (click)="getEditor(heredityAttention.id)" [innerHtml]="des.heredityAttention"
+                            class="textarea-div"></div>
+                        <textarea [hidden]="!isHeredityAttention" #heredityAttention row="3" id="ue-heredity-attention" [(ngModel)]="des.heredityAttention"></textarea>
+                    </div>
+                    <div class="tb-single-margin">
+                        <label for="">其他：</label>
+                        <div [hidden]="isOtherAttention" row="3" (click)="getEditor(otherAttention.id)" [innerHtml]="des.otherAttention" class="textarea-div"></div>
+                        <textarea [hidden]="!isOtherAttention" #otherAttention row="3" id="ue-other-attention" [(ngModel)]="des.otherAttention"></textarea>
+                    </div>
+                </div>
+
+                <div class="ng-drugNote-5 ">
+                    <div class="ng-drugTitle part-title">贮藏方法：（参照Carenotes、说明书）</div>
+                    <div class="tb-single-margin">
+                        <label for="">温度：</label>
+                        <!--<input type="number" [(ngModel)]="patientDrugStorageDto.startTemperature">——
+                        <input type="number" [(ngModel)]="patientDrugStorageDto.endTemperature">℃-->
+                        <input [(ngModel)]="patientDrugStorageDto.temperature" placeholder="例：常温">
+                    </div>
+                    <!--<div class="tb-single-margin">
+                        <label for="">容器：</label>
+                        <select [(ngModel)]="containerOtherText" #container>
+                        <option *ngFor="let item of Container"  [value]="item.value" >{{item.value}}</option>
+                    </select><input *ngIf="container.value == '其他'" [(ngModel)]="patientDrugStorageDto.container">
+                    </div>-->
+                    <div class="tb-single-margin">
+                        <label for="">光线：</label>
+                        <select [(ngModel)]="lightOtherText" #light>
+                            <option *ngFor="let item of Light"  [value]="item.value"  [title]="item.title">{{item.value}}</option>
+                        </select>
+                        <input *ngIf="light.value == '其他'" [(ngModel)]="patientDrugStorageDto.light">
+                    </div>
+                    <div class="tb-single-margin">
+                        <label for="">湿度：</label>
+                        <select [(ngModel)]="humidityOtherText" #humidity>
+                            <option *ngFor="let item of Humidity"  [value]="item.value">{{item.value}}</option>
+                        </select>
+                        <input *ngIf="humidity.value == '其他'" [(ngModel)]="patientDrugStorageDto.humidity">
+                    </div>
+                    <div class="tb-single-margin">
+                        <label for="">空间：</label>
+                        <select [(ngModel)]="environmentOtherText" #environment>
+                            <option *ngFor="let item of Environment"  [value]="item.value"  [title]="item.title">{{item.value}}</option>       
+                        </select>
+                        <input *ngIf="environment.value == '其他'" [(ngModel)]="patientDrugStorageDto.environment">
+                    </div>
+                    <div class="tb-single-margin">
+                        <label for="">时间：</label>本药开封后, 请在
+                        <!--<select [(ngModel)]="patientDrugStorageDto.life">
+                        <option value="1" >1</option>
+                        <option value="2">2</option>
+                        <option value="7">7</option>
+                        <option value="15">15</option>
+                        <option value="30">30</option>
+                    </select>-->
+                    <input type="number" [(ngModel)]="patientDrugStorageDto.life">天内使用。超过时间未使用完的剩余药品不能再使用，请将剩余药品放入政府统一的药品回收站。
+                    </div>
+                    <div class="tb-single-margin block-textarea">
+                        <div [hidden]="isComment" row="3" (click)="getEditor(comment.id)" [innerHtml]="patientDrugStorageDto.comment" class="textarea-div"></div>
+                        <textarea [hidden]="!isComment" #comment id="ue-comment" row="2" [(ngModel)]="patientDrugStorageDto.comment" placeholder="请将药品存放在小孩拿不到的地方。"
+                            (select)="getText()"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div [hidden]="selectedTab!==2">
+            <div class="">
+                <div class="top-ver-align tb-single-margin">
+                    <label for="">给药途径：</label><span>{{patientDrugGuideDto.takeMethod}}</span>
+                    <div>
+                        <Tree *ngIf="dictionaryGroup" #tree [nodes]="dictionaryGroup" [options]="customTemplateStringOptions" (onActivate)="updateTakeMethod($event)"></Tree>
+                    </div>
+                </div>
+                <label for="">给药计量单位：</label>
+                <select *ngIf="dicOPtionsDose" [(ngModel)]="patientDrugGuideDto.unitCode">
+                    <option  [value]=""></option>
+                    <option *ngFor="let dic of dicOPtionsDose" [value]="dic.code">{{dic.name}}</option>
+                </select>
+            </div>
+        </div>
+
+        <div [hidden]="selectedTab!==3">
+            <button class="" (click)="addOccasion()" class="tb-single-margin">添加给药时机</button>
+            <div *ngFor="let occa of occas;let oci = index">
+                <label>给药时机：</label>
+                <select *ngIf="dicOPtionsTime" [(ngModel)]="occa.takeTiming" (ngModelChange)="setOccaItemInfo(occa)">
+                    <option *ngFor="let dic of dicOPtionsTime" [value]="dic.code" [disabled]="checkDicDisabled(dic.code)">{{dic.name}}</option>
+                </select>
+                <a (click)="deleteUseTimeByGuideId(occa,oci)">删除</a>
+                <div class="row single-padding" *ngFor="let freq of occa.freqs;let fei = index">
+                    <select [(ngModel)]="freq.takeTimes" (ngModelChange)="setTakeTimes(occa,freq)">
+                        <option *ngFor="let opt of occa.options" [value]="opt.code"  [disabled]="checkDisabled(occa,opt.code)">{{opt.name}}</option>
+                    </select>
+                    <span class="row-sec">
+                        <input *ngIf="freq.type === 'text'" type="text" [(ngModel)]="freq.takeFrequencyArr[0]" placeholder="请用顿号隔开" required/>
+                        <div *ngIf="freq.type === 'time'" class="inline-block">
+                            <div *ngFor="let extext of freq.takeFrequencyArr;let exi = index" class="inline-block">
+                                第{{exi+1}}次<input type="time" id="input{{oci}}{{fei}}{{exi}}" [value]="extext" required/>
+                            </div>
+                        </div>
+                        <span class="icon-delete single-margin" (click)="deleteFromTable('useTimeId',occa.freqs,fei,occa)">X</span>
+                    </span>
+                </div>
+                <button class="" (click)="addFrequency(oci)">添加给药频率</button>
+            </div>
+        </div>
+    </div>
+    <my-dialog></my-dialog>
+    <!--<base-drug [isTemplate]="dialogTemplate" (chooseDrug)="chooseDrug($event)" (onClose)="onClose()"></base-drug>-->
+</div>
+<add_product_guide (onDblActivate)="onDblActivate($event)" *ngIf="dialogTemplate" (onClose)="dialogTemplate = false;" [isGuideList]=true></add_product_guide>

@@ -1,0 +1,49 @@
+<div class="flex column flexbox" style="margin: 10px;">
+    <div class="form-inline pw-searchbar search-panel fixed-header">
+        <div class="form-group">
+            <label for="">配伍标识：</label>
+            <select [(ngModel)]="pwFlag" class="form-control input-sm">
+                <option value="default">全部</option>
+                <option *ngFor="let pwItem of pwList" value={{pwItem.messageId}}>{{pwItem.flag}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="">药品A:</label>
+            <input type="text" class="form-control input-sm" [(ngModel)]="drugA" (keyup.enter)="searchInputEntered()">
+        </div>
+        <div class="form-group">
+            <label for="">药品B:</label>
+            <input type="text" class="form-control input-sm" [(ngModel)]="drugB" (keyup.enter)="searchInputEntered()">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-sm" (click)="search()">搜索</button>
+        </div>
+    </div>
+
+    <div class="pw-searchcon">
+        <div class="pw-setting">
+            <a routerLink="drug_match_dictlist">配伍标志字典</a>
+            <a (click)="pwAdd()">+添加</a>
+        </div>
+    </div>
+    
+    <div class="flex1 elastictable">
+        <my-table [table]="table" [isFixedHeader]="true">
+            <template #tableTemplate let-tableinfo>
+                <tr *ngFor="let trow of tableinfo.dataList" (click)="onClick(trow)" [class.selected]="trow === selectedDataList">
+                    <td width="20%">{{trow.drug1}}</td>
+                    <td width="20%">{{trow.drug2}}</td>
+                    <td width="10%">{{trow.pwMessageDto.flag}}</td>
+                    <td width="25%">{{trow.pwMessageDto.message}}</td>
+                    <td width="10%">{{trow.pwMessageDto.level}}</td>
+                    <td width="15%">
+                        <a (click)="pwModify(trow)">修改</a>
+                        |
+                        <a (click)="pwDel(trow)">删除</a>
+                    </td>
+                </tr>
+            </template>
+        </my-table>
+    </div>
+</div>
+<my-dialog></my-dialog>

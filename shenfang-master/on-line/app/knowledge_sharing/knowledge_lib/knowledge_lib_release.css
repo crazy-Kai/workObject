@@ -1,0 +1,32 @@
+.progressbox{
+    width: 72%;
+    vertical-align: middle;
+    margin: auto;
+    display: inline-block;
+}
+.progressbox span{
+    margin: auto;
+    display: inline-block;
+    vertical-align: middle;
+}
+.progress{
+    width: 70%;
+    margin: auto;
+    display: inline-block;
+    vertical-align: middle;
+    border: solid 1px navy;
+}
+
+.progress-bar{
+    overflow: hidden;
+    border: 1px solid saddlebrown;
+    border-radius: 3px;
+    background: green;
+}
+
+.progress-info{
+    margin: auto;
+    display: inline-block;
+    font: bold;
+    color: red;
+}

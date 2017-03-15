@@ -1,0 +1,84 @@
+<div class="spec-m-container">
+    <div [hidden]="handler" class="column spec-m-list" [class.flex]="!handler">
+        <div class="form-inline search-form">
+            <div class="form-group">
+                <label for="">名称：</label>
+                <input type="text" class="form-control input-sm" (keyup.enter)="keyupHandle($event)" [(ngModel)]="name"
+                    [autoSuggestion] (select)="name=$event.name" [url]="drugSuggestionAPI">
+            </div>
+            <div class="form-group">
+                <label for="">厂家:</label>
+                <input type="text" class="form-control input-sm" (keyup.enter)="keyupHandle($event)" [(ngModel)]="producer">
+            </div>
+            <div class="form-group">
+                <label for="">剂型:</label>
+                <input type="text" class="form-control input-sm" (keyup.enter)="keyupHandle($event)" [(ngModel)]="drugForm">
+            </div>
+            <div class="form-group">
+                <label for="">添加人：</label>
+                <!--<input type="text" class="form-control input-sm" (keyup.enter)="keyupHandle($event)" [(ngModel)]="createdBy">-->
+                <input type="text" class="form-control input-sm" (keyup.enter)="keyupHandle($event)" [(ngModel)]="createByModel" [ngbTypeahead]="searchCreateBy"
+                    [resultTemplate]="searchCreatedByTemplate" [inputFormatter]="searchCreateFormatter" />
+                <template #searchCreatedByTemplate let-r="result" let-t="term">
+                    {{ r.realname}}
+                </template>
+            </div>
+            <div class="form-group">
+                <label for="">审核人：</label>
+                <input type="text" class="form-control input-sm" (keyup.enter)="keyupHandle($event)" [(ngModel)]="auditByModel" [ngbTypeahead]="searchAuditBy"
+                    [resultTemplate]="searchAuditByTemplate" [inputFormatter]="searchAuditByFormatter" />
+                <template #searchAuditByTemplate let-r="result" let-t="term">
+                    {{ r.realname}}
+                </template>
+            </div>
+            <div class="form-group">
+                <label for="">状态：</label>
+                <select [(ngModel)]="audit" class="form-control input-sm">
+                    <option value="0">全部</option>
+                    <option value="1">已审核</option>
+                    <option value="2">未审核</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-sm" (click)="search(true)">搜索</button>
+            </div>
+        </div>
+        <div class="result-con flex1 flex column">
+            <div class="btn-group">
+                <button class="btn btn-success" (click)="add()" *ngIf="userService.hasJurisdiction('instruction:post')">添加</button>
+                <button class="btn btn-warning" (click)="modify()" *ngIf="userService.hasJurisdiction('instruction:put')">修改</button>
+                <button class="btn btn-info" (click)="examine()" *ngIf="doExamine && userService.hasJurisdiction('auditInstruction:put')">审核</button>
+                <button class="btn btn-primary" (click)="check()" *ngIf="false">查看</button>
+                <button class="btn btn-danger" (click)="delete()" *ngIf="userService.hasJurisdiction('instruction:delete')">删除</button>
+            </div>
+            <div class="flex1" style="position: relative;">
+                <my-table [table]="table" [isFixedHeader]="true">
+                    <table>
+                        <tbody>
+                            <template #tableTemplate let-tableinfo>
+                                <tr *ngFor="let trow of tableinfo.dataList;let i = index;" (click)="onClick(trow)" (dblclick)="goDetail(trow)" [class.selected]="trow === instruction">
+                                    <td width="4%">{{i + 1}}</td>
+                                    <td width="10%">{{trow.genericName}}</td>
+                                    <td width="10%">{{trow.tradeName}}</td>
+                                    <td width="10%">{{trow.drugSpec}}</td>
+                                    <td width="5%">{{trow.drugForm}}</td>
+                                    <td width="15%">{{trow.producer}}</td>
+                                    <td width="8%">{{trow.approveDate | date:"yyyy-MM-dd"}}</td>
+                                    <td width="5%">{{trow.createdName}}</td>
+                                    <td width="10%">{{trow.createdTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                                    <td width="6%" [class.red]="trow.isAudit == 1" [class.green]="trow.isAudit != 1">{{trow.isAudit == 1 ? "未审核" : "已审核"}}</td>
+                                    <td width="6%" [class.red]="curUser == trow.auditedName">{{trow.auditedName}}</td>
+                                    <td width="10%">{{trow.isAudit == 1 ? "" : trow.auditedTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </my-table>
+            </div>
+            <my-dialog></my-dialog>
+        </div>
+    </div>
+    <specification-edit [instructionId]="instruction.id" [curHandleType]="handler" *ngIf="handler == 'add' || handler == 'modify' || handler =='examine'"
+        (editComplete)="complete($event, 'edit')"></specification-edit>
+        <specification-review [instructionId]="instruction.id" *ngIf="handler =='review'" (reviewComplete)="complete($event, 'review')"></specification-review>
+</div>

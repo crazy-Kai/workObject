@@ -1,0 +1,30 @@
+<div class="container" *ngIf="isShow">
+    <div id="mymodel" class="multitable">
+        <div class="model-header">
+            选择产品
+        </div>
+        <div class="model-content">
+            <div class="search-panel form-inline mb15">
+                <div class="form-group" style="margin:0 5px;">
+                    <label class="control-label">产品名称：</label>
+                    <input class="form-control" type="text" placeholder="请输入关键字" [(ngModel)]="productSearchQuery.productName">
+                </div>
+                <div class="form-group ml-30" style="margin:0 5px;">
+                    <label class="control-label">生产厂家：</label>
+                    <input class="form-control" type="text" placeholder="请输入关键字" [(ngModel)]="productSearchQuery.producerName">
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin:0 5px;" (click)="search()">搜索</button>
+            </div>
+            <div class="multitable-container">
+                <my-table [table]="prodtable" [(oriArrData)]="curNodes" (onCheck)="onCheck($event)"></my-table>        
+            </div>
+        </div>
+        <div class="btn-panel">
+            <button type="submit" class="btn btn-default" (click)="fnClose()">取消</button>
+            <button type="submit" class="btn btn-primary" (click)="fnConfirm()">确定</button>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade"></div>
+</div>
+
+<my-dialog></my-dialog>

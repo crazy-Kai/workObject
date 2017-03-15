@@ -1,0 +1,103 @@
+/*
+* management_group @CSS
+* this module's CSSRule with prefix "mg-"
+*/
+.mg-container{
+    position: absolute;left: 0;top: 0;right: 0;bottom: 0;
+    margin-left: 10px;overflow: hidden;
+}
+.mg-list-module{
+    float:left;border-right:1px solid #e9e9e9;
+    width: 300px;height:100%;
+}
+.mg-list-module .mg-list{
+    margin-top: 10px;
+    border-top: 1px solid #e9e9e9;
+    overflow: auto;
+}
+
+.mg-list-module .mg-list li{
+    display: block;padding:8px 10px;
+    cursor: pointer;
+}
+.mg-list-module .mg-list li:hover{
+    border-left: 2px solid #26A69A;
+    background: #8edc68;
+    box-shadow: 0 0 2px rgba(0, 0, 0, .2)
+}
+.mg-list-module .mg-list li.selected{
+    border-left: 4px solid #26A69A;
+    background: #26a69a;
+}
+
+.mg-handle-module{
+    margin-left: 310px;height: 100%;
+}
+.mg-handle-nav{
+    height: 40px;
+    border-bottom:1px solid #ccc;
+}
+.mg-handle-nav:after{
+    content: ".";display: block;clear:both;visibility: hidden;
+}
+.mg-handle-nav li{
+    float: left;margin-right: 5px;
+    width: 80px;height: 40px;background: #fff;
+    border: 1px solid #ccc;border-top-left-radius: 5px;border-top-right-radius: 5px;
+    text-align: center;line-height: 40px;
+    cursor: pointer;
+}
+.mg-handle-nav li.active{
+    border-bottom: 0;
+}
+.mg-handle-container{
+    position: relative;
+}
+.mg-handle-container .mg-handle-model{
+    position: absolute;left: 0;top: 0;right: 0; bottom: 0;
+    padding-top: 10px;
+}
+.mg-handle-container .mg-handle-model.active{display: block;}
+
+.mg-handle-bar{
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+.mg-handle-content{
+    padding-top: 10px;
+    overflow: auto;
+}
+.mg-handle-content.form-horizontal .form-group{
+    margin-left: 0;margin-right: 0;
+}
+.mg-handle-addform{
+    margin-bottom:10px;
+}
+.mg-handle-addform label{
+    font-weight: 400;margin: 0 20px 0 0;
+}
+.mg-handle-addform input[type='text']{
+    width:200px;height: 26px;padding: 0 5px;
+    border: 1px solid #ccc;
+    line-height: 26px;
+}
+.mg-handle-addform input[type='radio']{
+    vertical-align: -2px;margin-right: 5px;
+}
+.mg-list li a.selected{
+    background: yellow;
+}
+/*拷贝权限*/
+.copy-author-list{
+    height: 385px;overflow: auto;
+}
+.copy-author-list li{
+    padding: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+.copy-author-list li:hover, .copy-author-list li.selected{
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 1px rgba(0, 0, 0, .3);
+}

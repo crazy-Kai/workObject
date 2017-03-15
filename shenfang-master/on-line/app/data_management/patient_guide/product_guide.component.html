@@ -1,0 +1,57 @@
+<!--产品相关指导页-->
+<div class="flex column flexbox">
+    <div class="form-inline search-panel fixed-header">
+        <div class="form-group">
+            <label class="control-label">产品名称：</label>
+            <input type="text" class="form-control input-sm" [(ngModel)]="searchParams.name"
+                [autoSuggestion] (select)="searchParams.name=$event.name" [url]="productSuggestionAPI">
+        </div>
+        <div class="form-group">
+            <label class="control-label">添加人：</label>
+            <input type="text" class="form-control input-sm" [(ngModel)]="searchParams.createdBy">
+        </div>
+        <div class="form-group">
+            <label class="control-label">审核人：</label>
+            <input type="text" class="form-control input-sm" [(ngModel)]="searchParams.auditBy">
+        </div>
+        <div class="form-group">
+            <label class="control-label">审核状态:</label>
+            <select [(ngModel)]="searchParams.status" class="form-control input-sm">
+                <option value="0">全部</option>
+                <option value="1">已审核</option>
+                <option value="2">未审核</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-sm" (click)="search(true)">搜索</button>
+        </div>
+    </div>
+
+    <div class="gray-underline bottom-single-padding">
+        <button class="btn btn-sm btn-primary" (click)="addProductGuide()">添加</button>
+        <button class="btn btn-sm btn-primary" (click)="gotoDetail(true)" *ngIf="selectedProductList">审核</button>
+        <button class="btn btn-sm btn-primary" (click)="gotoDetail(false)" *ngIf="selectedProductList">修改</button>
+        <button class="btn btn-sm btn-danger" (click)="delete()" *ngIf="selectedProductList">删除</button>
+    </div>
+    
+    <div class="flex1 elastictable">
+        <my-table [table]="table" [isFixedHeader]="true" [notInit]="true" (emitPagination)="getPagination($event)">
+            <template #tableTemplate let-tableinfo>
+                <tr *ngFor="let trow of tableinfo.dataList" (click)="selectedProductList = trow" (dblclick)="editProductGuide(trow)" class="table-body" [class.selected]='trow == selectedProductList'>
+                    <td width="15%">{{trow.id}}</td>
+                    <td width="12%">{{trow.productName}}</td>
+                    <td width="5%">{{trow.createdName}}</td>
+                    <td width="12%">{{trow.createdTime|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                    <td width="8%" [style.color]="trow.status == '未审核' ? 'red' : '#26a69a'">{{trow.status}}</td>
+                    <td width="5%" [style.color] = "trow.auditName == userService.user.realname ? 'red': 'black'">{{trow.auditName}}</td>
+                    <td width="10%">{{trow.auditTime|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                    <td width="10%">{{trow.formulation}}</td>
+                    <td width="10%">{{trow.chinesespecification}}</td>
+                    <td width="13%">{{trow.chinesemanufacturename}}</td>
+                </tr>
+            </template>   
+        </my-table>
+    </div>
+</div>
+<my-dialog></my-dialog>
+<add_product_guide (onDblActivate)="onDblActivate($event)" *ngIf="isShowDialog" (onClose)="isShowDialog = false;"></add_product_guide>

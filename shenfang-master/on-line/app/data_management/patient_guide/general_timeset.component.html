@@ -1,0 +1,41 @@
+<div class="single-margin relative flexbox  max-height700">
+    <div class="gray-border bg-white left single-padding height500">
+        <form class="gray-underline" (ngSubmit)="searchByValue()">
+            <label>字典值:</label>
+            <input type="text" [(ngModel)]="searchText" name="searchText">
+            <button type="submit" class="btn btn-primary btn-sm">搜索</button>
+            <!--<button (click)="ngOnInit()">取消</button>-->
+        </form>
+        <div class="tree-list" >
+            <Tree *ngIf="dictionaryGroup" class="my-tree"  [nodes]="dictionaryGroup" (onActivate)="updataDicName($event)"></Tree>
+        </div>
+    </div>
+    <div class="gray-border bg-white right single-padding height500" >
+        <div *ngIf="dictionaryName">
+        <div class="gray-underline">
+            <a (click)="addNewRouteFreq()" class="btn btn-primary btn-sm">添加给药频率</a>
+            <a (click)="onSubmit()" class="btn btn-primary btn-sm">保存</a>
+        </div>
+        <div class="row-group relative" >
+            <div class="row single-padding"><span>字典值:</span><span class="row-sec">{{dictionaryName}}</span></div>
+            <div class="scrollY height400">
+                <div class="single-padding" *ngFor="let freq of freqs;let i = index">
+                    <select [(ngModel)]="freq.codeFreq" #codeFreq (ngModelChange)="setDefaultInput(i,codeFreq.value)">
+                        <option *ngFor="let dic of dicOPtions" [value]="dic.code" [disabled]="dic.isDisabled">{{dic.name}}</option>
+                    </select>
+                    <span class="row-sec">
+                    <input *ngIf="freq.type === 'text'" type="text" [(ngModel)]="freq.explainTextArr[0]" placeholder="请用顿号隔开"/>
+                    <div *ngIf="freq.type === 'time'" class="inline-block">
+                        <div *ngFor="let extext of freq.explainTextArr;let exi = index" class="inline-block">
+                            第{{exi+1}}次<input type="time" id="input{{i}}{{exi}}" [value]="extext"/>
+                        </div>
+                    </div>
+                    <span class="icon-delete single-margin" (click)="delelteRouteFreqRow(i)">X</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<my-dialog></my-dialog>

@@ -1,0 +1,192 @@
+<button type="submit" (click)="onSubmit()">保存</button>
+<button *ngIf="params=='true'" type="button">保存并审核</button>
+<button (click)="onCancel()" type="button">关闭</button>
+
+<!--hr-->
+<div class="m-hr"></div>
+
+<div class="edit-data-content">
+    <!--书籍资料-->
+    <div class="" *ngIf="dataType=='0'">
+        <span><label for="">资料名称：</label><input type="text" [(ngModel)]= "docInfo.docName"></span>
+        <span><label for="">关联疾病：</label><input type="text" readonly [(ngModel)]="icdName"><img src="../../../images/search.png" (click)="chooseDisease()"><span class="red-select">选择疾病分类</span></span>
+        <span><label for="">关联药品：</label><input type="text" readonly [(ngModel)]="drugName"><img src="../../../images/search.png" (click)="chooseDrug()"><span class="red-select">选择药品分类</span></span>
+        <span><label for="">关联产品：</label><input type="text" readonly [(ngModel)]="productName"><img src="../../../images/search.png" (click)="chooseProduct()"><span class="red-select">选择产品</span></span>
+        <span><label for="">书籍名称：</label><input type="text" readonly [(ngModel)]="docInfo.nameBook"><img src="../../../images/search.png" (click)="chooseBook()"><span class="red-select">选择书籍专著下分类</span></span>
+        <span><label for="">页码：</label><input type="text" [(ngModel)]= "docInfo.numPage"></span>
+        <span><label for="">关键词：</label><input type="text" [(ngModel)]= "docInfo.keyWord"></span>
+        <span><label for="">内容：</label><textarea rows="3" [(ngModel)]= "docInfo.content"></textarea></span>
+        <!--<span><label for="">资料原件：</label><input type="file"></span>-->
+    </div>
+
+    <!--期刊杂志-->
+    <div class="" *ngIf="dataType=='1'">
+        <span><label for="">资料名称：</label><input type="text" [(ngModel)]= "docInfo.docName"></span>
+        <span><label for="">关联药品：</label><input type="text" readonly [(ngModel)]="drugName"><img src="../../../images/search.png" (click)="chooseDrug()"><span class="red-select">选择药品分类</span></span>
+        <span><label for="">关联产品：</label><input type="text" readonly [(ngModel)]="productName"><img src="../../../images/search.png" (click)="chooseProduct()"><span class="red-select">选择产品</span></span>
+        <span><label for="">关联疾病：</label><input type="text" readonly [(ngModel)]="icdName"><img src="../../../images/search.png" (click)="chooseDisease()"><span class="red-select">选择疾病分类</span></span>
+        <span><label for="">作者：</label><input type="text" [(ngModel)]= "docInfo.sourceFrom"></span>
+        <div><label>评分类型：</label>
+            <select [(ngModel)]="docInfo.scoreType" required>
+                <option value="meta">Meta分析</option>
+                <option value="rct">RCT研究</option>
+                <option value="nrcs">非随机临床研究</option>
+                <option value="cs">队列研究</option>
+                <option value="ccs">病例对照研究</option>
+                <option value="qhes">模型法药物经济学研究</option>
+                <option value="chec">试验型药物经济学研究</option>
+            </select>
+        </div>
+        <span><label for="">发表期刊：</label><input type="text"  readonly [(ngModel)]="periodName"><img src="../../../images/search.png" (click)="chooseJournal()"><span class="red-select">选择期刊杂志下分类</span></span>
+        <span><label for="">年，卷（期）：</label><input type="text" [(ngModel)]= "docInfo.yearVolume"></span>
+        <span><label for="">页码：</label><input type="text" [(ngModel)]= "docInfo.numPage"></span>
+        <span><label for="">关键词：</label><input type="text" [(ngModel)]= "docInfo.keyWord"></span>
+        <span><label for="">关联科室：</label><input type="text" [(ngModel)]= "docInfo.provenance"></span>
+        <span><label for="">摘要：</label><textarea rows="3" [(ngModel)]= "docInfo.content"></textarea></span>
+        <!--<span><label for="">资料原件：</label><input type="file"></span>-->
+    </div>
+
+    <!--临床指南-->
+    <div class="" *ngIf="dataType=='2'">
+        <span><label for="">指南名称：</label><input type="text" [(ngModel)]= "docInfo.docName"></span>
+        <span><label for="">关联疾病：</label><input type="text" readonly [(ngModel)]="icdName"><img src="../../../images/search.png" (click)="chooseDisease()"><span class="red-select">选择疾病分类</span></span>
+        <span><label for="">关联药品：</label><input type="text" readonly [(ngModel)]="drugName"><img src="../../../images/search.png" (click)="chooseDrug()"><span class="red-select">选择药品分类</span></span>
+        <span><label for="">关联产品：</label><input type="text" readonly [(ngModel)]="productName"><img src="../../../images/search.png" (click)="chooseProduct()"><span class="red-select">选择产品</span></span>
+        <span><label for="">专科：</label><input type="text" [(ngModel)]= "docInfo.provenance"></span>
+        <span><label for="">制定者：</label><input type="text" [(ngModel)]= "docInfo.policymaker"></span>
+        <span><label for="">出处：</label><input type="text" [(ngModel)]= "docInfo.nameBook"></span>
+        <span><label for="">年，卷（期）：</label><input type="text" [(ngModel)]= "docInfo.yearVolume"></span>
+        <span><label for="">页码：</label><input type="text" [(ngModel)]= "docInfo.numPage"></span>
+        <span><label for="">发布日期：</label><input type="date" [(ngModel)]= "docInfo.publicationDate"></span>
+        <span><label for="">关键词：</label><input type="text" [(ngModel)]= "docInfo.keyWord"></span>
+        <span><label for="">摘要：</label><textarea rows="3" [(ngModel)]= "docInfo.content"></textarea></span>
+        <!--<span><label for="">资料原件：</label><input type="file"></span>-->
+    </div>
+
+    <!--临床路径-->
+    <div class="" *ngIf="dataType=='3'">
+        <span><label for="">指南名称：</label><input type="text" [(ngModel)]= "docInfo.docName"></span>
+        <span><label for="">关联疾病：</label><input type="text" readonly [(ngModel)]="icdName"><img src="../../../images/search.png" (click)="chooseDisease()"><span class="red-select">选择疾病分类</span></span>
+        <span><label for="">关联药品：</label><input type="text" readonly [(ngModel)]="drugName"><img src="../../../images/search.png" (click)="chooseDrug()"><span class="red-select">选择药品分类</span></span>
+        <span><label for="">关联产品：</label><input type="text" readonly [(ngModel)]="productName"><img src="../../../images/search.png" (click)="chooseProduct()"><span class="red-select">选择产品</span></span>
+        <span><label for="">专科：</label><input type="text" [(ngModel)]= "docInfo.provenance"></span>
+        <span><label for="">关键词：</label><input type="text" [(ngModel)]= "docInfo.keyWord"></span>
+        <span><label for="">摘要：</label><textarea rows="3" [(ngModel)]= "docInfo.content"></textarea></span>
+        <!--<span><label for="">资料原件：</label><input type="file"></span>-->
+    </div>
+
+    <!--报纸-->
+    <div class="" *ngIf="dataType=='4'">
+        <span><label for="">文章名称</label><input type="text" [(ngModel)]= "docInfo.docName"></span>
+        <span><label for="">关联药品：</label><input type="text" readonly [(ngModel)]="drugName"><img src="../../../images/search.png" (click)="chooseDrug()"><span class="red-select">选择药品分类</span></span>
+        <span><label for="">关联产品：</label><input type="text" readonly [(ngModel)]="productName"><img src="../../../images/search.png" (click)="chooseProduct()"><span class="red-select">选择产品</span></span>
+        <span><label for="">关联疾病：</label><input type="text" readonly [(ngModel)]="icdName"><img src="../../../images/search.png" (click)="chooseDisease()"><span class="red-select">选择疾病分类</span></span>
+        <span><label for="">报纸名称：</label><input type="text" readonly [(ngModel)]= "newspaperName"><img src="../../../images/search.png" (click)="choosePaper()"><span class="red-select">选择报纸下分类</span></span>
+        <span><label for="">日期：</label><input type="date" [(ngModel)]= "docInfo.effectiveDate"></span>
+        <span><label for="">卷（期）：</label><input type="text" [(ngModel)]= "docInfo.yearVolume"></span>
+        <span><label for="">版面：</label><input type="text" [(ngModel)]= "docInfo.provenance"></span>
+        <span><label for="">发布日期：</label><input type="date" [(ngModel)]= "docInfo.publicationDate"></span>
+        <span><label for="">关键词：</label><input type="text" [(ngModel)]= "docInfo.keyWord"></span>
+        <span><label for="">摘要：</label><textarea rows="3" [(ngModel)]= "docInfo.content"></textarea></span>
+        <!--<span><label for="">资料原件：</label><input type="file"></span>-->
+    </div>
+
+    <!--药品安全警示-->
+    <div class="" *ngIf="dataType=='5'">
+        <span><label for="">资料名称</label><input type="text" [(ngModel)]= "docInfo.docName"></span>
+        <span><label for="">关联药品：</label><input type="text" readonly [(ngModel)]="drugName"><img src="../../../images/search.png" (click)="chooseDrug()"><span class="red-select">选择药品分类</span></span>
+        <span><label for="">关联产品：</label><input type="text" readonly [(ngModel)]="productName"><img src="../../../images/search.png" (click)="chooseProduct()"><span class="red-select">选择产品</span></span>
+        <span><label for="">关联疾病：</label><input type="text" readonly [(ngModel)]="icdName"><img src="../../../images/search.png" (click)="chooseDisease()"><span class="red-select">选择疾病分类</span></span>
+        <span>
+            <label for="">类别：</label>
+            <label for="provenance1"><input type="radio" id="provenance1" name="provenance" >药品不良反应信息通报</label>
+            <label for="provenance2"><input type="radio" id="provenance2" name="provenance" >药物警戒快讯</label>
+        </span>
+        <span><label for="">期：</label><input type="text" [(ngModel)]= "docInfo.yearVolume"></span>
+        <span><label for="">发布日期：</label><input type="date" [(ngModel)]= "docInfo.publicationDate"></span>
+        <span><label for="">关键词：</label><input type="text" [(ngModel)]= "docInfo.keyWord"></span>
+        <span><label for="">摘要：</label><textarea rows="3" [(ngModel)]= "docInfo.content"></textarea></span>
+        <!--<span><label for="">资料原件：</label><input type="file"></span>-->
+    </div>
+
+    <!--医药法规-->
+    <div class="" *ngIf="dataType=='6'">
+        <span><label for="">法规名称：</label><input type="text" [(ngModel)]= "docInfo.docName"></span>
+        <span><label for="">发文单位：</label><input type="text" [(ngModel)]= "docInfo.sourceFrom"></span>
+        <span><label for="">发布日期：</label><input type="date" [(ngModel)]= "docInfo.publicationDate"></span>
+        <span><label for="">生效日期：</label><input type="date" [(ngModel)]= "docInfo.effectiveDate"></span>
+        <span><label for="">关键词：</label><input type="text" [(ngModel)]= "docInfo.keyWord"></span>
+        <span><label for="">内容：</label><textarea rows="3" [(ngModel)]= "docInfo.content"></textarea></span>
+        <!--<span><label for="">资料原件：</label><input type="file"></span>-->
+    </div>
+
+    <!--其他资料-->
+    <div class="" *ngIf="dataType=='7'">
+        <span><label for="">资料名称：</label><input type="text" [(ngModel)]= "docInfo.docName"></span>
+        <span><label for="">资料类别：</label><input type="text" [(ngModel)]= "docInfo.provenance"><span class="red-select">其他资料下各类别</span></span>
+        <span><label for="">关键词：</label><input type="text" [(ngModel)]= "docInfo.keyWord"></span>
+        <span><label for="">内容：</label><textarea rows="3" [(ngModel)]= "docInfo.content"></textarea></span>
+        <!--<span><label for="">资料原件：</label><input type="file"></span>-->
+    </div>
+
+</div>
+
+<div class="edit-data-content audit-data-content">
+    <!--资料审核页面-->
+    <!--<div class="" >
+        <span><label for="">资料名称：</label><input type="text" [(ngModel)]= "docInfo.docName"></span>
+        <span><label for="">关联疾病：</label><input type="text" readonly [(ngModel)]="icdName"><img src="../../../images/search.png" (click)="chooseDisease()"><span class="red-select">选择疾病分类</span></span>
+        <span><label for="">关联药品：</label><input type="text" readonly [(ngModel)]="drugName"><img src="../../../images/search.png" (click)="chooseDrug()"><span class="red-select">选择药品分类</span></span>
+        <span><label for="">关联产品：</label><input type="text" readonly [(ngModel)]="productName"><img src="../../../images/search.png" (click)="chooseProduct()"><span class="red-select">选择产品</span></span>
+        <span><label for="">书籍名称：</label><input type="text" readonly [(ngModel)]="bookName"><img src="../../../images/search.png" (click)="chooseBook()"><span class="red-select">选择书籍专著下分类</span></span>
+        <span><label for="">页码：</label><input type="text" [(ngModel)]= "docInfo.numPage"></span>
+        <span><label for="">关键词：</label><input type="text" [(ngModel)]= "docInfo.keyWord"></span>
+        <span><label for="">内容：</label><textarea rows="3" [(ngModel)]= "docInfo.content"></textarea></span>
+        <!--<span><label for="">资料原件：</label><input type="file"></span>
+    </div>-->
+</div>
+<my-upload [typeId]="id" [uploadType]="uploadType"></my-upload>
+
+<div class="container" *ngIf="isDialog">
+    <div class="modal" style="display:block;">
+        <!-- 隐藏class fade-->
+        <div class="modal-dialog" style="width: 1000px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">
+                        <span (click)="onClose()">x</span>
+                        <span class="sr-only" (click)="onClose()">关闭</span>
+                    </button>
+                    <h4 class="modal-title">选择{{typeTitles[type]}}分类</h4>
+                </div>
+                <div class="modal-body" style="overflow: auto; max-height: 500px;">
+                    <div class="gray-underline" *ngIf="!isGuideList">
+                        <span *ngIf="type!=2"><label>{{typeTitles[type]}}名称：</label><input type="text" [(ngModel)]="searchText[type]"></span>
+                        <span *ngIf="type==2"><label>{{typeTitles[type]}}名称/ID：</label><input type="text" [(ngModel)]="searchText[type]"></span>
+                        <span *ngIf="type==2"><label>商品名称：</label><input type="text" [(ngModel)]="goodsname"></span>
+                        <span *ngIf="type==2"><label>生产厂家：</label><input type="text" [(ngModel)]="producerName"></span>
+                        <button (click)="search()">搜索</button>
+                    </div>
+                    <div *ngIf="type == 0 || type == 1">
+                        <Tree #tree [nodes]="nodes" [options]="options" (onActivate)="chooseNode($event)"></Tree>
+                    </div>
+                    <div *ngIf="type == 2 || type == 3 || type == 4 || type == 5" >
+                        <my-table [table]="table" [oriArrData]="checkedList" (onCheck)="onCheck($event)" (onClick)="chooseTr($event)"></my-table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div *ngIf="type == 2" class="checkedList"> 
+                        <ul *ngFor="let showProduct of checkedList">
+                            <li><input type="checkbox" (click)="cancelProduct(showProduct)" [checked]="true">{{showProduct.chineseproductname}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-default" (click)="onClose()">关闭</button>
+                    <button class="btn btn-primary" (click)="confirm()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade"></div>
+</div>
+
+<my-dialog></my-dialog>

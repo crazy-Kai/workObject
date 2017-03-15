@@ -1,0 +1,80 @@
+<div class="single-margin relative flexbox">
+    <div class="gray-border bg-white left single-padding height500">
+        <div class="gray-underline">
+            <label>药品名称：</label>
+            <input type="text" [(ngModel)]="name" (keyup.enter)="searchInputEntered()"
+                [autoSuggestion] (select)="name=$event.name" [url]="drugSuggestionAPI">
+            <label>状态：</label>
+            <select [(ngModel)]="status">
+                <option value=''>全部</option>
+                <option value=1>未定义</option>
+                <option value=2>未审核</option>
+                <option value=3>编辑中</option>
+                <option value=0>已审核</option>
+            </select>
+            <button (click)="search()">搜索</button>
+        </div>
+        <div class="tree-list">
+            <!--<Tree  [nodes]="drugRuleTree"  class="my-tree" ></Tree>-->
+            <Tree [nodes]="drugRuleTree" [options]="customTemplateStringOptions" class="my-tree" (onToggle)="getChildren($event)">
+                <template #treeNodeTemplate let-node>
+                    <span class="my-tree-node" (click)="chooseDrug(node.data.code)">{{ node.data.title }}</span>
+                    <span *ngIf="node.data.title!='规则'">
+                        <a class="dynatree-title" (click)="openSysRuleUrl(sysRuleUrl,node.data.title)" style="color:red;" *ngIf="(node.data.sysRuleStatus == 2) ||  (node.data.sysRuleStatus == 3)">审核</a>
+                        <a class="dynatree-title" (click)="openSysRuleUrl(sysRuleUrl,node.data.title)" style="color:#75bbfe;" *ngIf="node.data.sysRuleStatus == 1 || node.data.sysRuleStatus == null">添加</a>
+                        <a class="dynatree-title" (click)="openSysRuleUrl(sysRuleUrl,node.data.title)" style="color:green;" *ngIf="node.data.sysRuleStatus == 0">编辑</a>
+
+
+                        <a class="dynatree-title" (click)="openSysRuleUrl(iphRuleUrl,node.data.title)" style="color:#75bbfe;" *ngIf="node.data.sysStatusPatient == 0 || node.data.sysStatusPatient == null">添加知识部规则</a>
+                        <a class="dynatree-title" (click)="openSysRuleUrl(iphRuleUrl,node.data.title)" style="color:#75bbfe;" *ngIf="node.data.sysStatusPatient == 1">编辑知识部规则</a>
+<!--
+                        <a class="dynatree-title" (click)="openSysRuleUrl(iphRuleUrl,node.data.title)" style="color:#75bbfe;" *ngIf="node.data.userRuleStatus == 1 || node.data.userRuleStatus == null">添加逸耀规则</a>
+                        <a class="dynatree-title" (click)="openSysRuleUrl('/designer/create_ipharmacare_rule.action?ruleType=0&name=',node.data.title)" style="color:red;" *ngIf="node.data.userRuleStatus == 2 ||  node.data.userRuleStatus == 3">编辑逸耀规则</a>
+                        <a class="dynatree-title" (click)="openSysRuleUrl('/designer/create_ipharmacare_rule.action?ruleType=0&name=',node.data.title)" style="color:green;" *ngIf="node.data.userRuleStatus == 0">编辑逸耀规则</a>
+-->
+                    </span>
+                </template>
+            </Tree>
+        </div>
+    </div>
+
+    <!-- 右侧: class="gray-border bg-white right single-padding height500" -->
+    <div class="gray-border bg-white right single-padding height500">
+        <form class="gray-underline" (ngSubmit)="searchProduct()">
+            <label>产品/ID:</label><input type="text" [(ngModel)]="productName" name="productName"
+                [autoSuggestion] (select)="productName=$event.name" [url]="productSuggestionAPI">
+            <!--<label>剂型:</label><input type="text" [(ngModel)]="producerName">-->
+            <label>厂家:</label><input type="text" [(ngModel)]="producerName" name="producerName">
+            <label>剂型:</label><input type="text" [(ngModel)]="formulation" name="formulation">
+            <label>状态：</label>
+            <select [(ngModel)]="sysRuleStatus" name="sysRuleStatus">
+                <option value=''>全部</option>
+                <option value=1>未定义</option>
+                <option value=2>未审核</option>
+                <option value=3>编辑中</option>
+                <option value=0>已审核</option>
+            </select>
+            <button type="submit" (click)="searchProduct()">搜索</button>
+        </form>
+
+        <!-- 表格内容 -->
+        <my-table [table]="table" (onClick)="clickProduct($event)">
+            <template #tableTemplate let-tableinfo>
+                <tr *ngFor="let trow of tableinfo.dataList">
+                    <td>{{trow.id}}</td>
+                    <td>{{trow.chineseproductname}}</td>
+                    <td>{{trow.chinesemanufacturename}}</td>
+                    <td>{{trow.dictformulation}}</td>
+                    <td>{{trow.formulation}}</td>
+                    <td>{{trow.chinesespecification}}</td>
+                    <td>{{statusList[trow.sysRuleStatus]}}</td>
+                    <td>
+                        <a target="_blank" *ngIf="trow.sysRuleStatus == 1 || trow.sysRuleStatus == -1 || trow.sysRuleStatus == null" href="/designer/editor.action?ruleType=0&productId={{trow.id}}">创建系统规则</a>
+                        <a target="_blank" *ngIf="trow.sysRuleStatus == 0" href="/designer/editor.action?ruleType=0&productId={{trow.id}}">编辑系统规则</a>
+                        <a target="_blank" *ngIf="trow.sysRuleStatus == 2 || trow.sysRuleStatus == 3" href="/designer/editor.action?ruleType=0&productId={{trow.id}}">审核系统规则</a>
+                    </td>
+                </tr>
+            </template>
+        </my-table>
+    </div>
+</div>

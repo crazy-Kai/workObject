@@ -1,0 +1,74 @@
+<!--搜索条件-->
+<div class="flex column flexbox">
+    <!-- 表头 "form-inline content-search mb15"-->
+    <div class="form-inline search-form fixed-header" style="margin:10px;">
+        <div class="form-group">
+            <label class="control-label">名称：</label>
+            <input type="text" class="form-control input-sm" (keyup.enter)="keyupHandle($event)" [(ngModel)]="searchWord.docName">
+        </div>
+        <div class="form-group">
+            <label class="control-label">资料类型:</label>
+            <select [(ngModel)]="searchWord.docType" class="form-control input-sm">
+                <option value="">全部</option>
+                <option value="0">书籍专著</option>
+                <option value="1">期刊杂志</option>
+                <option value="2">电子文献</option>
+                <option value="3">电子公告</option>
+                <option value="4">其他资料</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label">添加人:</label>
+            <input type="text" class="form-control input-sm" (keyup.enter)="keyupHandle($event)" [(ngModel)]="searchWord.createdName">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-sm" (click)="search(true)">搜索</button>
+        </div>
+
+        <!--工具栏按钮-->
+        <div class="mb10" style="text-align: left; margin-top: 5px;">
+            <button class="btn btn-primary btn-sm" (click)="addData()">添加</button>
+        </div>
+    </div>
+
+    <div class="flex1 elastictable">
+        <!-- 表格体 -->
+        <!--table-->
+        <my-table [table]="table" (onRowClick)="onRowClick($event)"  [isFixedHeader]="true">
+            <template #tableTemplate let-tableinfo>
+                <tr *ngFor="let trow of tableinfo.dataList" (click)="onClick(trow)" (dblclick)="onDblClick(trow)" [class.selected]="trow === deleteData">
+                    <td width="20%">{{trow.docName}}</td>
+                    <td width="20%">
+                        <span *ngFor="let dpd of trow.dpds">
+                            {{dpd.dbdName}}({{dpdTypeList[dpd.dbdType]}})
+                        </span>
+                    </td>
+                    <td width="10%">{{docTypeList[trow.docType]}}</td>
+                    <td width="20%">{{trow.sourceFrom}}</td>
+                    <td width="10%">{{trow.createdName}}</td>
+                    <td width="10%">{{trow.createdTime|date:"yyyy-MM-dd"}}</td>
+                    <td width="10%">
+                        <a (click)="gotoDetail(trow)">修改</a>
+                        <a (click)="deleteData(trow)">删除</a>
+                    </td>
+                </tr>
+            </template>
+        </my-table>
+    </div>
+</div>
+
+<!-- 弹框浮动层： 添加资料 -->
+<my-dialog class="show-dialog">
+    <template #dialogTemplate let-dialogModel>
+        <div class="datatype-choosing">
+            <ul class="type-list">
+                <li><a (click)="gotoEditContent(0)">书籍</a></li>
+                <li><a (click)="gotoEditContent(1)">期刊</a></li>
+                <li><a (click)="gotoEditContent(2)">电子文献</a></li>
+                <li><a (click)="gotoEditContent(3)">电子公告</a></li>
+                <li><a (click)="gotoEditContent(4)">其他资料</a></li>
+            </ul>
+            <a class="mt10" (click)="dialogModel.customModule = false;" style="color: #666;">取消</a>
+        </div>
+    </template>
+</my-dialog>

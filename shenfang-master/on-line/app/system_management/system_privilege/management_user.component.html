@@ -1,0 +1,154 @@
+<div class="mu-container flex column flexbox">
+    <div class="mu-search-bar gray-border single-padding">
+        <div class="">
+            用户名/名称：<input type="text" name="" [(ngModel)]="username"> 
+        </div>
+        <div class="">
+            用户状态：
+            <label for="enable"><input id="enable" type="radio" name="status" value="1" [checked]="userState == 1" (change)="userState = $event.target.value">启用</label>
+            <label for="disabled"><input id="disabled" type="radio" name="status" value="3" [checked]="userState == 3" (change)="userState = $event.target.value">停用</label>
+        </div>
+        <div class="">
+            <button type="button" class="btn btn-primary btn-sm" (click)="search()" *ngIf="userService.hasJurisdiction('user:get')">搜索</button>
+        </div>
+
+    </div>
+    <div class="mb10">
+        <div class="mu-handle-bar btn-group">
+            <button type="button" class="btn btn-primary" (click)="addUser()" *ngIf="userService.hasJurisdiction('user:post')">添加</button>
+            <button type="button" class="btn btn-danger" *ngIf="handleState == 1 && userService.hasJurisdiction('user:put')" (click)="disabledUser()">停用</button>
+            <button type="button" class="btn btn-primary" *ngIf="handleState == 3 && userService.hasJurisdiction('user:put')" (click)="enabledUser()">恢复</button>
+            <button type="button" class="btn btn-primary" (click)="editUser()" *ngIf="userService.hasJurisdiction('user:put')">修改</button>
+        </div>
+    </div>
+
+    <div class="flex1 elastictable">
+        <my-table [table]="table" [isFixedHeader]="true">
+            <template #tableTemplate let-tableinfo>
+                <tr *ngFor="let trow of tableinfo.dataList; let i = index;" (click)="onSelectedUser(trow)" [class.selected]="trow === selectedUser">
+                    <td width="4%">{{i + 1}}</td>
+                    <td width="8%">{{trow.username}}</td>
+                    <td width="8%">{{trow.realname}}</td>
+                    <td width="12%">{{trow.authGroupDtoList | formatListToStr: 'name'}}</td>
+                    <td width="13%">{{trow.company}}</td>
+                    <td width="10%">{{trow.officeQualification}}</td>
+                    <td width="10%">{{trow.contactNumber}}</td>
+                    <td width="15%">{{trow.email}}</td>
+                    <td width="15%">{{trow.createdTime | date:"yyyy-MM-dd"}}</td>
+                    <td width="5%">{{trow.state == 1? "启用" : "停用"}}</td>
+                </tr>
+            </template>
+        </my-table>
+    </div>
+</div>
+<!--添加&修改: 浮动层-->
+<div class="wrapper-gray66" [hidden]="!showEditForm">
+    <div class="mu-edit-form">
+        <div class="mu-edit-btngroup">
+            <button type="button" class="btn btn-primary" (click)="saveUserInfo()">保存</button>
+            <button type="button" class="btn btn-default" (click)="closeEditForm()">取消</button>
+        </div>
+        <div class="mu-form-content">
+            <div class="mu-form-item row">
+                <span class="col-md-3"><strong class="required">*</strong>用户名：</span>
+                <div class="col-md-9">
+                    <input type="text" class="" [(ngModel)]="userInfo.username">
+                </div>
+            </div>
+            <div class="mu-form-item row">
+                <span class="col-md-3"><strong class="required">*</strong>姓名：</span>
+                <div class="col-md-9">
+                    <input type="text" class="" [(ngModel)]="userInfo.realname">
+                </div>
+            </div>
+            <div class="mu-form-item row">
+                <span class="col-md-3"><strong class="required">*</strong>密码：</span>
+                <div class="col-md-9">
+                    <input type="password" class="" [(ngModel)]="userInfo.password">
+                </div>
+            </div>
+            <div class="mu-form-item row">
+                <span class="col-md-3"><strong class="required">*</strong>确认密码：</span>
+                <div class="col-md-9">
+                    <input type="password" class="" [(ngModel)]="comfirmPwd" (blur)="comparePwd()">
+                </div>
+            </div>
+            <div class="mu-form-item row">
+                <span class="col-md-3">工作单位：</span>
+                <div class="col-md-9">
+                    <input type="text" class="" [(ngModel)]="userInfo.company">
+                </div>
+            </div>
+            <div class="mu-form-item row">
+                <span class="col-md-3">职务：</span>
+                <div class="col-md-9">
+                    <input type="text" class="" [(ngModel)]="userInfo.officeQualification">
+                </div>
+            </div>
+            <div class="mu-form-item row">
+                <span class="col-md-3">联系电话：</span>
+                <div class="col-md-9">
+                    <input type="text" class="" [(ngModel)]="userInfo.contactNumber">
+                </div>
+            </div>
+            <div class="mu-form-item row">
+                <span class="col-md-3">邮箱：</span>
+                <div class="col-md-9">
+                    <input type="text" class="" [(ngModel)]="userInfo.email">
+                </div>
+            </div>
+            <div class="mu-form-item row">
+                <span class="col-md-3">关联药品：</span>
+                <div class="col-md-9">
+                    <input type="text" class="" [ngModel]="relationalDrugs" readonly>
+                    <img src="../../../images/search.png" (click)="chooseDrug()"><span class="red-select">选择药品分类</span>
+                </div>
+            </div>
+            <div class="mu-form-item row">
+                <span class="col-md-3"><strong class="required">*</strong>所属角色：</span>
+                <div class="col-md-9 role-contain">
+                    <span *ngFor="let item of userGroups; let i = index;">
+                        <input type="checkbox" value="{{item.id}}" [ngModel]="item.checked" (change)="pushUserGroup($event.target.checked, i)">{{item.name}}
+                    </span>
+                </div>
+            </div>
+            <div class="mu-form-item row">
+                <span class="col-md-3">备注：</span>
+                <div class="col-md-9">
+                    <textarea [(ngModel)]="userInfo.remark"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--关联药品-->
+<div class="drugChoosen" *ngIf="isDialog">
+    <div class="dC-header">
+        <h3><a href="javascript:;" (click)="onClose()">x</a>选择关联药品</h3>
+    </div>
+    <div class="dC-content">
+        <div class="dC-slide">
+            <div class="form-group form-inline">
+                <label for="">药品名称：</label><input type="text" class="form-control" [(ngModel)]="searchWord"><button class="btn btn-primary" (click)="getByValue()" style="margin-left:10px;">搜索</button>
+            </div>
+            <div class="tree-content">
+                <Tree #tree [nodes]="nodes" [options]="options"></Tree>
+            </div>
+        </div>
+        <div class="dC-choosen">
+            <div class="form-group form-inline">
+                <button class="btn btn-primary" style="margin-left:10px;" (click)="completeChoose()">确定</button>
+                <button class="btn btn-danger" style="margin-left:10px;" (click)="onClose()">取消</button>
+            </div>
+            <div class="chooosens-content">
+                <ul>
+                    <li *ngFor="let product of checkedPros">
+                        <input type="checkbox" (click)="cancelProduct(product)" checked>{{product.data.name}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<my-dialog></my-dialog>

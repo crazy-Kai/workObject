@@ -1,0 +1,322 @@
+<div *ngIf="!operate">
+    <button (click)="onCancel(true)" class="btn btn-primary">返回</button>
+</div>
+<!--<table style="height:400px;overflow-x:scroll;overflow-y:scroll" class="table">-->
+<div>
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="col-md-6 row">
+            <div class="text-right col-xs-4">产品id：</div>
+            <div class="text-left col-xs-8">{{productDto.id}}</div>
+        </div>
+        <div class="col-md-5 row">
+            <div class="text-right col-xs-4">产品名称：</div>
+            <div class="text-left col-xs-8">
+                <input [(ngModel)]="productDto.chineseproductname" *ngIf="operate">
+                <div *ngIf="!operate">{{productDto.chineseproductname}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="col-md-6 row">
+            <div class="text-right col-xs-4">拼音：</div>
+            <div class="text-left col-xs-8">{{productDto.pinyin}}</div>
+        </div>
+        <div class="col-md-5 row">
+            <div class="text-right col-xs-4">商品名：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="productDto.goodsname" *ngIf="operate">
+                <div *ngIf="!operate">{{productDto.goodsname}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="col-md-6 row">
+            <div class="text-right col-xs-4">生产企业：</div>
+            <div class="text-left col-xs-8">{{productDto.chinesemanufacturename}}</div>
+        </div>
+        <div class="col-md-5 row">
+            <div class="text-right col-xs-4">剂型：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="productDto.formulation" *ngIf="operate">
+                <div *ngIf="!operate">{{productDto.formulation}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">字典剂型：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="dictionaryService.jixDicCode" (click)="chooseJix()" readonly *ngIf="operate">
+                <div *ngIf="!operate">{{dictionaryService.jixDicCode}}</div>
+            </div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">规格：</div>
+            <div class="text-left col-xs-8">{{productDto.chinesespecification}}</div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">转换规格：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="productDto.transspecification" *ngIf="operate">
+                <div *ngIf="!operate">{{productDto.transspecification}}</div>
+            </div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">规格国际单位：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="productDto.enspecunit" *ngIf="operate">
+                <div *ngIf="!operate">{{productDto.enspecunit}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">规格单位数量：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="productDto.specquantity" *ngIf="operate">
+                <div *ngIf="!operate">{{productDto.specquantity}}</div>
+            </div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">DDD：</div>
+            <div class="text-left col-xs-8">{{productDto.ddd}}</div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">DDD单位：</div>
+            <div class="text-left col-xs-8">{{productDto.dddunit}}</div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">药品类别：</div>
+            <div class="text-left col-xs-8">{{productDto.productcategory}}</div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">已映射分类：</div>
+            <div class="text-left col-xs-8">{{drugList}}</div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">映射新分类：</div>
+            <div class="text-left col-xs-8">{{drugcategoryname}}<img src="../../../images/search.png" (click)="chooseNewCategory()" *ngIf="operate">
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">批准文号：</div>
+            <div class="text-left col-xs-8">{{productDto.registerno}}</div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">本位码：</div>
+            <div class="text-left col-xs-8">{{productDto.standardcode}}</div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">分类属性：</div>
+            <div class="text-left col-xs-8" [innerHTML]="drugPropertys"></div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">药品编码：</div>
+            <div class="text-left col-xs-8">{{productDto.medicinecode}}</div>
+        </div>
+    </div>
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">主要成分编码：</div>
+            <div class="text-left col-xs-8">{{productDto.medcode}}</div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">产品编码：</div>
+            <div class="text-left col-xs-8">{{productDto.productcode}}</div>
+        </div>
+    </div>
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">产品属性：</div>
+            <div class="text-left col-xs-8">
+                <input type="hidden" id="chooseDictCodes" name="chooseDictCodes" [(ngModel)]="chooseDictCodes" *ngIf="operate"/>
+                <input type="text" id="chooseDictName" name="chooseDictName" [(ngModel)]="chooseDictName" *ngIf="operate" readonly (click)="addProductProprety()"/>
+                <div *ngIf="!operate">{{chooseDictName}}</div>
+            </div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">给药途径(患者)：</div>
+            <div class="text-left col-xs-8">
+                <input type="hidden" id="chooseRouteCodes" name="chooseRouteCodes" [(ngModel)]="chooseRouteCodes" *ngIf="operate" />
+                <input type="text" id="chooseRouteName" name="chooseRouteName" [(ngModel)]="chooseRouteName" readonly *ngIf="operate" (click)="addDrugProprety()" />
+                <div *ngIf="!operate">{{chooseRouteName}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">药品名称：</div>
+            <div class="text-left col-xs-8">{{productDto.chinesemedname}}</div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">房室模型：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="pharmacokinetics.atrioventricularModel.value" *ngIf="operate">
+                <div *ngIf="!operate">{{pharmacokinetics.atrioventricularModel?.value}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">达峰时间：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="pharmacokinetics.peakTime.value" *ngIf="operate">
+                <div *ngIf="!operate">{{pharmacokinetics.peakTime?.value}}</div>
+            </div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">生物利用度：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="pharmacokinetics.bioavailability.value" *ngIf="operate">
+                <div *ngIf="!operate">{{pharmacokinetics.bioavailability?.value}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">血浆蛋白结合率：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="pharmacokinetics.plasmaProteinBindingRate.value" *ngIf="operate">
+                <div *ngIf="!operate">{{pharmacokinetics.plasmaProteinBindingRate?.value}}</div>
+            </div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">排泄途径：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="pharmacokinetics.excretionPathway.value" *ngIf="operate">
+                <div *ngIf="!operate">{{pharmacokinetics.excretionPathway?.value}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">分布容积：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="pharmacokinetics.distributionCubage.value" *ngIf="operate">
+                <div *ngIf="!operate">{{pharmacokinetics.distributionCubage?.value}}</div>
+            </div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">起效时间：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="pharmacokinetics.effectiveTime.value" *ngIf="operate">
+                <div *ngIf="!operate">{{pharmacokinetics.effectiveTime?.value}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">药效持续时间：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="pharmacokinetics.effecDuration.value" *ngIf="operate">
+                <div *ngIf="!operate">{{pharmacokinetics.effecDuration?.value}}</div>
+            </div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">吸收分数：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="pharmacokinetics.absorptionFraction.value" *ngIf="operate">
+                <div *ngIf="!operate">{{pharmacokinetics.absorptionFraction?.value}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">药动学类型：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="pharmacokinetics.pharmacokinetics.value" *ngIf="operate">
+                <div *ngIf="!operate">{{pharmacokinetics.pharmacokinetics?.value}}</div>
+            </div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">器官毒性：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="pharmacokinetics.organToxicities.value" *ngIf="operate">
+                <div *ngIf="!operate">{{pharmacokinetics.organToxicities?.value}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">容量：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="pharmacokinetics.capacity.value" *ngIf="operate">
+                <div *ngIf="!operate">{{pharmacokinetics.capacity?.value}}</div>
+            </div>
+        </div>
+        <div class="row col-md-5">
+            <div class="text-right col-xs-4">最低有效浓度：</div>
+            <div class="text-left col-xs-8"><input [(ngModel)]="pharmacokinetics.minimalEffectiveConcentration.value" *ngIf="operate">
+                <div *ngIf="!operate">{{pharmacokinetics.minimalEffectiveConcentration?.value}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-left:0px;margin-right:0px;">
+        <div class="row col-md-6">
+            <div class="text-right col-xs-4">最低中毒浓度：</div>
+            <div class="text-left col-xs-8">
+                <input [(ngModel)]="pharmacokinetics.minimumToxicConcentration.value" *ngIf="operate">
+                <div *ngIf="!operate">{{pharmacokinetics.minimumToxicConcentration?.value}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="height:54px"></div>
+<div class="detail-footer row" *ngIf="operate">
+    <button (click)="onCancel()" class="btn btn-default">取消</button>
+    <button (click)="updateInfo()" class="btn btn-primary">保存</button>
+</div>
+<my-dialog>
+    <template #dialogTemplate let-dialogModel>
+        <div class="jix-info dialog-template-content">
+            <div>
+                <span><label>字典剂型：</label><input type="text" [(ngModel)]="searchText"></span>
+                <button (click)="searchjix()">搜索</button>
+            </div>
+            <div class="m-info-layout">
+                <div class="m-info-left">
+                    <Tree #tree [nodes]="diseaseGroup" [options]="jixTemplateStringOptions" (onActivate)="getJixTreeNode($event)"></Tree>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" (click)="dialogModel.isTemplate = false">取消</button>
+            <button class="btn btn-primary"  (click)="confirmDisease();dialogModel.isTemplate = false;">确定</button>
+        </div>
+    </template>
+</my-dialog>
+
+<add_drug *ngIf="isAddProductDialog" (onClose)="onProductClose()" [drugGroup]="propertyGroup" [options]="options" (getCheckedNodes)="getCheckedNode($event)"></add_drug>
+<add_drug *ngIf="isAddDrugDialog" (onClose)="onDrugClose()" [drugGroup]="drugGroup" [options]="drugOptions" (getCheckedNodes)="getDrugCheckedNode($event)"></add_drug>
+
+<drug-category-dialog #drugCategoryDialog [options]="drugCategoryDialogOptions" (onChooseDrugs)="chooseNewCategoryConfirm($event)"></drug-category-dialog>
+<!--<div class="container" *ngIf="!isHideDialog">
+    <div class="modal" style="display:block;" [class.fade]="isHideDialog">
+        <div class="modal-dialog" style="z-index: 1050;">
+            <div class="modal-content">
+                <div class="modal-header">选择新分类
+                    <button class="close" data-dismiss="modal">
+                    <span (click)="isHideDialog = true">x</span>
+                    <span class="sr-only" (click)="isHideDialog = true">关闭</span>
+                </button>
+                </div>
+                <div class="modal-body" style="max-height: 500px;">
+                    <div style="position:fixed;">
+                        <input [(ngModel)]="searchDrugText">
+                        <button class="btn btn-default" (click)="searchDrug()">搜索</button>
+                    </div>
+                    <div style="margin-top: 30px;overflow-y: auto;max-height:450px;">
+                        <drug-category-tree [keyword]="searchDrugName" (onActivate)="addNewCategory($event)"></drug-category-tree>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" (click)="isHideDialog = true;categoryName='';">关闭</button>
+                    <button class="btn btn-primary" (click)="submitCategory()">提交</button>
+                </div>
+            </div>
+        </div>
+        <div class="in modal-backdrop fade" *ngIf="!isHideDialog"></div>
+    </div>
+</div>-->

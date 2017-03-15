@@ -1,0 +1,376 @@
+<style>
+    .dropdown-menu{min-width: 300px;}
+</style>
+<div class="single-padding">
+    <div class="gray-underline-dashed row">
+        <h3 class="col-md-8" style="margin: 5px 0px;">医疗机构客户管理</h3>
+        <div class="col-md-4">
+            <button class="btn btn-default" type="submit" (click)="cancelSubmit()">取消</button>
+            <button class="btn btn-primary" type="submit" (click)="submitHosp()">保存</button>
+        </div>
+    </div>
+    <div class="gray-underline-dashed">
+        <div class="row" style="padding:10px;">
+            <div class="col-md-3 row">
+                <div class="col-xs-4"><strong class="required">*</strong>机构代码：</div>
+                <input class="col-xs-5" [(ngModel)]="hospitalInfo.code" ngRequired>
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4"><strong class="required">*</strong>机构名称：</div>
+                <input class="col-xs-5" [(ngModel)]="hospitalInfo.name" ngRequired>
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4"><strong class="required">*</strong>机构类别：</div>
+                <select class="col-xs-5" [(ngModel)]="hospitalInfo.category" ngRequired>
+                    <option value="综合医院">综合医院</option>
+                    <option value="中西医结合医院">中西医结合医院</option>
+                    <option value="中医医院">中医医院</option>
+                    <option value="民族医院">民族医院</option>
+                    <option value="专科医院">专科医院</option>
+                </select>
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4"><strong class="required">*</strong>机构性质：</div>
+                <select class="col-xs-5" [(ngModel)]="hospitalInfo.nature" ngRequired>
+                    <option value="非营利性医院">非营利性医院</option>
+                    <option value="营利性医院">营利性医院</option>
+                </select>
+            </div>
+        </div>
+        <div class="row" style="padding:10px;">
+            <div class="col-md-3 row">
+                <div class="col-xs-4">机构级别：</div>
+                <select class="col-xs-5" [(ngModel)]="hospitalInfo.level">
+                    <option value="">—— ——</option>
+                    <option value="三级甲等">三级甲等</option>
+                    <option value="二级丙等">二级丙等</option>
+                    <option value="二级乙等">二级乙等</option>
+                    <option value="三级丙等">三级丙等</option>
+                    <option value="一级甲等">一级甲等</option>
+                    <option value="二级甲等">二级甲等</option>
+                    <option value="三级乙等">三级乙等</option>
+                    <option value="一级医院">一级医院</option>
+                    <option value="二级医院">二级医院</option>
+                    <option value="三级医院">三级医院</option>
+                    <option value="一级乙等">一级乙等</option>
+                    <option value="一级丙等">一级丙等</option>
+                </select>
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">机构类型：</div>
+                <input class="col-xs-5" [(ngModel)]="hospitalInfo.type">
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4"><strong class="required">*</strong>法定代表人：</div>
+                <input class="col-xs-5" [(ngModel)]="hospitalInfo.legalRepresent" ngRequired>
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4"><strong class="required">*</strong>编制床位数：</div>
+                <input class="col-xs-5" [(ngModel)]="hospitalInfo.prepareBedsNum" type="number" min="0" ngRequired>
+            </div>
+        </div>
+        <div class="row" style="padding:10px;">
+            <div class="col-md-3 row">
+                <div class="col-xs-4">实有床位数：</div><input class="col-xs-5" [(ngModel)]="hospitalInfo.actualBedsNum" type="number" min="0"></div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">人员数：</div><input class="col-xs-5" [(ngModel)]="hospitalInfo.personsNum" type="number" min="0"></div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">卫技人员数：</div><input class="col-xs-5" [(ngModel)]="hospitalInfo.healthPersonsNum" type="number" min="0"></div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">诊疗科室数：</div><input class="col-xs-5" [(ngModel)]="hospitalInfo.medicalDepartsNum" type="number" min="0"></div>
+        </div>
+        <div class="row" style="padding:10px;">
+            <div class="col-md-3 row">
+                <div class="col-xs-4"><strong class="required">*</strong>所属区域：</div>
+                <input class="col-xs-5" readonly [(ngModel)]="hospitalInfo.area" ngRequired>
+                <img src="../../images/search.png" (click)="showDialog('区域选择','region')">
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">通讯地址：</div><input class="col-xs-5" [(ngModel)]="hospitalInfo.connectAddress"></div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">HIS厂商：</div><input class="col-xs-5" [(ngModel)]="hospitalInfo.hisManufacturer"></div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4"><strong class="required">*</strong>购买系统类型：</div>
+                <select class="col-xs-5" [(ngModel)]="hospitalInfo.sysType" ngRequired>
+                    <option value="3">集中平台</option>
+                    <option value="2">多院区</option>
+                    <option value="1">单院区</option>
+                    <option value="4">模块化平台</option>
+                </select>
+            </div>
+        </div>
+        <div class="row" style="padding:10px;">
+            <div class="col-md-3 row">
+                <div class="col-xs-4">购买系统版本：</div>
+                <div class="col-xs-5">{{purchaseVersion[hospitalInfo.sysType]}}</div>
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4"><strong class="required">*</strong>院区数量：</div>
+                    <input class="col-xs-5" [(ngModel)]="hospitalInfo.zonesNum" type="number" min="0" ngRequired>
+                </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4"></div>
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4"></div>
+            </div>
+        </div>
+    </div>
+    <div class="gray-underline-dashed" *ngIf="hospitalInfo.sysType == 4">
+        <div class="row" style="padding:10px;">
+            <div class="col-md-3 row">
+                <div class="col-xs-4">购买系统支持类型：</div>
+                <div>
+                    <select [(ngModel)]="hospitalInfo.supportType" (ngModelChange)="setRelativeProperty()">
+                        <option value="3">集中平台</option>
+                        <option value="2">多院区</option>
+                        <option value="1">单院区</option>
+                    </select>
+                    <span class="warning">*系统类型为模块化平台时启用</span>
+                </div>
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">字典是否共用：</div>
+                <div>
+                    <select [(ngModel)]="hospitalInfo.allDict" [disabled]="hospitalInfo.supportType!=2">
+                        <option value="1">非共用</option>
+                        <option value="0">共用</option>
+                    </select>
+                    <span class="warning">*系统类型为模块化平台时启用</span>
+                </div>
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">产品是否共用：</div>
+                <div>
+                    <select [(ngModel)]="hospitalInfo.allProduct" [disabled]="hospitalInfo.supportType!=2">
+                        <option value="1">非共用</option>
+                        <option value="0">共用</option>
+                    </select>
+                    <span class="warning">*系统类型为模块化平台时启用</span>
+                </div>
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">是否支持检验规则：</div>
+                <div>
+                    <select [(ngModel)]="hospitalInfo.labRule">
+                        <option value="1">支持</option>
+                        <option value="0">不支持</option>
+                    </select>
+                    <span class="warning">*系统类型为模块化平台时启用</span>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding:10px;">
+            <div class="col-md-4 row">
+                <div class="col-xs-3">干预类型：</div>
+                <div>
+                    <select [(ngModel)]="hospitalInfo.gyType">
+                        <option value="1">包含处方干预和患者干预</option>
+                        <option value="0">仅支持处方干预</option>
+                    </select>
+                    <span class="warning">*系统类型为模块化平台时启用</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-3">
+            </div>
+        </div>
+    </div>
+    <div class="gray-underline-dashed">
+        <div class="row" style="padding:10px;">
+            <div class="col-md-3 row">
+                <div class="col-xs-4">实施时间：</div>
+                <!--<input class="col-xs-5" [(ngModel)]="hospitalInfo.implementTime">-->
+                <form class="form-inline" class="col-xs-8" style="padding-left:0;">
+                    <div class="form-group">
+                        <div class="input-group time-input">
+                            <input class="form-control" placeholder="yyyy-mm-dd" name="implementTime" [(ngModel)]="hospitalInfo.implementTime" ngbDatepicker
+                                #implementTime="ngbDatepicker">
+                            <div class="input-group-addon" (click)="implementTime.toggle()">
+                                <img src="../../images/calendar-icon.svg" style="width: 1.2rem; height: 1rem; cursor: pointer;" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">上线时间：</div>
+                <!--<input class="col-xs-5" [(ngModel)]="hospitalInfo.onlineTime">-->
+                <form class="form-inline" class="col-xs-8" style="padding-left:0;">
+                    <div class="form-group">
+                        <div class="input-group time-input">
+                            <input class="form-control" placeholder="yyyy-mm-dd" name="onlineTime" [(ngModel)]="hospitalInfo.onlineTime" ngbDatepicker
+                                #onlineTime="ngbDatepicker">
+                            <div class="input-group-addon" (click)="onlineTime.toggle()">
+                                <img src="../../images/calendar-icon.svg" style="width: 1.2rem; height: 1rem; cursor: pointer;" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">验收时间：</div>
+                <!--<input class="col-xs-5" [(ngModel)]="hospitalInfo.checkTime">-->
+                <form class="form-inline" class="col-xs-8" style="padding-left:0;">
+                    <div class="form-group">
+                        <div class="input-group time-input">
+                            <input class="form-control" placeholder="yyyy-mm-dd" name="checkTime" [(ngModel)]="hospitalInfo.checkTime" ngbDatepicker
+                                #checkTime="ngbDatepicker">
+                            <div class="input-group-addon" (click)="checkTime.toggle()">
+                                <img src="../../images/calendar-icon.svg" style="width: 1.2rem; height: 1rem; cursor: pointer;" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">接口方式：</div>
+                <select class="col-xs-5" [(ngModel)]="hospitalInfo.interfaceMode">
+                    <option >—— ——</option>
+                    <option value="dll">dll</option>
+                    <option value="ws">ws</option>
+                    <option value="js">js</option>
+                </select>
+            </div>
+        </div>
+        <div class="row" style="padding:10px;">
+            <div class="col-md-3 row">
+                <div class="col-xs-4">远程工具：</div>
+                <input class="col-xs-5" [(ngModel)]="hospitalInfo.remoteTool">
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">销售负责人：</div>
+                <input class="col-xs-5" [(ngModel)]="hospitalInfo.saleResponse">
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">技术负责人：</div>
+                <input class="col-xs-5" [(ngModel)]="hospitalInfo.techPerson">
+            </div>
+            <div class="col-md-3 row">
+                <div class="col-xs-4">业务负责人：</div>
+                <input class="col-xs-5" [(ngModel)]="hospitalInfo.businessPerson">
+            </div>
+        </div>
+        <div class="row" style="padding:10px;">
+            <div class="col-md-3 row">
+                <div class="col-xs-4"><strong class="required">*</strong>医院状态：</div>
+                <select class="col-xs-5" [(ngModel)]="hospitalInfo.currentStatus" ngRequired>
+                    <option value="">—— ——</option>
+                <option *ngFor="let hospStatus of hospitalStatusArr" [value]="hospStatus">{{hospStatus}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="row" style="padding:10px;" *ngIf="hospitalInfo.sysType == 4">
+            <div class="col-md-3 row">
+                <div class="col-xs-4">系统菜单：</div>
+                <div class="col-xs-8">
+                    <img src="../../images/search.png" (click)="showDialog('选择系统菜单','systemMenu')">
+                    <span class="warning">*系统类型为模块化平台时启用</span>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding:10px;" *ngIf="hospitalInfo.sysType == 4">
+            <div class="col-md-10 row">
+                <div class="col-xs-1">干预阶段：</div>
+                <div class="col-xs-8">
+                    <textarea style="width:100%" [(ngModel)]="hospitalInfo.gyPhaseName" readonly (click)="showDialog('选择干预菜单','gy')"></textarea>
+                    <span class="warning">*系统类型为模块化平台时启用</span>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding:10px;">
+            <div class="col-md-10 row">
+                <div class="col-xs-1">服务器信息：</div>
+                <div class="col-xs-8">
+                    <textarea style="width:100%" [(ngModel)]="hospitalInfo.serverInfo"></textarea>
+                </div>
+            </div>
+        </div>
+        <h3>联系人管理</h3>
+    </div>
+    <button class="btn btn-primary" (click)="editContacter()">+添加</button>
+    <my-table [table]="contacterTable">
+        <template #tableTemplate let-tableinfo>
+            <tr *ngFor="let trow of tableinfo.dataList" (click)="onSelectContacter(trow)" [class.selected]="trow === contacterInfo">
+                <td>{{trow.id}}</td>
+                <td>{{trow.name}}</td>
+                <td>{{trow.depart}}</td>
+                <td>{{trow.title}}</td>
+                <td>{{trow.module}}</td>
+                <td>{{trow.phone}}</td>
+                <td>{{trow.email}}</td>
+                <td>{{trow.otherConnect}}</td>
+                <td>
+                    <a (click)="editContacter(trow)">修改</a>|
+                    <a (click)="deleteContacter(trow.id)">删除</a>
+                </td>
+            </tr>
+        </template>
+    </my-table>
+</div>
+<div class="container" *ngIf="!isHideDialog && dialogType!=='gy' && dialogType !== 'systemMenu'">
+    <div class="modal" style="display:block;" [class.fade]="isHideDialog">
+        <!-- 隐藏class fade-->
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">
+                    <span (click)="isHideDialog = true">x</span>
+                    <span class="sr-only" (click)="isHideDialog = true">关闭</span>
+                </button>
+                    <h4 class="modal-title">{{title}}</h4>
+                </div>
+                <div class="modal-body" style="max-height: 500px;overflow-y: auto;">
+                    <div *ngIf="dialogType=='region'">
+                        <Tree #treeRegion [nodes]="regionGroup" [options]="optionsRegion" (onActivate)="getRegionNodeData($event)"></Tree>
+                    </div>
+                    <div *ngIf="dialogType=='contacter'">
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3"><strong class="required">*</strong>姓名：</div>
+                            <input [(ngModel)]="contacterInfo.name" ngRequired>
+                        </div>
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3"><strong class="required">*</strong>科室：</div>
+                            <input [(ngModel)]="contacterInfo.depart" ngRequired>
+                        </div>
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3">职务：</div>
+                            <input [(ngModel)]="contacterInfo.title">
+                        </div>
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3">负责使用模块：</div>
+                            <input [(ngModel)]="contacterInfo.module">
+                        </div>
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3"><strong class="required">*</strong>联系电话：</div>
+                            <input [(ngModel)]="contacterInfo.phone" ngRequired>
+                        </div>
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3">邮箱：</div>
+                            <input [(ngModel)]="contacterInfo.email">
+                        </div>
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3">其他联系方式：</div>
+                            <textarea [(ngModel)]="contacterInfo.otherConnect"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" (click)="isHideDialog = true">关闭</button>
+                    <button class="btn btn-primary" (click)="onSubmit()">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade" *ngIf="!isHideDialog"></div>
+</div>
+<my-dialog></my-dialog>
+<div *ngIf="dialogType=='gy' && !isHideDialog">
+    <add_drug (onClose)="isHideDialog = true" [drugGroup]="gyGroup" [options]="optionsGy" (getCheckedNodes)="getCheckedNodeGy($event)"></add_drug>
+</div>
+<div *ngIf="dialogType=='systemMenu' && !isHideDialog">
+    <add_drug (onClose)="isHideDialog = true" [drugGroup]="systemMenuGroup" [options]="optionsSystemMenu" (getCheckedNodes)="getCheckedNodeSysMenu($event)"></add_drug>
+</div>

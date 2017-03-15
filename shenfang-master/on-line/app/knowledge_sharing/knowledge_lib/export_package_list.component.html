@@ -1,0 +1,57 @@
+<div class="export-package">
+    <div class="heard-bar">
+        <a class="goback" (click)="goback()">返回</a>
+        <label for="" (click)="allHistory()" class="btn-history"><input type="checkbox" [checked]="!viewDefault">查看全部导出历史</label>
+    </div>
+    <div class="export-list">
+        <table class="last-update-table" *ngIf="viewDefault">
+            <tr>
+                <th>更新包生成时间</th>
+                <th>导出人</th>
+                <th>机构名称</th>
+                <th>适应系统</th>
+                <th>是否含患教</th>
+                <th>更新包内容</th>
+                <th>更新方式</th>
+                <th>数据开始时间</th>
+                <th>数据截止时间</th>
+                <th>更新包文件名</th>
+                <th>操作记录</th>
+                <th>操作</th>
+            </tr>
+            <tr *ngFor="let trow of viewDefaultData" (click)="onClick(trow)" [class.checked]="trow == curOrg">
+                <td>{{trow.exportedTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                <td>{{trow.exportedName}}</td>
+                <td>{{trow.hospitalName}}</td>
+                <td>{{trow.systemVersion}}</td>
+                <td>{{trow.patientRule == 'ALL' ? '全部规则保留' : (trow.patientRule == 'ONLY' ? '只含患教' : '不含患教')}}</td>
+                <td>{{trow.packageContent}}</td>
+                <td>{{trow.updateMode == 'ALL' ? '全量' : '增量'}}</td>
+                <td>{{trow.dataFromTime | date:"yyyy-MM-dd"}}</td>
+                <td>{{trow.dataToTime | date:"yyyy-MM-dd"}}</td>
+                <td>{{trow.packageFileName }}</td>
+                <td>{{trow.operateRecord}}</td>
+                <td><a (click)="downloadFile(trow)">下载</a></td>
+            </tr>
+        </table>
+        <my-table [table]="table" [notInit]="true" [hidden]="viewDefault">
+            <template #tableTemplate let-tableinfo>
+                <tr *ngFor="let trow of tableinfo.dataList;let i = index;" (click)="onClick(trow)" [class.checked]="trow == curOrg">
+                    <td>{{trow.exportedTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                    <td>{{trow.exportedName}}</td>
+                    <td>{{trow.hospitalName}}</td>
+                    <td>{{trow.systemVersion}}</td>
+                    <td>{{trow.patientRule == 'ALL' ? '全部规则保留' : (trow.patientRule == 'ONLY' ? '只含患教' : '不含患教')}}</td>
+                    <td>{{trow.packageContent}}</td>
+                    <td>{{trow.updateMode == 'ALL' ? '全量' : '增量'}}</td>
+                    <td>{{trow.dataFromTime | date:"yyyy-MM-dd"}}</td>
+                    <td>{{trow.dataToTime | date:"yyyy-MM-dd"}}</td>
+                    <td>{{trow.packageFileName }}</td>
+                    <td>{{trow.operateRecord}}</td>
+                    <td><a (click)="downloadFile(trow)" *ngIf="i < 2">下载</a></td>
+                </tr>
+            </template>
+        </my-table>
+    </div>
+</div>
+<my-dialog></my-dialog>

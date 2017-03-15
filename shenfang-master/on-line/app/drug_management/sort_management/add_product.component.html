@@ -1,0 +1,64 @@
+<!--<div class="dialog-template">
+    <div class="dialog-template-title">{{title}}<span class="icon-close" (click)="close()">x</span></div>
+    <div class="bg-white single-padding max-height700 relative dialog-template-content">
+        <form class="gray-underline" (ngSubmit)="searchProduct()">
+            <label>药品名称:</label><input type="text" [(ngModel)]="productName" name="productName">
+            <!--<label>剂型:</label><input type="text" [(ngModel)]="producerName">-->
+<!--<label>生产厂家:</label><input type="text" [(ngModel)]="producerName" name="producerName">
+            <button type="submit" (click)="searchProduct()">搜索</button>
+            <button type="button" (click)="addProduct()">添加</button>
+        </form>
+        <div id="dragDiv"></div>
+        <div style="max-height:650px;">
+            <my-table [table]="table" (onCheck)="onCheck($event)" (onClick)="onclick($event)"></my-table>
+        </div>
+    </div>
+</div>
+<div class="mask"></div>-->
+<my-dialog></my-dialog>
+<div class="container">
+    <div class="modal" style="display:block;">
+        <!-- 隐藏class fade-->
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">
+                        <span (click)="close()">x</span>
+                        <span class="sr-only" (click)="close()">关闭</span>
+                    </button>
+                    <h4 class="modal-title">{{title}}</h4>
+                </div>
+                <div class="modal-body" style="overflow-y: scroll; max-height: 500px;">
+                    <form class="gray-underline" (ngSubmit)="searchProduct()">
+                        <!--<label>产品名称:</label><input type="text" [(ngModel)]="productName" name="productName">
+                        
+                        <label>生产厂家:</label><input type="text" [(ngModel)]="producerName" name="producerName">
+                        <button class="btn btn-sm btn-primary" type="submit" (click)="searchProduct()">搜索</button>-->
+                        <div class="form-inline content-search gray-underline">
+                            <div class="form-group">
+                                <label class="control-label">产品名称：</label>
+                                <input type="text" class="form-control input-sm" name="productName" [(ngModel)]="productName">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">生产厂家</label>
+                                <input type="text" class="form-control input-sm" name="producerName" [(ngModel)]="producerName">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-sm" (click)="searchProduct()">搜索</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="dragDiv"></div>
+                    <div style="max-height:650px;">
+                        <my-table [table]="table" (onCheck)="onCheck($event)" (onClick)="onclick($event)"></my-table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" (click)="close()">关闭</button>
+                    <button class="btn btn-primary" (click)="addProduct()">添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade"></div>
+</div>

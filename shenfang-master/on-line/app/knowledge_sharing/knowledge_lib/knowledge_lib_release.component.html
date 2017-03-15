@@ -1,0 +1,195 @@
+<!-- 发布人页面 -->
+<div *ngIf="isPublisher">
+    <div class="mb5">
+        <div class="headline">
+            <h4>知识库发布（提交发布）</h4>
+        </div>
+        <div class="quick-handler">
+            <label class="warning" style="float: left;" *ngIf="isPublisher">（注：提交发布后，需审核人审核。若审核通过，知识库发布成功；若审核不通过，则需知识部修改后重新发布）</label>
+            <a class="btn btn-primary" style="float: right; " (click)="viewReleaseLogs()">发布日志</a>
+        </div>
+    </div>
+    <hr style="margin-top: 50px;" />
+    
+    <!-- 发布申请表单 -->
+    <div class="mt15 mb5" *ngIf="isShowReleaseForm">
+        <label>本次发布更新内容:</label>
+        <textarea #releaseReqDes name="releaseReqDes" cols="80" rows="6" 
+            placeholder="请填写本次发布的更新内容!" style="vertical-align: middle;"></textarea>
+        <div style="margin-top: 10px;">
+            <button type="submit" class="btn btn-primary btn-sm" (click)="submitReleaseRequest(releaseReqDes.value)">提交发布</button>
+        </div>
+    </div>
+
+    <!-- 发布申请详情 -->
+    <div class="mt15 mb5" *ngIf="isShowReleaseDetail">
+        <h4>提交发布结果：</h4>
+        <table style="vertical-align: middle">
+            <thead>
+                <th>知识库发布ID</th>
+                <th>提交发布时间</th>
+                <th>提交发布人</th>
+                <th>本次发布更新内容</th>
+                <th>提交发布结果</th>
+                <th>提交发布的知识包</th>
+            </thead>
+            <tr *ngIf="releaseRequestDto">
+                <td>{{releaseRequestDto.id}}</td>
+                <td>{{releaseRequestDto.publishedTime | date:"yyyy-MM-dd HH:mm:ss" }}</td>
+                <td>{{releaseRequestDto.publishedName}}</td>
+                <td>{{releaseRequestDto.publishContent}}</td>
+                <td>{{ publishedStatusMap[releaseRequestDto.status] }}</td>
+                <td>
+                    <a href="#" *ngIf="releaseRequestDto.status >= 100" (click)="downloadTestPackage(true)">下载测试知识包</a>
+                </td>
+            </tr>
+        </table>
+        
+    </div>
+
+    <!-- 测试结果提交表单 -->
+    <div class="mt15 mb5" *ngIf="isShowTestForm">
+        <h4>提交发布测试结果:</h4>
+        <div class="quick-handler">
+            <label class="warning">（注：请填写您根据下载的知识包进行测试的结果，方便审核发布人审核）</label>
+        </div>
+        <hr class="mt15 mb5"/>
+        
+        <div class="quick-handler">
+            <label for="testResult">测试结果:</label>
+            <select #testResult name="testResult" placeholder="请选择测试结果">
+                <option value="101">测试通过</option>
+                <option value="102">测试不通过</option>
+            </select>
+            <br />
+            <label for="testResultDes">测试意见:</label>
+            <textarea #testResultDes name="testResultDes" cols="80" rows="6" 
+                placeholder="请填写本次发布的测试意见内容!" style="vertical-align: middle;"></textarea>
+
+            <div class="mt5 mb5">
+                <button type="submit" class="btn btn-primary btn-sm" (click)="submitTestResult(testResult.value, testResultDes.value)">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 进度条 -->
+    <div *ngIf="isShowPublishProgress">
+        <label>知识库发布进度：</label>
+        <div class="progressbox">
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" [style.width]="progressWidth"></div>
+            </div>
+            <span class="progress-info">{{progressWidth}}</span>
+            <div class="progress-info" *ngIf="isPublishFailed">知识库发布失败!</div>
+        </div>
+    </div>
+</div>
+
+<!-- 审核人显示页面 -->
+<div *ngIf="isAuditor">
+    <div class="mb5">
+        <div class="headline">
+            <h4>知识库发布（审核发布）</h4>
+        </div>
+        <div class="quick-handler">
+            <label class="warning" style="float: left;" *ngIf="isAuditor">（注：显示提交发布的申请结果，并审核发布，审核发布后，形成可被下载的知识更新包）</label>
+            <a class="btn btn-primary" style="float: right; " (click)="viewReleaseLogs()">发布日志</a>
+        </div>
+    </div>
+    <hr style="margin-top: 50px;" />
+
+    <div class="mt15 mb5" *ngIf="isShowReleaseDetail">
+        <h4>最新提交发布申请：
+            <span class="warning" *ngIf="auditStatusTips">({{auditStatusTips}})</span>
+        </h4>
+        <table style="vertical-align: middle">
+            <thead>
+                <th>知识库发布ID</th>
+                <th>提交发布时间</th>
+                <th>提交发布人</th>
+                <th>本次发布更新内容</th>
+                <th>提交发布的知识包</th>
+            </thead>
+            <tr *ngIf="releaseRequestDto">
+                <td>{{releaseRequestDto.id}}</td>
+                <td>{{releaseRequestDto.publishedTime | date:"yyyy-MM-dd HH:mm:ss" }}</td>
+                <td>{{releaseRequestDto.publishedName}}</td>
+                <td>{{releaseRequestDto.publishContent}}</td>
+                <td>
+                    <a href="#" *ngIf="releaseRequestDto.status >= 100" (click)="downloadTestPackage(true)">下载测试知识包</a>
+                </td>
+            </tr>
+        </table>
+
+        <hr class="mt15 mb5" />
+    </div>
+
+    <!-- 测试结果详情 -->
+    <div class="mt10" style="font-size: 18px;" *ngIf="isShowTestDetail">
+        <label>提交发布的测试结果:</label>
+        <div style="display: inline-block;">{{releaseRequestDto.confirmInfo}}</div>
+    </div>
+    <hr class="m510 mb5" />
+
+    <!-- 审核结果详情 -->
+    <div class="mt15 mb5" *ngIf="isShowAuditButtons">
+        <button type="submit" class="btn btn-primary btn-sm" (click)="auditReleaseRequest(true)">审核通过</button>
+        <button type="submit" class="btn btn-primary btn-sm" (click)="auditReleaseRequest(false)">审核不通过</button>
+    </div>
+
+    <div class="mt15 mb5" *ngIf="isShowAuditAreaDetail">
+        <h4>审核详情：</h4>
+        <table style="vertical-align: middle;">
+            <thead>
+                <th>审核发布时间</th>
+                <th>审核发布人</th>
+                <th>审核发布结果</th>
+                <th>备注</th>
+            </thead>
+            <tr>
+                <td>{{releaseRequestDto.auditedTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                <td>{{releaseRequestDto.auditedName}}</td>
+                <td>{{ publishedStatusMap[releaseRequestDto.status] }}</td>
+                <td>{{releaseRequestDto.auditInfo}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- 消息提示浮动层 -->
+<my-dialog class="show-dialog" [dialogMsgWidth]="250">
+    <!-- 二次确认弹出框 -->
+    <template #dialogTemplate let-dialogModel>
+        <div class="dialog-template-content">
+            <div *ngIf="isAuditConfirmYes">
+                <div><label>知识库发布ID：{{releaseRequestDto.id}}</label></div>
+                <div><label>提交发布时间：{{releaseRequestDto.publishedTime}}</label></div>
+                <div>
+                    <label>本次发布更新内容：</label>
+                    <textarea cols="40" rows="6" #auditConfirmDes name="auditConfirmDes" 
+                        style="vertical-align: middle;">{{releaseRequestDto.publishContent}}</textarea>
+                </div>
+                <div><label>提交发布人：{{releaseRequestDto.publishedName}}</label></div>
+                <div><label>审核发布人：{{releaseRequestDto.auditedName}}</label></div>
+
+                <div>
+                    <button class="btn btn-primary btn-sm" (click)="postAuditConfirmData(auditConfirmDes.value); dialogModel.isTemplate = false;">确认</button>
+                    <button class="btn btn-primary btn-sm" (click)="dialogModel.isTemplate = false;">取消</button>
+                </div>
+            </div>
+
+            <div *ngIf="!isAuditConfirmYes">
+                <div>
+                    <label>审核不通过的原因：</label>
+                    <textarea cols="40" rows="6" #auditConfirmDes name="auditConfirmDes" 
+                        style="vertical-align: middle;"></textarea>
+                </div>
+
+                <div>
+                    <button class="btn btn-primary btn-sm" (click)="postAuditConfirmData(auditConfirmDes.value); dialogModel.isTemplate = false;">确认</button>
+                    <button class="btn btn-primary btn-sm" (click)="dialogModel.isTemplate = false;">取消</button>
+                </div>
+            </div>
+        </div>
+    </template>
+</my-dialog>    

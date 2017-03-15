@@ -1,0 +1,47 @@
+<style>
+	.single-margin{margin: 5px;}
+	.left{margin-right: 10px;}
+    .row{margin-right:0;margin-left:0;}
+</style>
+<div class="flex flexbox column">
+    <div class="single-margin gray-border bg-white single-padding ">
+        <span>请选择专业用语：</span>
+        <select *ngIf="dicOPtions" [(ngModel)]="dicOptionValue" (ngModelChange)="getDicTree(dicOptionValue)">>
+            <option *ngFor="let dic of dicOPtions" [value]="dic.code">{{dic.name}}</option>
+        </select>
+        <span style="padding-left:10px;">快捷选项：</span>
+        <a (click)="getDicTree(DRAG_ROUTE_CODE)">给药途径</a>
+        <a (click)="getDicTree(DELIVERY_TIME_CODE)">给药时机</a>
+    </div>
+    <div class="single-margin relative flex1 flex">
+        <div class="gray-border bg-white left single-padding">
+            <form class="gray-underline"  (ngSubmit)="searchByValue()">
+                <label>字典值:</label>
+                <input type="text" [(ngModel)]="searchText" name="searchText">
+                <button type="submit" class="btn btn-primary btn-xs">搜索</button>
+                <!--<button (click)="clearTree()">取消</button>-->
+            </form>
+            <div class="tree-list">
+                <Tree *ngIf="dictionaryGroup" #tree [nodes]="dictionaryGroup" [options]="customTemplateStringOptions" (onActivate)="getTermExplain($event)"></Tree>
+            </div>
+        </div>
+        <div class="gray-border bg-white flex1 single-padding">
+            <div *ngIf="term.name">
+                <div class="gray-underline">
+                    <a class="btn btn-primary btn-xs"  (click)="onSubmit()">保存</a>
+                </div>
+                <div class="row-group relative">
+                    <div class="row single-padding"><span>字典值:</span><span class="row-sec">{{term.name}}</span></div>
+                    <div class="row single-padding"><span>解释:</span><textarea class="row-sec" required [(ngModel)]="term.explainText"></textarea></div>
+                    <div class="row single-padding" style="padding-top: 100px"><span>患者可选:</span>
+                        <span class="row-sec">
+                        <input type="radio" name="isChoose" value="1" [ngModel]="{checked: term.patientOption == 1}" (change)="term.patientOption=$event.target.value">是
+                        <input type="radio" name="isChoose" value="2" [ngModel]="{checked: term.patientOption == 2}" (change)="term.patientOption=$event.target.value">否
+                    </span>
+                    </div>
+                </div>
+            </div>
+            <my-dialog></my-dialog>
+        </div>
+    </div>
+</div>

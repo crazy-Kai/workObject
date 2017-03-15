@@ -1,0 +1,143 @@
+<div class="single-padding">
+    <div class="gray-underline-dashed ">
+        <h3 style="margin: 5px 0px;">医院客户详细信息</h3>
+    </div>
+    <div class="row" style="padding:10px;">机构名称：{{hospitalInfo?.name}}</div>
+    <div class="row" style="padding:10px;">所属区域：{{hospitalInfo?.area}}</div>
+    <div class="row" style="padding:10px;">系统版本：{{hospitalInfo?.purchaseVersion}}</div>
+    <div class="row" style="padding:10px;">院区数量：{{hospitalInfo?.zonesNum}}</div>
+    <div class="row" style="padding:10px;">机构状态：{{hospitalInfo?.currentStatus}}</div>
+    <div class="row" style="padding:10px;">业务负责人：{{hospitalInfo?.businessPerson}}</div>
+    <div class="row" style="padding:10px;">技术负责人：{{hospitalInfo?.techPerson}}</div>
+    <div class="gray-underline-dashed ">
+        <h3 style="margin: 5px 0px;">系统激活码</h3>
+    </div>
+    <button class="btn btn-primary" (click)="addActivationCode('system')">+添加</button>
+    <my-table [table]="sysActivationCodesTable">
+        <template #tableTemplate let-tableinfo>
+            <tr *ngFor="let sysItem of tableinfo.dataList" (click)="onSelectSystem(sysItem)" (dblclick)="showInfo('system',sysItem,false)"
+                [class.selected]="sysItem === sysActivationInfo">
+                <td>{{sysItem.id}}</td>
+                <td>{{sysItem.serverCode}}</td>
+                <td>{{lisenceTypeArr[sysItem.licenseType]}}</td>
+                <td>{{sysItem.deadTime|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                <td>{{sysItem.licenseCode}}</td>
+                <td>{{sysItem.status}}</td>
+                <td>{{sysItem.entrustor}}</td>
+                <td>{{sysItem.operatorRealName}}</td>
+                <td>{{sysItem.createTime|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                <td>
+                    <a href='/api/v1/hospitalLicenseFile?id={{sysItem.id}}'>导出</a>|
+                    <a (click)="deleteSysActivationCode(sysItem.id)">删除</a>
+                </td>
+            </tr>
+        </template>
+    </my-table>
+    <div class="zone-license-code" *ngIf="(hospitalInfo.sysType == 2 && hospitalInfo.purchaseVersion == '2.0') || (hospitalInfo.sysType == 4 && hospitalInfo.purchaseVersion == '3.0' && hospitalInfo.supportType == 2)">
+        <div class="gray-underline-dashed ">
+            <h3 style="margin: 5px 0px;">院区激活码</h3>
+        </div>
+        <button class="btn btn-primary" (click)="addActivationCode('zone')" *ngIf="zoneActivationInfo.licenseCode">+添加</button>
+        <my-table [table]="zoneActivationCodesTable">
+            <template #tableTemplate let-tableinfo>
+                <tr *ngFor="let zone of tableinfo.dataList" (click)="onSelectZone(zone)" [class.selected]="zone === zoneActivationInfo">
+                    <td>{{zone.id}}</td>
+                    <td>{{zone.licenseCode}}</td>
+                    <td>{{zone.zoneCode}}</td>
+                    <td>{{zone.zoneName}}</td>
+                    <td>{{zone.zoneLicenseCode}}</td>
+                    <td>{{zone.status}}</td>
+                    <td>{{zone.entrustor}}</td>
+                    <td>{{zone.operatorRealName}}</td>
+                    <td>{{zone.createTime|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                    <td>
+                        <a href='/api/v1/hospitalZoneLicenseFile?id={{zone.id}}'>导出</a>|
+                        <a (click)="showInfo('zone',zone)">修改</a>|
+                        <a (click)="deleteZoneActivationCode(zone.id)">删除</a>
+                    </td>
+                </tr>
+            </template>
+        </my-table>
+    </div>
+</div>
+<div class="container" *ngIf="!isHideDialog">
+    <div class="modal" style="display:block;" [class.fade]="isHideDialog">
+        <!-- 隐藏class fade-->
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">
+                    <span (click)="isHideDialog = true">x</span>
+                    <span class="sr-only" (click)="isHideDialog = true">关闭</span>
+                </button>
+                    <h4 class="modal-title">{{title}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div *ngIf="dialogType=='system'">
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3">*机器码：</div>
+                            <input [(ngModel)]="sysActivationInfo.serverCode">
+                        </div>
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3">*授权类型：</div>
+                            <select [(ngModel)]="sysActivationInfo.licenseType">
+                                <option value="U">无限期授权</option>
+                                <option value="L">日期受限授权</option>
+                            </select>
+                        </div>
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3">*到期时间：</div>
+                            <!--<input [(ngModel)]="sysActivationInfo.deadTime" type="date">-->
+                            <form class="form-inline">
+                                <div class="form-group">
+                                    <div class="input-group time-input">
+                                        <input class="form-control" placeholder="yyyy-mm-dd" name="deadTime" [(ngModel)]="deadTime" ngbDatepicker #sysDeadTime="ngbDatepicker">
+                                        <div class="input-group-addon" (click)="sysDeadTime.toggle()">
+                                            <img src="../../images/calendar-icon.svg" style="width: 1.2rem; height: 1rem; cursor: pointer;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3">委托人：</div>
+                            <input [(ngModel)]="sysActivationInfo.entrustor">
+                        </div>
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3">用户使用激活码：</div>
+                            <textarea [(ngModel)]="sysActivationInfo.licenseCode" readonly></textarea>
+                        </div>
+                    </div>
+                    <div *ngIf="dialogType=='zone'">
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3">*系统激活码：</div>
+                            <input [(ngModel)]="zoneActivationInfo.licenseCode" readonly>
+                        </div>
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3">*院区编码：</div>
+                            <input [(ngModel)]="zoneActivationInfo.zoneCode">
+                        </div>
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3">*院区名称：</div>
+                            <input [(ngModel)]="zoneActivationInfo.zoneName">
+                        </div>
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3">院区激活码：</div>
+                            <input [(ngModel)]="zoneActivationInfo.zoneLicenseCode">
+                        </div>
+                        <div class="row" style="padding:10px;">
+                            <div class="col-md-3">委托人：</div>
+                            <input [(ngModel)]="zoneActivationInfo.entrustor">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" (click)="isHideDialog = true">关闭</button>
+                    <button class="btn btn-primary" (click)="onSubmit()" *ngIf="isSubmit">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade" *ngIf="!isHideDialog"></div>
+</div>
+<my-dialog></my-dialog>

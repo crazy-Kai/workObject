@@ -1,0 +1,225 @@
+<style>
+    .row-label {
+        width: 100px;
+        text-align: right;
+        display: inline-block;
+    }
+    .single-margin{margin: 5px;}
+</style>
+<div class="flex flexbox column">
+    <div class="single-margin gray-border bg-white single-padding">
+        <label>分类名称:</label>
+        <input type="text" [(ngModel)]="searchText" (keyup.enter)="searchInputEntered()"
+            [autoSuggestion] (select)="searchText=$event.name" [url]="drugSuggestionAPI">
+        <button class="btn btn-sm btn-primary" (click)="searchByDrugName()">搜索</button>
+    </div>
+
+    <div class="single-margin gray-border bg-white single-padding">
+        <!--<button>添加根分类</button>-->
+        <button  class="btn btn-sm btn-primary" (click)="goToTab(3)">添加子分类</button>
+        <!--<button  class="btn btn-sm btn-primary" (click)="copy()">拷贝添加</button>-->
+        <button  class="btn btn-sm btn-danger" (click)="deleteDrug()">删除</button>
+        <!--<button  class="btn btn-sm btn-primary">盐基属性升级</button>-->
+    </div>
+
+    <div class="single-margin relative flex1 flex" style="overflow:auto">
+        <div class="gray-border bg-white left single-padding" style="overflow:auto">
+            <Tree #tree [nodes]="drugGroup" class="my-tree" [options]="customTemplateStringOptions" (onActivate)="getDrugDetail($event)"></Tree>
+        </div>
+        <div class="flex1 flex column" style="margin-left:10px">
+            <!--<div class="tab ">
+                <a (click)="goToTab(1)" [class.active]="selectedTab==1">分类信息</a>
+                <a (click)="goToTab(2)" [class.active]="selectedTab==2">产品映射</a>
+            </div>-->
+
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" (click)="goToTab(1)" [class.active]="selectedTab==1"><a>分类信息</a></li>
+                <li role="presentation" (click)="goToTab(2)" [class.active]="selectedTab==2"><a>产品映射</a></li>
+            </ul>
+
+
+            <div class="flex1" style="overflow: auto;" [hidden]="selectedTab!==1">
+                <div class="bg-white single-padding ">
+                    <div *ngIf="isShow">
+                        <button class="btn btn-sm btn-primary" (click)="saveDrugInfo()">保存药理分类</button>
+                        <div class="row2 single-padding">
+                            <span class="row-label">分类路径：</span>
+                            <span class="row-insec" [innerHtml]="drugForm.drugPath"></span>
+                        </div>
+                        <div class="row2 single-padding">
+                            <span class="row-label">分类id：</span>
+                            <span class="row-insec">
+                                <input type="text" [(ngModel)]="drugForm.drug.id" readonly>
+                            </span>
+                        </div>
+                        <div class="row2 single-padding">
+                            <span class="row-label">分类名称：</span>
+                            <span class="row-insec">
+                                <input type="text" [(ngModel)]="drugForm.drug.ypmc" *ngIf="drugForm.drug.ypmc=='规则'" >
+                                <input type="text" [(ngModel)]="drugForm.drug.ypmc" *ngIf="drugForm.drug.ypmc!='规则'">
+                            </span>
+                        </div>
+                        <div class="row2 single-padding">
+                            <span class="row-label">父分类名称：</span>
+                            <span class="row-insec">
+                                <input  [(ngModel)]="drugService.flmcId"  type="hidden"/>
+                                <input type="text" [(ngModel)]="drugService.flmc"><button class="btn btn-sm btn-primary" (click)="chooseDrug()">选择</button>
+                            </span>
+                        </div>
+                        <div class="row2 single-padding">
+                            <span class="row-label">分类编码：</span>
+                            <span class="row-insec">
+                                <input type="text" [(ngModel)]="drugForm.drug.code" readonly>
+                            </span>
+                        </div>
+                        <div class="row2 single-padding">
+                            <span class="row-label">DDD：</span>
+                            <span class="row-insec">
+                                <input type="text" [(ngModel)]="drugForm.drug.ddd">
+                            </span>
+                        </div>
+                        <div class="row2 single-padding">
+                            <span class="row-label">DDD单位：</span>
+                            <span class="row-insec">
+                                <input type="text" [(ngModel)]="drugForm.drug.dddUnit">
+                            </span>
+                        </div>
+                        <div class="row2 single-padding">
+                            <span class="row-label">状态：</span>
+                            <select class="combox" name="drugForm.drug.status" [(ngModel)]="drugForm.drug.status">
+                                <option value="0" >已审核</option>
+                                <option value="1" >已分配</option>
+                                <option value="2" >编辑中</option>
+                                <option value="3" >待审核</option>
+                                <option value="4" >已审核</option>
+                            </select>
+                        </div>
+                        <div class="row2 single-padding">
+                            <span class="row-label">维护人：</span>
+                            <select class="combox" [(ngModel)]="drugForm.drug.userId">
+                                <option *ngFor="let user of drugForm.userList"  [value]="user.id">{{user.username}}</option>
+                            </select>
+                        </div>
+                        <div class="row2 single-padding">
+                            <span class="row-label">审核人：</span>
+                            <select class="combox" [(ngModel)]="drugForm.drug.confirmUserId">
+                                <option *ngFor="let user of drugForm.userList"  [value]="user.id">{{user.username}}</option>
+                            </select>
+                        </div>
+                        <div class="row2 single-padding">
+                            <span class="row-label">继承属性：</span>
+                            <span class="row-insec">
+                                <div *ngFor="let item of drugForm.parentPropertyList" >{{item}}</div>
+                            </span>
+                        </div>
+                        <div class="row2 single-padding">
+                            <span class="row-label">分类属性：</span>
+                            <span class="row-insec">
+                                <textarea type="text" rows="12" cols="30"
+                                    style="overflow-y: auto; word-break:break-all;"
+                                    [(ngModel)]="drugForm.drugPropertyDictValues" 
+                                    (focus)="addFlArtt()"></textarea>
+                                <input type="hidden" [(ngModel)] = "drugForm.drugPropertyDictCodes">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex1" style="overflow: auto;padding-top: 10px" [hidden]="selectedTab!=2">
+                <button class="btn btn-sm btn-primary" (click)="addProduct()">添加产品</button>
+                <!--<button>按名称添加产品</button>-->
+                <button class="btn btn-sm btn-danger" (click)="deleteDrugProduct()">删除产品</button>
+                <my-table [table]="table" (onClick)="onclick($event)" (onCheck)="onCheck($event)"></my-table>
+            </div>
+            <div class="flex1" style="overflow: auto;" *ngIf="selectedTab===3">
+                <div class="bg-white right single-padding ">
+                    <button class="btn btn-sm btn-primary" (click)="saveDrugInfoChild()">保存药理分类</button>
+                    <div class="row2 single-padding">
+                        <span class="row-label"><em style="color: #f00;">*</em>分类名称：</span>
+                        <span class="row-insec">
+                                <input type="text" [(ngModel)]="drugRoot.ypmc" >
+                            </span>
+                    </div>
+                    <div class="row2 single-padding">
+                        <span class="row-label">当前父分类：</span>
+                        <span class="row-insec">
+                                <input type="text" [(ngModel)]="drugRoot.flmc" readonly>
+                            </span>
+                    </div>
+                    <div class="row2 single-padding">
+                        <span class="row-label">其他父分类：</span>
+                        <span class="row-insec">
+                            <input type="text" [(ngModel)]="drugService.flmc" readonly>
+                            <img src='../../../images/search.png' (click)="chooseDrug()">
+                            </span>
+                    </div>
+                    <div class="row2 single-padding">
+                        <span class="row-label">DDD：</span>
+                        <span class="row-insec">
+                            <input type="text" [(ngModel)]="drugRoot.ddd">
+                            </span>
+                    </div>
+                    <div class="row2 single-padding">
+                        <span class="row-label">DDD单位：</span>
+                        <span class="row-insec">
+                            <input type="text" [(ngModel)]="drugRoot.dddUnit">
+                            </span>
+                    </div>
+                    <div class="row2 single-padding">
+                        <span class="row-label">状态：</span>
+                        <select class="combox" name="drugRoot.status" [(ngModel)]="drugRoot.status">
+                                <option value="0" >已审核</option>
+                                <option value="1" >已分配</option>
+                                <option value="2" >编辑中</option>
+                                <option value="3" >待审核</option>
+                                <option value="4" >已审核</option>
+                            </select>
+                    </div>
+                    <!--<div class="row2 single-padding"><span>维护人：</span>
+                            <select class="combox" [(ngModel)]="drugRoot.userId">
+                                <option *ngFor="let user of drugForm.userList"  [value]="user.id">{{user.username}}</option>
+                            </select>
+                        </div>
+                        <div class="row2 single-padding"><span>审核人：</span>
+                            <select class="combox" [(ngModel)]="drugRoot.confirmUserId">
+                                <option *ngFor="let user of drugForm.userList"  [value]="user.id">{{user.username}}</option>
+                            </select>
+                        </div>
+
+                        <div class="row2 single-padding"><span>继承属性：</span>
+                            <span class="row-insec">
+                                <div *ngFor="let item of drugForm.parentPropertyList" >{{item}}</div>
+                            </span>
+                        </div>-->
+                    <div class="row2 single-padding">
+                        <span class="row-label">分类属性：</span>
+                        <span class="row-insec">
+                                <textarea type="text" [(ngModel)]="drugForm.drugPropertyDictValues" (focus)="addFlArtt()"></textarea>
+                                <input type="hidden" [(ngModel)]="drugForm.drugPropertyDictCodes">
+                            </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<my-dialog>
+    <template #dialogTemplate let-dialogModel>
+        <div class="modal-body" style="max-height:500px;overflow:auto;">
+            <div>
+                <span><label>药品名称：</label><input type="text" [(ngModel)]="searchDrugText"></span>
+                <button class="btn btn-sm btn-primary" (click)="searchDrug()">搜索</button>
+            </div>
+            <div class="">
+                <drug-category-tree [keyword]="searchDrugName" (onActivate)="getDrugTreeNode($event,dialogModel)"></drug-category-tree>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-sm btn-danger" (click)="onClose();dialogModel.isTemplate = false;" *ngIf="!isCopy">取消</button>
+            <button class="btn btn-sm btn-danger" (click)="dialogModel.isTemplate = false;" *ngIf="isCopy">关闭</button>
+            <button class="btn btn-sm btn-primary" (click)="dialogModel.isTemplate = false;" *ngIf="!isCopy">确定</button>
+        </div>
+    </template>
+</my-dialog>
+<add_product *ngIf="isAddProductDialog" (onClose)="onProductClose($event)" [drugForm]="drugForm" [title]="titleProduct"></add_product>
+<add_drug *ngIf="isAddDrugDialog" (onClose)="onDrugClose()" [drugGroup]="propertyGroup" [options]="options" (getCheckedNodes)="getCheckedNode($event)"></add_drug>

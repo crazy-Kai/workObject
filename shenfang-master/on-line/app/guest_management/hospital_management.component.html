@@ -1,0 +1,97 @@
+<div class="spec-m-container">
+    <div class="flex column flexbox">
+        <div class="form-inline search-form fixed-header">
+            <div class="form-group">
+                <label>机构名称：</label>
+                <input type="text" class="form-control input-sm" [(ngModel)]="searchService.hospName" (keyup.enter)="searchInputEntered()"
+                    [autoSuggestion] (select)="searchService.hospName=$event.name" [url]="hospitalSuggestionURL">
+            </div>
+            <div class="form-group">
+                <label>医院状态：</label>
+                <select [(ngModel)]="searchService.hospCurrentStatus" class="form-control input-sm">
+                    <option value="">—— ——</option>
+                    <option *ngFor="let hospStatus of hospitalStatusArr" [value]="hospStatus">{{hospStatus}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>区域:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control input-sm" [(ngModel)]="hosName" readonly (click)=" this.isHideDialog = false;this.checkedArea = null;" (keyup.enter)="searchInputEntered()">
+                    <a class="input-group-addon" *ngIf="hosName" (click)="resetRegion()">x</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>技术负责人：</label>
+                <input type="text" class="form-control input-sm" [(ngModel)]="searchService.hospTechPerson">
+            </div>
+            <div class="form-group">
+                <label>业务负责人：</label>
+                <input type="text" class="form-control input-sm" [(ngModel)]="searchService.hospBusinessPerson">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary btn-sm" (click)="onSearch()">搜索</button>
+            </div>
+        </div>
+        
+        <div class="btn-group mb10">
+            <div class="single-padding">
+                <button type="button" class="btn btn-primary btn-sm" (click)="goToEditPage()">+添加</button>
+            </div>
+        </div>
+
+        <div class="flex1 elastictable">
+            <my-table [table]="table" [isFixedHeader]="true">
+                <template #tableTemplate let-tableinfo>
+                    <tr *ngFor="let trow of tableinfo.dataList" (click)="onSelect(trow)" (dblclick)="goToEditPage(trow.id)" [class.selected]="trow == selectHosp">
+                        <td width="4%">{{trow.id}}</td>
+                        <td width="8%">{{trow.name}}</td>
+                        <td width="6%">{{trow.level}}</td>
+                        <td width="8%">{{trow.area}}</td>
+                        <td width="6%">{{trow.currentStatus}}</td>
+                        <td width="9%">{{trow.implementTime|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                        <td width="9%">{{trow.onlineTime|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                        <td width="9%">{{trow.checkTime|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                        <td width="8%">{{trow.techPerson}}</td>
+                        <td width="8%">{{trow.businessPerson}}</td>
+                        <td width="9%">{{trow.updateTime|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                        <td width="6%">
+                            <a (click)="goToEditPage(trow.id)">修改</a> |
+                            <a (click)="deleteHosp(trow.id)">删除</a>
+                        </td>
+                        <td width="6%">
+                            <a (click)="goToAuthCodePage(trow.id)">授权码管理</a>
+                            <!--|
+                            <a>服务日志</a>-->
+                        </td>
+                    </tr>
+                </template>
+            </my-table>
+            <!--(onClick)="onSelectedUser($event)"-->
+        </div>
+    </div>
+    <div class="container" *ngIf="!isHideDialog">
+        <div class="modal" style="display:block;" [class.fade]="isHideDialog">
+            <!-- 隐藏class fade-->
+            <div class="modal-dialog" style="z-index: 1050;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">
+                        <span (click)="isHideDialog = true">x</span>
+                        <span class="sr-only" (click)="isHideDialog = true">关闭</span>
+                    </button>
+                        <h4 class="modal-title">区域选择</h4>
+                    </div>
+                    <div class="modal-body" style="max-height: 500px;overflow-y: auto;">
+                        <Tree #tree [nodes]="regionGroup" [options]="optionsRegion" (onActivate)="getRegionNodeData($event)"></Tree>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" (click)="isHideDialog = true">关闭</button>
+                        <button class="btn btn-primary" (click)="onSubmit()">提交</button>
+                    </div>
+                </div>
+            </div>
+            <div class="in modal-backdrop fade" *ngIf="!isHideDialog"></div>
+        </div>
+    </div>
+    <my-dialog></my-dialog>
+</div>

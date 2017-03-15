@@ -1,0 +1,79 @@
+.data-sort-container{
+    margin: 10px;
+    position: absolute;
+    left: 0;top: 0;right: 0;bottom: 0;
+}
+.data-sort-container .input-sm{
+    width: 250px!important;
+}
+.data-sort-container textarea{
+    min-width: 400px!important; 
+}
+.category{
+    padding: 10px;width: 400px;height: 100%;
+    float:left;
+    background: #fff;
+    box-shadow: 0 0 1px 1px #e9e9e9;
+}
+.category .search-panel{
+    width: 100%;
+    height: 34px;margin-bottom: 16px
+}
+.category .search-panel .input-group-addon{
+    padding: 0;width: 30px;
+    background: url('../../../images/commonicons/search-icon.svg') center center no-repeat;
+}
+.category-list{
+    float: left;
+    overflow: auto;padding: 10px;
+    border: 1px solid #e9e9e9;
+}
+.category-list .inline-list{float: left;}
+.category-list .nodes-icon{
+    padding-left: 25px;height: 20px;
+    background: url('../../../images/zTreeStrandard_folder.svg') center center no-repeat;
+}
+.category-list .node-icon{
+    padding-left: 25px;height: 20px;
+    background: url('../../../images/zTreeStrandard_folder.svg') center center no-repeat;
+}
+.category-list  .node-add:after{
+    content: " ";
+    padding-left: 25px;height: 20px;
+    background: url('../../../images/commonicons/add-icon.svg') center center no-repeat;
+}
+.category-list  .node-delete:after{
+    content: " ";
+    padding-left: 25px;height: 20px;
+    background: url('../../../images/commonicons/delete-icon.svg') center center no-repeat;
+}
+
+.handler-panel{
+    margin-left: 415px;padding: 10px;
+    height: 100%;
+    box-shadow: 0 0 1px 1px #e9e9e9;
+}
+.handler-panel .nav-tabs{
+    height: 42px;
+}
+.panel-content{
+    padding: 10px;
+    overflow: auto;
+}
+.add-category-form{
+
+}
+.add-category-form .col-md-2{min-width: 160px}
+.add-category-form .form-group{
+    height: 30px;margin-bottom: 15px;
+}
+.add-category-form .form-group label{
+    margin-top: 5px;margin-right: 5px;padding:0;
+    text-align: right;
+    font-weight: 500;
+}
+.add-category-form .form-group span{line-height: 30px;}
+.add-category-form .form-group label em{
+    padding: 0 5px;
+    font-weight: 800;color: #f00;
+}

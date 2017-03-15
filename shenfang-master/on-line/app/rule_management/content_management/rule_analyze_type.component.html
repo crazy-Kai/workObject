@@ -1,0 +1,26 @@
+<div class="gray-border single-padding ">
+    <div class="m-classification gray-border bg-white left single-padding height500">
+        <div class="m-search-part">
+            <label>字典名称：</label><input type="text" [(ngModel)]="searchText">
+            <button (click)="searchRule()">搜索</button>
+        </div>
+        <div class="m-hr"></div>
+        <Tree #tree [nodes]="ruleGroup" [options]="customTemplateStringOptions"  (onActivate)="getRuleTreeNode($event)"></Tree>
+    </div>
+
+    <div *ngIf="ruleInfo.dictValue">
+        <button (click)="addRule()">添加</button>
+        <button (click)="delete()">删除</button>
+    </div>
+
+    <div class="m-show-info gray-border bg-white right single-padding height500" >
+        <div *ngIf="ruleInfo.dictValue">
+            <button (click)="onSubmit()">保存</button>
+            <div class="m-hr"></div>
+            <div><label>字典名称:</label><input type="text" [(ngModel)]="ruleInfo.code"></div>
+            <div><label>说明：</label><textarea rows="3" [(ngModel)]="ruleInfo.remark"></textarea></div>
+        </div>
+    </div>
+</div>
+
+<my-dialog></my-dialog>

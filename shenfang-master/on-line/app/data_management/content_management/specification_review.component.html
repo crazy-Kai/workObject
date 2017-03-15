@@ -1,0 +1,109 @@
+<!--v1.0.0.1-->
+<div class="">
+    <div class="addInsHeader">
+        <button class="btn btn-primary btn-sm" (click)="getBack()">返回</button>
+    </div>
+    <div class="addIndCon drugReview">
+        <div form class="form-horizontal" role="form">
+            <!--药品基本信息-->
+            <div class="basic-info">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">通用名：</label>
+                    <div class="col-md-10 form-inline">
+                        <span class="drug-info-left">{{instructionDto.genericName}}</span>
+                        <span class="glyphicon glyphicon-circle-arrow-left" *ngIf="instructionDto.product.chineseproductname"></span>
+                        <span class="drug-info-right" *ngIf="instructionDto.product.chineseproductname">{{instructionDto.product.chineseproductname}}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">商品名：</label>
+                    <div class="col-md-10 form-inline">
+                        <span class="drug-info-left">{{instructionDto.tradeName}}</span>
+                        <span class="glyphicon glyphicon-circle-arrow-left" *ngIf="instructionDto.product.goodsname"></span>
+                        <span class="drug-info-right" *ngIf="instructionDto.product.goodsname">{{instructionDto.product.goodsname}}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">厂家：</label>
+                    <div class="col-md-10 form-inline">
+                        <span class="drug-info-left">{{instructionDto.producer}}</span>
+                        <span class="glyphicon glyphicon-circle-arrow-left" *ngIf="instructionDto.product.chinesemanufacturename"></span>
+                        <span class="drug-info-right" *ngIf="instructionDto.product.chinesemanufacturename">{{instructionDto.product.chinesemanufacturename}}</span>
+                    </div>
+                </div><div class="form-group">
+                    <label class="col-md-2 control-label">剂型：</label>
+                    <div class="col-md-10 form-inline">
+                        <span class="drug-info-left">{{instructionDto.drugForm}}</span>
+                        <span class="glyphicon glyphicon-circle-arrow-left" *ngIf="instructionDto.product.formulation"></span>
+                        <span class="drug-info-right" *ngIf="instructionDto.product.formulation">{{instructionDto.product.formulation}}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">拼音：</label>
+                    <div class="col-md-10 form-inline">
+                        <span class="drug-info-left">{{instructionDto.pinyin}}</span>
+                        <span class="glyphicon glyphicon-circle-arrow-left" *ngIf="instructionDto.product.pinyin"></span>
+                        <span class="drug-info-right" *ngIf="instructionDto.product.pinyin">{{instructionDto.product.pinyin}}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">说明书规格：</label>
+                    <div class="col-md-10 form-inline">
+                        <span>{{instructionDto.drugSpec}}</span>
+                    </div>
+                </div>
+            </div>
+            <!--药品规格-->
+            <div class="drugs-spec" *ngIf="instructionDto.spacList.length">
+                 <div class="form-group">
+                    <label class="col-md-2 control-label">规格：</label>
+                    <div class="col-md-10 form-inline">
+                        <div *ngFor="let spec of instructionDto.spacList;" style="margin-bottom: 10px;">
+                            <span class="drug-info-left">{{spec.drugspac}}</span>
+                            <span class="glyphicon glyphicon-circle-arrow-left"></span>
+                            <span class="drug-info-right">{{spec.productspac}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--date and instruction-->
+            <div class="addition-info">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">最新核准/修改日期：</label>
+                    <div class="col-md-10 form-inline">
+                        {{instructionDto.approveDate | date: "yyyy-MM-dd"}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 control-label">指定审核人：</label>
+                    <div class="col-md-10 form-inline">
+                        {{instructionDto.auditedName}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">摘要：</label>
+                    <div class="col-md-10 form-inline" [innerHTML]="instructionDto.summary">
+                        <!--摘要-->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">说明书：</label>
+                    <div class="col-md-10 form-inline" [innerHTML]="instructionDto.contents">
+                        <!--说明书-->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">说明书原件：</label>
+                    <div class="col-md-10 form-inline" style="padding-top: 7px;">
+                        <ul class="instruction-imgs">
+                            <li *ngFor="let insImg of instructionImgs">
+                                <img [src]="'/api/v1/orgFileOpen?filePath='+insImg.filePath" (click)="preview(insImg)">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <my-dialog></my-dialog>
+</div>

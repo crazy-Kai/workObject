@@ -1,0 +1,7 @@
+.row div{
+    display: inline-block;
+    margin-left: 2px;
+}
+div.row {
+    margin: 10px 5px 10px 5px;
+}

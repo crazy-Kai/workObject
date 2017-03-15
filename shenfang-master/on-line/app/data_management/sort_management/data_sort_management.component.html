@@ -1,0 +1,420 @@
+<div class="data-sort-container">
+    <div class="category flex column">
+        <div class="search-panel form-inline">
+            <div class="form-group">
+                <label class="control-label">资料名称：</label>
+                <div class="input-group">
+                    <div class="input-group-addon"></div>
+                    <input class="form-control" type="text" placeholder="请输入关键字" [(ngModel)]="searchWord"
+                        [autoSuggestion] (select)="searchWord=$event.name" [url]="booksSuggestionAPI">
+                </div>
+                <button type="submit" class="btn btn-primary" (click)="search()">搜索</button>
+            </div>
+        </div>
+        <div id="data-category-list" class="category-list flex1">
+            <Tree [nodes]="bookTreeData" [options]="options" class="my-tree" (onToggle)="getChildren($event)" (onActivate)="chooseNode($event)">
+                <template #treeNodeTemplate let-node>
+                    <div >
+                        <span [class.nodes-icon]="node.data.type == 0" [class.node-icon]="node.data.type != 0"></span>
+                        <span>{{node.data.name || node.data.bookName}}</span>
+                        <span *ngIf="node.data.type == 0 && node.data == curNode" (click)="add(node)"><img src="../../../images/commonicons/add-icon.svg"></span>
+                        <span *ngIf="node.data == curNode && node.data.pid != null" (click)="delData(node)"><img src="../../../images/commonicons/delete-icon.svg" style="vertical-align: -2px;"></span>
+                    </div>
+                </template>
+            </Tree>
+        </div>
+    </div>
+    <div class="handler-panel flex column" *ngIf="curNode">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" *ngIf="(curNode.type == 0 && curNode.pid == null) && !isAdd" class="active"><a>{{curNode.name}}</a></li>
+            <li role="presentation" *ngIf="curNode.type != 0 || isAdd" [class.active]="handlerType != 'addCate'" (click)="handlerType = 'addData' || !isAdd"><a>{{isAdd ? '添加' : '修改'}}资料</a></li>
+            <li role="presentation" *ngIf="(curNode.type == 0 && curNode.pid != null) || isAdd" [class.active]="handlerType == 'addCate' || !isAdd" (click)="handlerType = 'addCate'"><a>{{isAdd ? '添加' : '修改'}}分类</a></li>
+        </ul>
+        <div class="flex1 panel-content">
+            <div *ngIf="(isAdd || curNode.type != 0) && handlerType != 'addCate'">
+                <!--添加书籍-->
+                <div class="add-category-form" *ngIf="docType == 'data_pharmacy'">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">书籍ID：</label>
+                        <div class="form-inline">
+                            <span>{{pharmacy.id ? pharmacy.id : '自动生成'}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>书籍名称：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="pharmacy.bookName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>作者：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="pharmacy.bookAuthor">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>卷：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="pharmacy.volume">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>版次：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="pharmacy.edition">
+                        </div>
+                    </div>
+                    <div class="form-group" style="position: relative;">
+                        <label class="col-md-2 control-label"><em>*</em>出版日期：</label>
+                        <div class="form-inline">
+                            <input class="form-control timeipt input-sm" placeholder="yyyy-mm-dd" (click)="startDateforSearch.toggle()" [maxDate]="maxEndDate" name="startDateforSearch" [(ngModel)]="pharmacy.calcTime"  tabIndex="-1" ngbDatepicker #startDateforSearch="ngbDatepicker">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>ISBN：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="pharmacy.isbn">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>语种：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="pharmacy.languages">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>出版社：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="pharmacy.press">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>出版地：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="pharmacy.publicationPlace">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: auto;">
+                        <label class="col-md-2 control-label">书籍简介：</label>
+                        <div class="form-inline">
+                            <textarea class="form-control" rows="4" [(ngModel)]="pharmacy.briefIntroduction"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{{pharmacy.updatedTime ? '修改人' : '添加人'}}：</label>
+                        <div class="form-inline">
+                            <span>{{pharmacy.updatedBy ? pharmacy.updatedName : (pharmacy.createdBy ? pharmacy.createdName : '自动获取')}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{{pharmacy.updatedTime ? '修改' : '添加'}}时间：</label>
+                        <div class="form-inline">
+                            <span>{{pharmacy.updatedTime ? (pharmacy.updatedTime | date:"yyyy-MM-dd") : (pharmacy.createdTime ? (pharmacy.createdTime | date:"yyyy-MM-dd") : '自动获取')}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"> </label>
+                        <div class="form-inline">
+                            <button type="submit" class="btn btn-default" (click)="save()">保存</button>
+                        </div>
+                    </div>
+                </div>
+                <!--添加期刊-->
+                <div class="add-category-form" *ngIf="docType == 'data_periodical'">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">期刊ID：</label>
+                        <div class="form-inline">
+                            <span>{{periodical.id ? periodical.id : '自动生成'}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>期刊名称：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="periodical.periodicalName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>英文缩写：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="periodical.nameZhEn">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>语种：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="periodical.languages">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>出版社或管理机构：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="periodical.press">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>出版地：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="periodical.publicationPlace">
+                        </div>
+                    </div>
+                    <div class="form-group" style="position: relative;">
+                        <label class="col-md-2 control-label">创刊日期：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="periodical.firstTime">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>出版周期：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="periodical.cyclePub">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>ISSN：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="periodical.issn">
+                        </div>
+                    </div>
+                    <!--需要特殊处理-->
+                    <div class="form-group" *ngFor="let impact of impactFactors;let i = index">
+                        <label class="col-md-2 control-label">影响因子：</label>
+                        <div class="form-inline" >
+                            <select [(ngModel)]="impact[0]" (ngModelChange)="impactReact(impact, i)">
+                                <option *ngFor="let year of years" [value]="year">{{year}}</option>
+                            </select>
+                            <input type="text" class="form-control input-sm" [(ngModel)]="impact[1]" (ngModelChange)="impactReact(impact, i)">
+                            <span *ngIf="impact[0] != '' || impact[1] != ''" (click)="spliceImpactFactors(i)">X</span>
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: auto">
+                        <label class="col-md-2 control-label">杂志简介/稿件收录要求：</label>
+                        <div class="form-inline">
+                            <textarea class="form-control" rows="4" [(ngModel)]="periodical.briefIntroduction"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group" style="position: relative;">
+                        <label class="col-md-2 control-label">投稿链接：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="periodical.submissionLink">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{{periodical.updatedTime ? '修改人' : '添加人'}}：</label>
+                        <div class="form-inline">
+                            <span>{{periodical.updatedBy ? periodical.updatedName : (periodical.createdBy ? periodical.createdName : '自动获取')}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{{periodical.updatedTime ? '修改' : '添加'}}时间：</label>
+                        <div class="form-inline">
+                            <span>{{periodical.updatedTime ? (periodical.updatedTime | date:"yyyy-MM-dd") : (periodical.createdTime ? (periodical.createdTime | date:"yyyy-MM-dd") : '自动获取')}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"> </label>
+                        <div class="form-inline">
+                            <button type="submit" class="btn btn-default" (click)="save()">保存</button>
+                        </div>
+                    </div>
+                </div>
+                <!--添加电子文献-->
+                <div class="add-category-form" *ngIf="docType == 'data_elec_doc'">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">电子文献ID：</label>
+                        <div class="form-inline">
+                            <span>{{elecDoc.id ? elecDoc.id : '自动生成'}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>电子刊名：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="elecDoc.name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>网站名称：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="elecDoc.websiteName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">网站链接：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="elecDoc.websiteLink">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>语种：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="elecDoc.languages">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>管理机构：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="elecDoc.administration">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{{elecDoc.updatedTime ? '修改人' : '添加人'}}：</label>
+                        <div class="form-inline">
+                            <span>{{elecDoc.updatedBy ? elecDoc.updatedName : (elecDoc.createdBy ? elecDoc.createdName : '自动获取')}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{{elecDoc.updatedTime ? '修改' : '添加'}}时间：</label>
+                        <div class="form-inline">
+                            <span>{{elecDoc.updatedTime ? (elecDoc.updatedTime | date:"yyyy-MM-dd") : (elecDoc.createdTime ? (elecDoc.createdTime | date:"yyyy-MM-dd") : '自动获取')}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"> </label>
+                        <div class="form-inline">
+                            <button type="submit" class="btn btn-default" (click)="save()">保存</button>
+                        </div>
+                    </div>
+                </div>
+                <!--添加电子公告-->
+                <div class="add-category-form" *ngIf="docType == 'data_elec_bull'">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">电子公告ID：</label>
+                        <div class="form-inline">
+                            <span>{{elecBulletin.id ? elecBulletin.id : '自动生成'}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>电子公告名称：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="elecBulletin.name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>网站名称：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="elecBulletin.websiteName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">网站链接：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="elecBulletin.websiteLink">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>管理机构：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="elecBulletin.administration">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{{elecBulletin.updatedTime ? '修改人' : '添加人'}}：</label>
+                        <div class="form-inline">
+                            <span>{{elecBulletin.updatedBy ? elecBulletin.updatedName : (elecBulletin.createdBy ? elecBulletin.createdName : '自动获取')}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{{elecBulletin.updatedTime ? '修改' : '添加'}}时间：</label>
+                        <div class="form-inline">
+                            <span>{{elecBulletin.updatedTime ? (elecBulletin.updatedTime | date:"yyyy-MM-dd") : (elecBulletin.createdTime ? (elecBulletin.createdTime | date:"yyyy-MM-dd") : '自动获取')}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"> </label>
+                        <div class="form-inline">
+                            <button type="submit" class="btn btn-default" (click)="save()">保存</button>
+                        </div>
+                    </div>
+                </div>
+                <!--添加其他资料-->
+                <div class="add-category-form" *ngIf="docType == 'data_others'">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">资料ID：</label>
+                        <div class="form-inline">
+                            <span>{{others.id ? others.id : '自动生成'}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"><em>*</em>资料名称：</label>
+                        <div class="form-inline">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="others.name">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: auto;">
+                        <label class="col-md-2 control-label"><em>*</em>资料简介：</label>
+                        <div class="form-inline">
+                            <textarea class="form-control" rows="4" [(ngModel)]="others.briefIntroduction"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{{others.updatedTime ? '修改人' : '添加人'}}：</label>
+                        <div class="form-inline">
+                            <span>{{others.updatedBy ? others.updatedName : (others.createdBy ? others.createdName : '自动获取')}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{{others.updatedTime ? '修改' : '添加'}}时间：</label>
+                        <div class="form-inline">
+                            <span>{{others.updatedTime ? (others.updatedTime | date:"yyyy-MM-dd") : (others.createdTime ? (others.createdTime | date:"yyyy-MM-dd") : '自动获取')}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"> </label>
+                        <div class="form-inline">
+                            <button type="submit" class="btn btn-default" (click)="save()">保存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--添加/修改分类-->
+            <div class="add-category-form" *ngIf="handlerType == 'addCate'">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">分类ID：</label>
+                    <div class="form-inline">
+                        <input type="text" class="form-control input-sm" [(ngModel)]="cateType.code" [readonly]="!isAdd" [disabled]="!isAdd">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">分类名称：</label>
+                    <div class="form-inline">
+                        <input type="text" class="form-control input-sm" [(ngModel)]="cateType.name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{{cateType.modifyUser ? '修改人' : '添加人'}}：</label>
+                    <div class="form-inline">
+                        <span>{{cateType.modifyUser ? cateType.modifyUser : (cateType.createUser ? cateType.createUser : '自动获取')}}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{{cateType.modifyDate ? '修改' : '添加'}}时间：</label>
+                    <div class="form-inline">
+                        <span>{{cateType.modifyDate ? (cateType.modifyDate | date:"yyyy-MM-dd") : (cateType.createDate ? (cateType.createDate | date:"yyyy-MM-dd") : '自动获取')}}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label"> </label>
+                    <div class="form-inline">
+                        <button type="submit" class="btn btn-primary" (click)="save()">保存</button>
+                    </div>
+                </div>
+            </div>
+            <!--curNode为根分类时显示基本信息-->
+            <div class="" *ngIf="(curNode.type == 0 && curNode.pid == null) && !isAdd">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">分类ID：</label>
+                    <div class="form-inline">
+                        <span>{{cateType.code}}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">分类名称：</label>
+                    <div class="form-inline">
+                        <span>{{cateType.name}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<my-dialog></my-dialog>

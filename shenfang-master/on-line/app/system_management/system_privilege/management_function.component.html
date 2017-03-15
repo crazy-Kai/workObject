@@ -1,0 +1,34 @@
+<div class="mf-">
+    <!--按钮操作栏-->
+    <!--<div class="mf-list-module">
+        <div class="mf-list-handle btn-group">
+            <button class="btn btn-primary" (click)="addFuncClick()" *ngIf="userService.hasJurisdiction('resource:post')">添加</button>
+            <button class="btn btn-danger" (click)="removeFunc()" *ngIf="userService.hasJurisdiction('resource:delete')">删除</button>
+        </div>
+		<button class="btn btn-default" *ngIf="saveBtn" (click)="saveFunc()">保存</button>
+    </div>-->
+    <!--功能模块-->
+    <div class="mf-module">
+		<!--功能树-->
+		<div class="mf-tree">
+			<Tree *ngIf="true" #tree class="my-tree" [nodes]="funcGroupTree" (onActivate)="getTermExplain($event)"></Tree>
+		</div>
+		<!--功能操作-->
+		<div class="mf-handle-module" [hidden]="false">
+			<div class="mf-updateform">
+				<div class="mf-handle-item">
+					<span>名称：</span><input type="text" [(ngModel)]="currentFunc.name" readonly>
+				</div>
+				<div class="mf-handle-item">
+					<span>类型：</span>
+					<label for="mf-system"><input id="mf-system" name="mf-type" type="radio" value="0"  [checked]="currentFunc.type == 0" disabled>系统菜单</label>
+					<label for="mf-func"><input id="mf-func" name="mf-type" type="radio" value="1"  [checked]="currentFunc.type == 1" disabled>功能项</label>
+				</div>
+				<div class="mf-handle-item">
+					<span>备注：</span><input type="text" [(ngModel)]="currentFunc.remark" readonly>
+				</div>
+			</div>
+		</div>
+    </div>
+</div>
+<my-dialog></my-dialog>

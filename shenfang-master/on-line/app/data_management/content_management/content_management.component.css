@@ -1,0 +1,206 @@
+.content-search, .content-list{
+    padding: 10px;
+    border: 1px solid #e9e9e9;
+    background: #fff;
+}
+
+.datatype-choosing{
+    position: fixed;left: 50%;top: 50%;z-index: 1050;
+    width: 220px;padding: 15px;
+    background: #fff;
+    transform: translate(-50%, -50%);
+}
+.datatype-choosing .type-list li{
+    line-height: 35px;
+    border-bottom: 1px solid #e9e9e9;
+}
+.datatype-choosing .type-list li:last-child{
+    border: none;
+}
+.datatype-choosing .type-list a{
+    text-align: center;
+    display: block;
+    cursor: pointer;
+}
+.datatype-choosing .type-list a:hover{
+    text-decoration: none;
+}
+.datatype-choosing > a{
+    display: block;
+    color: #2CA9E1;text-align: center;
+    cursor: pointer;
+}
+.datatype-choosing > a:hover{
+    color: #f00;
+}
+
+/*添加资料内容页*/
+.heard-bar{
+    height: 40px;margin-bottom: 15px;
+    border-bottom: 1px solid #e9e9e9;
+}
+.add-data{
+
+}
+.add-data.form-horizontal .form-group{margin-left: 0;margin-right: 0;}
+.add-data .form-group{
+    height: 30px;margin-bottom: 15px;
+}
+.add-data .form-group label{
+    margin-top: 5px;padding:0;
+    text-align: right;
+    font-weight: 500;
+}
+.add-data .form-group span{line-height: 30px;}
+.add-data .form-group label em{
+    padding: 0 5px;
+    font-weight: 800;color: #f00;
+}
+.add-data .input-sm{
+    width: 250px;
+}
+.add-data textarea{
+    min-width: 400px; 
+}
+.multi-select{
+    position: absolute;z-index: 1002;
+    width: 250px;height: 300px;overflow-y: auto;
+    background: #fff;
+    border: 1px solid rgba(82,168,236,.8);
+    box-shadow: 0 0 8px rgba(82,168,236,.8);
+}
+.multi-select li{
+    padding-left: 10px;
+    line-height: 25px;
+}
+.multi-select li:hover, .multi-select li.selected{
+    background: rgba(82,168,236,.8);color: #fff;
+}
+
+/*说明书管理*/
+.spec-m-container{
+    position: absolute;left: 0;top: 0;right: 0;bottom: 0;
+    margin: 10px;
+}
+.spec-m-list{
+    position: absolute;width: 100%;height: 100%;
+}
+.search-form{
+    margin-bottom: 10px;
+}
+.search-form .form-group{
+    margin-bottom: 5px!important;
+}
+.search-form input[type='text']{
+    width: 125px;
+}
+.result-con .btn-group{
+    margin:5px;
+}
+.result-con .red{
+    color: #f00;
+}
+.result-con .green{
+    color: #26a69a;
+}
+
+/*添加说明书*/
+.addInsHeader{
+    height: 35px;
+    padding-bottom: 5px;box-sizing: content-box;
+    border-bottom: 1px solid #ccc;
+}
+.addInsHeader h3{
+    margin: 0;padding: 0;
+    font: 600 18px/35px "MicroSoft YaHei";
+}
+.addInsHeader .btn-group{
+    float: right;
+}
+.addIndCon{
+    margin-top: 15px;overflow: hidden;
+}
+.addIndCon .basic-info, .addIndCon .drugs-spec{
+    border-bottom: 1px dashed #ccc;
+}
+.addIndCon .drugs-spec{
+    padding-top: 15px;
+}
+.addIndCon .glyphicon-remove, .addIndCon .glyphicon-plus{
+    padding: 2px;top: 3px;
+    border: 1px solid #ccc;border-radius: 2px;
+    cursor: pointer;
+}
+.form-group .glyphicon{
+    cursor: pointer;
+}
+.form-group .glyphicon-remove{
+    color: #f00;
+}
+.form-group .glyphicon-plus{
+    color: #34a853;
+}
+.addition-info .timeipt{
+    float:left;
+}
+.addition-info .invalid{
+    border-color: #f00;
+}
+.addition-info .input-group-addon{
+    float: left;
+    padding: 9px 20px;
+}
+.mu-search-bar{
+    height: 30px;box-sizing: content-box;
+    line-height: 30px;
+}
+.mu-search-bar > div{
+    float: left;
+    margin-right: 10px;
+}
+.mu-search-bar input[type='text']{
+    width: 200px;height: 30px;
+    padding: 0 5px;
+    border: 1px solid #ccc;
+}
+.mu-search-bar input[type='radio']{
+    margin-right:5px;
+    vertical-align: -2px;
+}
+.mu-search-bar label{
+    margin: 0;
+    font-weight: 400;
+}
+.mu-search-bar:after{
+    content: ".";display: block;height:0;clear: both;visibility: hidden;
+}
+.mu-handle-bar{
+    margin: 5px;
+}
+
+/*查看说明书*/
+.drugReview .form-inline{
+    padding-top: 7px;
+}
+.drug-info-left, .drug-info-right{
+    width: 210px;display: inline-block;
+    vertical-align: top;
+}
+.drugReview .glyphicon{
+    margin: 3px 20px;vertical-align: top;
+}
+.instruction-imgs{
+
+}
+.instruction-imgs:after{
+    content: " ";display: block;visibility: hidden;clear: both;
+}
+.instruction-imgs li{
+    width: 150px;height: 150px;overflow: hidden;
+    float: left;margin-right: 15px;
+    border: 1px solid #ccc;background: #fff;
+    cursor: pointer;
+}
+.instruction-imgs li img{
+    width: 100%;
+}

@@ -1,0 +1,79 @@
+<style>
+	.control-label{font-weight: 500;text-align: right;}
+	.control-label em{color: #f00;padding: 0 5px;}
+	.single-margin{margin: 5px;}
+	.left{margin-right: 10px;}
+</style>
+<div class="flex flexbox column">
+	<!-- 按钮 -->
+	<div class="single-margin gray-border bg-white single-padding">
+		<label>字典名称:</label> <input type="text" [(ngModel)]="name" (keyup.enter)="searchInputEntered()">
+		<button class="btn btn-sm btn-primary" (click)="search_dictionary_category()">搜索</button>
+	</div>
+
+	<div class="single-margin gray-border bg-white single-padding">
+		<button class="btn btn-sm btn-primary" (click)="dictionaryCategoryAddRoot()">添加根分类</button>
+		<button class="btn btn-sm btn-primary" (click)="dictionaryCategoryAddChildren()">添加子分类</button>
+		<button class="btn btn-sm btn-danger" (click)="dictionaryCategoryDelete()">删除</button>
+		<button class="btn btn-sm btn-primary" (click)="dictionaryDataQuery()">字典值</button>
+	</div>
+
+	<div class="single-margin relative flex1 flex" style="overflow:auto">
+		<div class="gray-border bg-white left single-padding" style="overflow: auto;">
+			<Tree #tree [nodes]="dictionaryGroup" [options]="options" (onActivate)="onClickDictionaryCategory($event)"></Tree>
+		</div>
+		<form class="gray-border bg-white flex1 single-padding" (ngSubmit)="onSubmit()">
+			<!--<input type="hidden" [(ngModel)]="dictionaryCategory.oldCode"/>-->
+			<div>
+				<!--<div class="gray-underline">
+					<button class="btn btn-sm btn-primary" type="submit">保存</button>
+				</div>
+				<div class="row-group relative">
+					<div class="row single-padding" *ngIf="dictionaryCategory.showLevel"><span>层级关系：</span><span class="row-sec">
+						<input type="radio" name="addChildren" value="false" checked (change)="dictionaryCategory.addChildren=$event.target.value"/>兄弟
+						<input type="radio" name="addChildren" value="true" (change)="dictionaryCategory.addChildren=$event.target.value"/>下级</span>
+					</div>
+					<div class="row single-padding"><span>字典编码：</span><span class="row-sec">
+						<input type="text" [(ngModel)]="dictionaryCategory.code" name="DicCode"></span>*
+					</div>
+					<div class="row single-padding"><span>字典名称：</span><span class="row-sec">
+						<input type="text" [(ngModel)]="dictionaryCategory.name" name="dicName"></span>*
+					</div>
+					<div class="row single-padding">
+						<span>字典备注：</span>
+						<textarea class="row-sec" [(ngModel)]="dictionaryCategory.remark" name="dicRemark"></textarea>
+					</div>
+				</div>-->
+				<div class="gray-underline">
+					<button class="btn btn-sm btn-primary" type="submit">保存</button>
+				</div>
+				<div class="form-group" *ngIf="dictionaryCategory.showLevel">
+					<label class="col-md-3 control-label"><em>*</em>层级关系：</label>
+					<div class="form-inline">
+						<label for="bro" class="radio-inline"><input type="radio" id="bro" name="level" (change)="dictionaryCategory.addChildren=$event.target.value" checked value="false">兄弟</label>
+						<label for="sub" class="radio-inline"><input type="radio" id="sub" name="level" (change)="dictionaryCategory.addChildren=$event.target.value" value="true">下级</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label"><em>*</em>字典编码：</label>
+					<div class="form-inline">
+						<input type="text" class="form-control input-sm" name="DicCode" [(ngModel)]="dictionaryCategory.code">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label"><em>*</em>字典名称：</label>
+					<div class="form-inline">
+						<input type="text" class="form-control input-sm" name="dicName" [(ngModel)]="dictionaryCategory.name">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">字典备注：</label>
+					<div class="form-inline">
+						<textarea class="form-control" rows="4" name="dicRemark" [(ngModel)]="dictionaryCategory.remark"></textarea>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<my-dialog></my-dialog>

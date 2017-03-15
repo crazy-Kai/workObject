@@ -1,0 +1,211 @@
+<!--v1.0.0.1-->
+<div class="spec-m-container">
+    <div class="addInsHeader">
+        <div class="btn-group">
+            <button class="btn btn-info" (click)="saveInstruction()" *ngIf="handleStr == '审核'">审核</button>
+            <button class="btn btn-success" (click)="saveInstruction()" *ngIf="handleStr != '审核'">保存</button>
+            <button class="btn btn-danger" (click)="cancel()">取消</button>
+        </div>
+        <h3>说明书{{handleStr}}</h3>
+    </div>
+    <div class="addIndCon">
+        <div form class="form-horizontal" role="form">
+            <!--药品基本信息-->
+            <div class="basic-info">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">通用名：</label>
+                    <div class="col-md-10 form-inline">
+                        <input type="text" class="form-control input-sm" [(ngModel)]="instructionDto.genericName">
+                        <span class="glyphicon glyphicon-circle-arrow-left" (click)="instructionDto.genericName = instructionDto.product.genericName"></span>
+                        <input type="text" class="form-control input-sm" [(ngModel)]="instructionDto.product.genericName" tabIndex="-1" readonly>
+                        <button class="btn btn-primary btn-sm" (click)="getProductList()" tabIndex="-1">查询产品</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">商品名：</label>
+                    <div class="col-md-10 form-inline">
+                        <input type="text" class="form-control input-sm" [(ngModel)]="instructionDto.tradeName">
+                        <span class="glyphicon glyphicon-circle-arrow-left" (click)="instructionDto.tradeName = instructionDto.product.tradeName"></span>
+                        <input type="text" class="form-control input-sm" [(ngModel)]="instructionDto.product.tradeName" tabIndex="-1" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">厂家：</label>
+                    <div class="col-md-10 form-inline">
+                        <input type="text" class="form-control input-sm" [(ngModel)]="instructionDto.producer">
+                        <span class="glyphicon glyphicon-circle-arrow-left" (click)="instructionDto.producer = instructionDto.product.producer"></span>
+                        <input type="text" class="form-control input-sm" [(ngModel)]="instructionDto.product.producer" tabIndex="-1" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">剂型：</label>
+                    <div class="col-md-10 form-inline">
+                        <input type="text" class="form-control input-sm" [(ngModel)]="instructionDto.drugForm">
+                        <span class="glyphicon glyphicon-circle-arrow-left" (click)="instructionDto.drugForm = instructionDto.product.drugForm"></span>
+                        <input type="text" class="form-control input-sm" [(ngModel)]="instructionDto.product.drugForm" tabIndex="-1" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">拼音：</label>
+                    <div class="col-md-10 form-inline">
+                        <input type="text" class="form-control input-sm" [(ngModel)]="instructionDto.pinyin" tabIndex="-1" readonly>
+                        <span class="glyphicon glyphicon-circle-arrow-left" (click)="instructionDto.pinyin = instructionDto.product.pinyin"></span>
+                        <input type="text" class="form-control input-sm" [(ngModel)]="instructionDto.product.pinyin" tabIndex="-1" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">说明书规格：</label>
+                    <div class="col-md-10 form-inline">
+                        <input type="text" class="form-control input-sm" [(ngModel)]="instructionDto.drugSpec">
+                    </div>
+                </div>
+            </div>
+            <!--药品规格-->
+            <div class="drugs-spec">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">规格：</label>
+                    <div class="col-md-10 form-inline">
+                        <div *ngFor="let spec of specList;" style="margin-bottom: 10px;">
+                            <input type="text" class="form-control input-sm" [(ngModel)]="spec.drugspac">
+                            <span class="glyphicon glyphicon-circle-arrow-left" (click)="spec.drugspac = spec.productspac"></span>
+                            <input type="text" class="form-control input-sm" [(ngModel)]="spec.productspac" tabIndex="-1" readonly>
+                            <span class="glyphicon glyphicon-remove" (click)="removeDrugSpec(spec)"></span>
+                            <span class="glyphicon glyphicon-plus" (click)="addDrugSpec()"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--date and instruction-->
+            <div class="addition-info">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">最新核准/修改日期：</label>
+                    <div class="col-md-10 form-inline">
+                        <input #bookInfoTimePub="ngbDatepicker" ngbDatepicker tabIndex="-1" class="form-control timeipt" placeholder="yyyy-mm-dd"
+                            name="bookInfoTimePub" (blur)="checkDateForm()" [maxDate]="maxDateSetting" [(ngModel)]="modifyTime"
+                            [class.invalid]="invalidTime">
+                            <div class="input-group-addon" (click)="bookInfoTimePub.toggle()">
+                                <img src="../../../images/calendar-icon.svg" style="width: 1.2rem; height: 1rem; cursor: pointer;" />
+                            </div>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="true">
+                    <label class="col-md-2 control-label">审核状态：</label>
+                    <div class="col-md-10">
+                        <label class="radio-inline"><input type="radio" [checked]="isAudited" disabled>已审核</label>
+                        <label class="radio-inline"><input type="radio" [checked]="!isAudited" disabled>未审核</label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 control-label">指定审核人：</label>
+                    <div class="col-md-10 form-inline">
+                        <input type="text" class="form-control input-sm" placeholder="审核人" [(ngModel)]="auditByModel" [ngbTypeahead]="searchAuditBy"
+                            [resultTemplate]="searchAuditByTemplate" [inputFormatter]="searchAuditByFormatter" />
+                        <template #searchAuditByTemplate let-r="result" let-t="term">
+                            {{ r.realname}}
+                        </template>
+                    </div>
+                    <!--<div class="col-md-10" style="padding-top: 7px;" *ngIf="isAudited || auditing">
+                        {{instructionDto.auditedName}}
+                    </div>-->
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">摘要：</label>
+                    <div class="col-md-10">
+                        <label class="checkbox" style="margin-bottom:10px;padding-left: 20px;">
+                            <input type="checkbox" [checked]="instructionDto.summaryAutoflag" #Summary (change)="sumType(Summary)">自动生成摘要<span style="color: #f00;">（注意：自动生成的摘要将会覆盖您自己编辑的摘要，请谨慎使用。）</span>
+                        </label>
+                        <!--<input type="text" class="form-control col-md-10" placeholder="请输入摘要" *ngIf="!Summary.checked" [(ngModel)]="instructionDto.summary">-->
+                        <textarea style="height: 150px;" class="form-control col-md-10" placeholder="请输入摘要" *ngIf="!instructionDto.summaryAutoflag"
+                            [(ngModel)]="instructionDto.summary"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">说明书：</label>
+                    <div class="col-md-10 form-inline">
+                        <textarea row="3" id="ueInstructions" #UEditor></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">说明书原件：</label>
+                    <div class="col-md-10 form-inline" style="padding-top: 7px;">
+                        <my-upload [typeId]="typeId" [uploadType]="uploadType" (uploadComplete)="uploaded($event)"></my-upload>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--产品信息-->
+    <!--<div class="dialog-template" [hidden]="!isShowProductList">
+        <div class="dialog-template-title">产品选择<span class="icon-close" (click)="closeDialog()">x</span></div>
+        <div class="bg-white single-padding relative dialog-template-content">
+            <div class="mu-search-bar gray-border single-padding">
+                <div class="">
+                    药品名称：<input type="text" name="" [(ngModel)]="productName" (keyup.enter)="keyupHandle($event)">
+                </div>
+                <div class="">
+                    生产厂家：<input type="text" name="" [(ngModel)]="producer" (keyup.enter)="keyupHandle($event)">
+                </div>
+                <button class="btn btn-primary" (click)="search()">搜索</button>
+                <div style="float: right;">
+                    <button class="btn btn-primary" (click)="saveProductName()">确定</button>
+                    <button class="btn btn-danger" (click)="closeDialog()">关闭</button>
+                </div>
+            </div>
+            <my-table [table]="productTable" (onClick)="chooseProduct($event)"></my-table>
+        </div>
+    </div>-->
+
+    <!-- 查询产品: 浮动层 -->
+    <div class="container" [hidden]="!isShowProductList">
+        <div id="mymodel" class="multitable">
+            <div class="model-header">
+                产品选择
+            </div>
+            <div class="model-content">
+                <div class="search-panel form-inline mb15">
+                    <div class="form-group">
+                        <label class="control-label">药品名称：</label>
+                        <input class="form-control" type="text" placeholder="请输入关键字" [(ngModel)]="productName" (keyup.enter)="keyupHandle($event)">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">生产厂家：</label>
+                        <input class="form-control" type="text" placeholder="请输入关键字" [(ngModel)]="producer" (keyup.enter)="keyupHandle($event)">
+                    </div>
+                    <button class="btn btn-primary" (click)="search()">搜索</button>
+                </div>
+                <div class="multitable-container">
+                    <my-table [table]="productTable" (onClick)="chooseProduct($event)" (onDblClick)="dblChooseProduct($event)"></my-table>
+                </div>
+            </div>
+            <div class="btn-panel mt10">
+                <button class="btn btn-danger" (click)="closeDialog()">取消</button>
+                <button class="btn btn-success" (click)="saveProductName()">确定</button>
+            </div>
+        </div>
+        <div class="in modal-backdrop fade"></div>
+    </div>
+
+    <!--规格-->
+    <div class="dialog-template" [hidden]="!isShowSpecList">
+        <div class="dialog-template-title">规格选择<span class="icon-close" (click)="closeDrugSearch()">x</span></div>
+        <div class="bg-white single-padding relative dialog-template-content">
+            <my-table [table]="specTable">
+                <template #tableTemplate let-tableinfo>
+                    <tr *ngFor="let trow of tableinfo.dataList" (click)="chooseSpec(trow)" [class.selected]="isChoosed(trow)">
+                        <td>{{trow.chineseproductname}}</td>
+                        <td>{{trow.goodsname}}</td>
+                        <td>{{trow.chinesemanufacturename}}</td>
+                        <td>{{trow.chinesespecification}}</td>
+                        <td>{{trow.formulation}}</td>
+                    </tr>
+                </template>
+            </my-table>
+            <div style="margin-top: 10px;">
+                <button class="btn btn-primary" (click)="checkSpecChoosen()">确定</button>
+                <button class="btn btn-danger" (click)="closeDrugSearch()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <my-dialog></my-dialog>
+</div>

@@ -1,0 +1,59 @@
+<style type="text/css" media="screen">
+	.uploadify-button {
+		background-color: transparent;
+		border: none;
+		padding: 0;
+	}
+
+
+	.uploadify:hover .uploadify-button {
+		background-color: transparent;
+	}
+
+
+	.fileQueue {
+		width: 400px;
+		height: 60px;
+		overflow: auto;
+		border: 1px solid #E5E5E5;
+		margin-bottom: 30px;
+	}
+</style>
+<h3 class="contentTitle">产品数据导入</h3>
+<div class="pageContent" style="margin: 0 10px">
+	<div class="pageFormContent nowrap">
+		<dl>
+			<dt>上传进度：</dt>
+			<dd>
+				<!--<div id="productFileQueue" class="fileQueue"></div>-->
+				<div class="progress" style="width:500px;height:15px;" *ngIf="productUploadService.hasProgress">
+					<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+						<span class="sr-only">100% Complete</span>
+					</div>
+				</div>
+			</dd>
+		</dl>
+		<dl>
+			<dt><input id="productUpload" type="file" name="image" #file (change)="uploadFile(file)" accept=".xls,.xlsx" />
+				<a href="/plugin/resource/template1.0.0.xlsx">模板下载</a></dt>
+			<dd>
+				<img src="../../../images/cancel.jpg" (click)="cancelUpload()" />
+				<input id="uploadIdInput" type="hidden" value="" />
+				<!--<input id="productDelBtn" *ngIf="productUploadService.fileMessage" type="button" value="删除非本次导入产品" (click)="deleteProducts()"/>-->
+			</dd>
+		</dl>
+		<dl class="">
+			<dt>上传结果：</dt>
+			<dd>
+				<textarea id="uploadResult" class="fileQueue" style="height:200px" readonly>
+					{{productUploadService.fileMessage}}
+				</textarea>
+			</dd>
+		</dl>
+	</div>
+</div>
+<div class="dialog center" *ngIf="productUploadService.message">
+	<div class="dialog-message">{{productUploadService.message}}</div>
+</div>
+<div class="mask" *ngIf="productUploadService.message"></div>
+<!--<my-dialog></my-dialog>-->

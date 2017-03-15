@@ -1,0 +1,36 @@
+<div class="single-margin relative flexbox max-height700">
+    <div class="gray-border bg-white left single-padding height500">
+        <form class="gray-underline"  (ngSubmit)="searchByValue()">
+            <label>字典值:</label>
+            <input type="text" [(ngModel)]="searchText" name="searchText">
+            <button type="submit" class="btn btn-primary btn-sm">搜索</button>
+            <!--<button (click)="ngOnInit()">取消</button>-->
+        </form>
+        <div class="tree-list">
+             <Tree *ngIf="dictionaryGroup" #tree class="my-tree" [nodes]="dictionaryGroup" [options]="customTemplateStringOptions" (onActivate)="getPatientDosage($event)"></Tree>
+        </div>
+
+    </div>
+    <div class="gray-border bg-white right single-padding height500 ">
+        <div  *ngIf="dosage.name">
+            <div class="gray-underline">
+                <a (click)="onSubmit()" class="btn btn-primary btn-sm">保存</a>
+            </div>
+            <div class="row-group relative">
+                <div class="row single-padding">
+                    <span>字典值:</span>
+                    <span class="row-sec">{{dosage.name}}</span>
+                </div>
+                <div class="row single-padding">
+                    <span>给药剂量单位:</span>
+                    <span class="row-sec">
+                        <select *ngIf="dicOPtions" [(ngModel)]="dosage.codeUnit" required>
+                            <option *ngFor="let dic of dicOPtions" [value]="dic.code">{{dic.name}}</option>
+                        </select>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<my-dialog></my-dialog>

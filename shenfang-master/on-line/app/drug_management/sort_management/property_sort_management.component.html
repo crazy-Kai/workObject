@@ -1,0 +1,45 @@
+<h1>属性分类管理</h1>
+<!-- 按钮 -->
+<div class="single-margin gray-border bg-white single-padding">
+	<label>字典名称:</label> <input type="text" [(ngModel)]="dictValue">
+	<button (click)="searchDictionaryData()">搜索</button>
+</div>
+
+<div class="single-margin gray-border bg-white single-padding">
+	<button (click)="dictionaryDataAdd()">添加字典</button>
+	<button (click)="dictionaryDataDelete()">删除</button>
+</div>
+
+<div class="single-margin relative flexbox max-height700">
+	<div class="gray-border bg-white left single-padding height500">
+		<div class="tree-list">
+			<Tree #tree [nodes]="dictionaryGroup" [options]="options" (onActivate)="onClickDictionaryData($event)"></Tree>
+		</div>
+	</div>
+	<form class="gray-border bg-white right single-padding height500" (ngSubmit)="onSubmit()">
+		<div>
+			<div class="gray-underline">
+				<button type="submit">保存</button>
+			</div>
+			<div class="row-group relative">
+				<div class="row single-padding" *ngIf="dictionaryData.showLevel"><span>层级关系：</span><span class="row-sec">
+					<input type="radio" name="addChildren" value="false" checked (change)="dictionaryData.addChildren=$event.target.value"/>兄弟
+					<input type="radio" name="addChildren" value="true" (change)="dictionaryData.addChildren=$event.target.value"/>下级</span>
+				</div>
+				<div class="row single-padding"><span>字典编码：</span><span class="row-sec">
+					<input type="text" [(ngModel)]="dictionaryData.code" name="code"></span>
+				</div>
+				<div class="row single-padding"><span>字典名称：</span><span class="row-sec">
+					<input type="text" [(ngModel)]="dictionaryData.dictValue" name="dictValue"></span>
+				</div>
+				<div class="row single-padding">
+					<span>字典备注：</span>
+					<textarea class="row-sec" [(ngModel)]="dictionaryData.remark" name="remark"></textarea>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<my-dialog></my-dialog>
+<div class="db"></div>

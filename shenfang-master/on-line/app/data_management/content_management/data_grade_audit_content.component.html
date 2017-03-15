@@ -1,0 +1,606 @@
+<style>
+    td{padding: 5px;}
+</style>
+<div class="container" [hidden]="!isShowMessage">
+    <div id="mymodel" class="multitable">
+        <div class="model-header">
+            评分审核表
+        </div>
+        <div class="model-content">
+            <div *ngIf="literatureType==0">
+                <div>
+                    <table *ngIf="handler == 'score'">
+                        <thead>
+                            <tr>
+                                <td>条目编号</td>
+                                <td>条目内容</td>
+                                <td>评分</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of itemInfo|slice:1;let i = index">
+                                <td>{{item.itemNumber}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>
+                                    <select [(ngModel)]="ScoreArray[i+1]" (ngModelChange)="updateScore(ScoreArray)" [disabled]="i>=6 && i<=8 && ScoreArray[1]==4">
+                                        <option *ngFor="let scoring of scoringSettingArray[i]" [value]=scoring >{{scoring}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">总评分</td>
+                                <td><span>{{ScoreArray[0]}}分</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">证据质量</td>
+                                <td>{{ScoreLevel}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">评分（审核）人</td>
+                                <td>{{username}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" *ngIf="itemInfo" [innerHtml]="itemInfo[0].itemValue" style="text-align:left"> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table *ngIf="handler != 'score'">
+                        <thead>
+                            <tr>
+                                <td>条目编号</td>
+                                <td>条目内容</td>
+                                <td>1号评分人结果</td>
+                                <td>2号评分人结果</td>
+                                <td *ngIf="handler == 'audit' || isAudited">审核人结果</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of itemInfo|slice:1;let i = index">
+                                <td>{{item.itemNumber}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>{{ScoreArray_1[i+1]}}</td>
+                                <td>{{ScoreArray_2[i+1]}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">
+                                    <select [(ngModel)]="ScoreArray[i+1]" (ngModelChange)="updateScore(ScoreArray)"  [disabled]="i>=6 && i<=8 && ScoreArray[1]==4">
+                                        <option *ngFor="let scoring of scoringSettingArray[i]" [value]=scoring>{{scoring}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">总评分</td>
+                                <td><span>{{ScoreArray_1[0]}}分</span></td>
+                                <td><span>{{ScoreArray_2[0]}}分</span></td>
+                                <td *ngIf="handler == 'audit' || isAudited"><span>{{ScoreArray[0]}}分</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">证据质量</td>
+                                <td>{{scoreService.ScoreLevel_1}}</td>
+                                <td>{{scoreService.ScoreLevel_2}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">{{ScoreLevel}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">评分（审核）人</td>
+                                <td>{{Grader_1}}</td>
+                                <td>{{Grader_2}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">{{username}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" *ngIf="itemInfo" [innerHtml]="itemInfo[0].itemValue" style="text-align:left"> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div *ngIf="literatureType == 1">
+                <div *ngIf="handler == 'score'">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>条目编号</td>
+                                <td>条目内容</td>
+                                <td>评分</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of itemInfo|slice:1:5;let i = index">
+                                <td>{{item.itemNumber}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>
+                                    <select [(ngModel)]="ScoreArray[i+1]" (ngModelChange)="updateRctScore(rctScore,ScoreArray)">
+                                        <option *ngFor="let scoring of scoringSettingArray[i]" [value]="scoring">{{scoring}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">总评分</td>
+                                <td><span>{{rctScore.tbOneScore}}分</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">证据质量</td>
+                                <td>{{rctScore.ScoreLevel}}</td>
+                            </tr>
+                            <tr>
+                                <td>条目编号</td>
+                                <td>条目内容</td>
+                                <td>偏倚程度</td>
+                            </tr>
+                            <tr *ngFor="let item of itemInfo|slice:5:11;let i = index">
+                                <td>{{item.itemNumber}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>
+                                    <select [(ngModel)]="ScoreArray[i+5]" (ngModelChange)="updateRctScore(rctScore,ScoreArray)">
+                                        <option *ngFor="let scoring of scoringSettingArray[i+4]" [value]="scoring">{{scoring}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">整体偏倚程度</td>
+                                <td>{{rctScore.LeanDegree}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">评分（审核）人</td>
+                                <td>{{username}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" *ngIf="itemInfo" [innerHtml]="itemInfo[0].itemValue" style="text-align:left"> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="handler != 'score'">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>条目编号</td>
+                                <td>条目内容</td>
+                                <td>1号评分人结果</td>
+                                <td>2号评分人结果</td>
+                                <td *ngIf="handler == 'audit' || isAudited">审核人结果</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of itemInfo|slice:1:5;let i = index">
+                                <td>{{item.itemNumber}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>{{ScoreArray_1[i+1]}}</td>
+                                <td>{{ScoreArray_2[i+1]}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">
+                                    <select [(ngModel)]="ScoreArray[i+1]" (ngModelChange)="updateScore(ScoreArray)">
+                                        <option *ngFor="let scoring of scoringSettingArray[i]" [value]="scoring">{{scoring}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">总评分</td>
+                                <td><span>{{rctScore_1.tbOneScore}}分</span></td>
+                                <td><span>{{rctScore_2.tbOneScore}}分</span></td>
+                                <td *ngIf="handler == 'audit' || isAudited"><span>{{rctScore.tbOneScore}}分</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">证据质量</td>
+                                <td>{{rctScore_1.ScoreLevel}}</td>
+                                <td>{{rctScore_2.ScoreLevel}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">{{rctScore.ScoreLevel}}</td>
+                            </tr>
+                            <tr>
+                                <td>条目编号</td>
+                                <td>条目内容</td>
+                                <td>1号评分人结果</td>
+                                <td>2号评分人结果</td>
+                                <td *ngIf="handler == 'audit' || isAudited">审核人结果</td>
+                            </tr>
+                            <tr *ngFor="let item of itemInfo|slice:5:11;let i = index">
+                                <td>{{item.itemNumber}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>{{ScoreArray_1[i+5]}}</td>
+                                <td>{{ScoreArray_2[i+5]}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">
+                                    <select [(ngModel)]="ScoreArray[i+5]" (ngModelChange)="updateScore(ScoreArray)">
+                                        <option *ngFor="let scoring of scoringSettingArray[i+4]" [value]="scoring">{{scoring}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">整体偏倚程度</td>
+                                <td>{{rctScore_1.LeanDegree}}</td>
+                                <td>{{rctScore_2.LeanDegree}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">{{rctScore.LeanDegree}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">评分（审核）人</td>
+                                <td>{{Grader_1}}</td>
+                                <td>{{Grader_2}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">{{username}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" *ngIf="itemInfo" [innerHtml]="itemInfo[0].itemValue" style="text-align:left"> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div *ngIf="literatureType == 2">
+                <div *ngIf="handler == 'score'">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>领域</td>
+                                <td>条目编号</td>
+                                <td>条目内容</td>
+                                <td>评分</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of itemInfo|slice:3:11;let i = index">
+                                <td rowspan="8" *ngIf="i == 0">{{itemInfo[1].itemValue}}</td>
+                                <td>{{item.itemNumber}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>
+                                    <select [(ngModel)]="ScoreArray[i+1]" (ngModelChange)="updateScore(ScoreArray)">
+                                    <option *ngFor="let scoring of scoringSettingArray[i+2]" [value]="scoring">{{scoring}}</option>
+                                </select>
+                                </td>
+                            </tr>
+                            <tr *ngFor="let item of itemInfo|slice:11:15;let i = index">
+                                <td rowspan="4" *ngIf="i == 0">{{itemInfo[2].itemValue}}</td>
+                                <td>{{item.itemNumber}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>
+                                    <select [(ngModel)]="ScoreArray[i+9]" (ngModelChange)="updateScore(ScoreArray)">
+                                    <option *ngFor="let scoring of scoringSettingArray[i+8]" [value]="scoring">{{scoring}}</option>
+                                </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:right">总评分</td>
+                                <td><span>{{ScoreArray[0]}}分</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:right">证据质量</td>
+                                <td>{{ScoreLevel}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:right">评分（审核）人</td>
+                                <td>{{username}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" *ngIf="itemInfo" [innerHtml]="itemInfo[0].itemValue" style="text-align:left"> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="handler != 'score'">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>领域</td>
+                                <td>条目编号</td>
+                                <td>条目内容</td>
+                                <td>1号评分人结果</td>
+                                <td>2号评分人结果</td>
+                                <td *ngIf="handler == 'audit' || isAudited">审核人结果</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of itemInfo|slice:3:11;let i = index">
+                                <td rowspan="8" *ngIf="i == 0">{{itemInfo[1].itemValue}}</td>
+                                <td>{{item.itemNumber}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>{{ScoreArray_1[i+1]}}</td>
+                                <td>{{ScoreArray_2[i+1]}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">
+                                    <select [(ngModel)]="ScoreArray[i+1]" (ngModelChange)="updateScore(ScoreArray)">
+                                    <option *ngFor="let scoring of scoringSettingArray[i+2]" [value]="scoring">{{scoring}}</option>
+                                </select>
+                                </td>
+                            </tr>
+                            <tr *ngFor="let item of itemInfo|slice:11:15;let i = index">
+                                <td rowspan="4" *ngIf="i == 0">{{itemInfo[2].itemValue}}</td>
+                                <td>{{item.itemNumber}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>{{ScoreArray_1[i+9]}}</td>
+                                <td>{{ScoreArray_2[i+9]}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">
+                                    <select [(ngModel)]="ScoreArray[i+9]" (ngModelChange)="updateScore(ScoreArray)">
+                                    <option *ngFor="let scoring of scoringSettingArray[i+8]" [value]="scoring">{{scoring}}</option>
+                                </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:right">总评分</td>
+                                <td><span>{{ScoreArray_1[0]}}分</span></td>
+                                <td><span>{{ScoreArray_2[0]}}分</span></td>
+                                <td *ngIf="handler == 'audit' || isAudited"><span>{{ScoreArray[0]}}分</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:right">证据质量</td>
+                                <td>{{scoreService.ScoreLevel_1}}</td>
+                                <td>{{scoreService.ScoreLevel_2}}</td>
+                                <td>{{ScoreLevel}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:right">评分（审核）人</td>
+                                <td>{{Grader_1}}</td>
+                                <td>{{Grader_2}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">{{username}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" *ngIf="itemInfo" [innerHtml]="itemInfo[0].itemValue" style="text-align:left"> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div *ngIf="literatureType == 3">
+                <div *ngIf="handler == 'score'">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>条目编号</td>
+                                <td>条目内容</td>
+                                <td>评分</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of itemInfo|slice:1;let i = index">
+                                <td>{{item.itemNumber}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>
+                                    <select [(ngModel)]="ScoreArray[i+1]" (ngModelChange)="updateScore(ScoreArray)">
+                                    <option *ngFor="let scoring of scoringSettingArray[i]" [value]="scoring">{{scoring}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">总评分</td>
+                                <td><span>{{ScoreArray[0]}}分</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">证据质量</td>
+                                <td>{{ScoreLevel}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:right">评分（审核）人</td>
+                                <td>{{username}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" *ngIf="itemInfo" [innerHtml]="itemInfo[0].itemValue" style="text-align:left"> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="handler != 'score'">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>条目编号</td>
+                                <td>条目内容</td>
+                                <td>1号评分人结果</td>
+                                <td>2号评分人结果</td>
+                                <td *ngIf="handler == 'audit' || isAudited">审核人结果</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of itemInfo|slice:1;let i = index">
+                                <td>{{item.itemNumber}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>{{ScoreArray_1[i+1]}}</td>
+                                <td>{{ScoreArray_2[i+1]}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">
+                                    <select [(ngModel)]="ScoreArray[i+1] " (ngModelChange)="updateScore(ScoreArray) ">
+                                    <option *ngFor="let scoring of scoringSettingArray[i] " [value]="scoring ">{{scoring}}</option>
+                                </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2 " style="text-align:right ">总评分</td>
+                                <td><span>{{ScoreArray_1[0]}}分</span></td>
+                                <td><span>{{ScoreArray_2[0]}}分</span></td>
+                                <td *ngIf="handler == 'audit' || isAudited"><span>{{ScoreArray[0]}}分</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2 " style="text-align:right ">证据质量</td>
+                                <td>{{scoreService.ScoreLevel_1}}</td>
+                                <td>{{scoreService.ScoreLevel_2}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">{{ScoreLevel}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2 " style="text-align:right ">评分（审核）人</td>
+                                <td>{{Grader_1}}</td>
+                                <td>{{Grader_2}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">{{username}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="5 " *ngIf="itemInfo " [innerHtml]="itemInfo[0].itemValue " style="text-align:left "> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div *ngIf="literatureType == 4 ">
+                <div *ngIf="!isAudit ">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>条目编号</td>
+                                <td>条目内容</td>
+                                <td>评分</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of itemInfo|slice:1;let i=index ">
+                                <td>{{item.itemNumber}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>
+                                    <select [(ngModel)]="ScoreArray[i+1] " (ngModelChange)="updateScore(ScoreArray) ">
+                                    <option *ngFor="let scoring of scoringSettingArray[i] " [value]="scoring ">{{scoring}}</option>
+                                </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2 " style="text-align:right ">总评分</td>
+                                <td><span>{{ScoreArray[0]}}分</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2 " style="text-align:right ">证据质量</td>
+                                <td>{{ScoreLevel}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2 " style="text-align:right ">评分（审核）人</td>
+                                <td>{{username}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3 " *ngIf="itemInfo " [innerHtml]="itemInfo[0].itemValue " style="text-align:left "> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="isAudit ">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>条目编号</td>
+                                <td>条目内容</td>
+                                <td>1号评分人结果</td>
+                                <td>2号评分人结果</td>
+                                <td *ngIf="handler == 'audit' || isAudited">审核人结果</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of itemInfo|slice:1;let i=index ">
+                                <td>{{item.itemNumber}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>{{ScoreArray_1[i+1]}}</td>
+                                <td>{{ScoreArray_2[i+1]}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">
+                                    <select [(ngModel)]="ScoreArray[i+1] " (ngModelChange)="updateScore(ScoreArray) ">
+                                    <option *ngFor="let scoring of scoringSettingArray[i] " [value]="scoring ">{{scoring}}</option>
+                                </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2 " style="text-align:right ">总评分</td>
+                                <td><span>{{ScoreArray_1[0]}}分</span></td>
+                                <td><span>{{ScoreArray_2[0]}}分</span></td>
+                                <td *ngIf="handler == 'audit' || isAudited"><span>{{ScoreArray[0]}}分</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2 " style="text-align:right ">证据质量</td>
+                                <td>{{scoreService.ScoreLevel_1}}</td>
+                                <td>{{scoreService.ScoreLevel_2}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">{{ScoreLevel}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2 " style="text-align:right ">评分（审核）人</td>
+                                <td>{{Grader_1}}</td>
+                                <td>{{Grader_2}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">{{username}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="5 " *ngIf="itemInfo " [innerHtml]="itemInfo[0].itemValue " style="text-align:left "> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div *ngIf="literatureType == 5 || literatureType == 6">
+                <div *ngIf="handler == 'score'">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>条目编号</td>
+                                <td>条目名称</td>
+                                <td>条目内容</td>
+                                <td>评分</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of itemInfo|slice:1; let i = index">
+                                <td>{{i+1}}</td>
+                                <td>{{item.scoringRuleName}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>
+                                    <select [(ngModel)]="ScoreArray[i+1]" (ngModelChange)="updateScore(ScoreArray)">
+                                        <option *ngFor="let scoring of scoringSettingArray[i]" [value]="scoring">{{scoring}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        
+                            <tr>
+                                <td colspan="3" style="text-align:right">总评分</td>
+                                <td><span>{{ScoreArray[0]}}分</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:right">证据质量</td>
+                                <td>{{ScoreLevel}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:right">评分（审核）人</td>
+                                <td>{{username}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" *ngIf="itemInfo" [innerHtml]="itemInfo[0].itemValue" style="text-align:left"> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="handler != 'score'">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>条目编号</td>
+                                <td>条目名称</td>
+                                <td>条目内容</td>
+                                <td>1号评分人结果</td>
+                                <td>2号评分人结果</td>
+                                <td *ngIf="handler == 'audit' || isAudited">审核人结果</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of itemInfo|slice: 1; let i = index">
+                                <td>{{i+1}}</td>
+                                <td>{{item.scoringRuleName}}</td>
+                                <td>{{item.itemValue}}</td>
+                                <td>{{ScoreArray_1[i+1]}}</td>
+                                <td>{{ScoreArray_2[i+1]}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">
+                                    <select [(ngModel)]="ScoreArray[i+1]" (ngModelChange)="updateScore(ScoreArray)">
+                                    <option *ngFor="let scoring of scoringSettingArray[i]" [value]="scoring">{{scoring}}</option>
+                                </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:right">总评分</td>
+                                <td><span>{{ScoreArray_1[0]}}分</span></td>
+                                <td><span>{{ScoreArray_2[0]}}分</span></td>
+                                <td *ngIf="handler == 'audit' || isAudited"><span>{{ScoreArray[0]}}分</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:right">证据质量</td>
+                                <td>{{scoreService.ScoreLevel_1}}</td>
+                                <td>{{scoreService.ScoreLevel_2}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">{{ScoreLevel}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:right">评分（审核）人</td>
+                                <td>{{Grader_1}}</td>
+                                <td>{{Grader_2}}</td>
+                                <td *ngIf="handler == 'audit' || isAudited">{{username}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" *ngIf="itemInfo" [innerHtml]="itemInfo[0].itemValue" style="text-align:left"> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="btn-panel mt10">
+            <button type="submit" class="btn btn-default" (click)="close()">取消</button>
+            <button type="submit" class="btn btn-primary" (click)="saveScore()" *ngIf="handler != 'view'">确定</button>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade"></div>
+</div>
+
+<my-dialog></my-dialog>

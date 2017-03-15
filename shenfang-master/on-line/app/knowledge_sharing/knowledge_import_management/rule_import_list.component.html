@@ -1,0 +1,70 @@
+<div class="knowledge-import-list">
+    <div class="form-inline knowledges-search-bar" fole="form">
+        <div class="form-group">
+            <label>日期：</label>
+            <input class="form-control timeipt input-sm" placeholder="yyyy-mm-dd" (click)="startDateforSearch.toggle()" (ngModelChange)="setEndInterval($event)" [maxDate]="maxStartDate" name="startDateforSearch" [(ngModel)]="startDate"  tabIndex="-1" ngbDatepicker #startDateforSearch="ngbDatepicker">
+            -
+            <input class="form-control timeipt input-sm" placeholder="yyyy-mm-dd" (click)="endDateforSearch.toggle()" (ngModelChange)="setStrartInterval($event)" [minDate]="minEndDate" [maxDate]="maxEndDate" name="endDateforSearch" [(ngModel)]="endDate"  tabIndex="-1" ngbDatepicker #endDateforSearch="ngbDatepicker">
+        </div>
+        <div class="form-group">
+            <label>药品名称：</label>
+            <input type="text" [(ngModel)]="searchQuery.drugId" class="form-control input-sm">
+        </div>
+        <div class="form-group">
+            <label>医院名称：</label><!--支持联想 => 列表接口-->
+            <input type="text" [(ngModel)]="searchQuery.hospitalName" class="form-control input-sm">
+        </div>
+        <div class="form-group">
+            <label>规则类型：</label>
+            <select class="form-control input-sm" [(ngModel)]="searchQuery.applyType">
+                <option value="">全部</option>
+                <option value="1">药品</option>
+                <option value="2">产品</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>规则来源：</label>
+            <select class="form-control input-sm" [(ngModel)]="searchQuery.source">
+                <option value="">全部</option>
+                <option value="1">医院</option>
+                <option value="2">用户</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>状态：</label>
+            <select class="form-control input-sm" [(ngModel)]="searchQuery.status">
+                <option value="">全部</option>
+                <option value="-2">已忽略</option>
+                <option value="-1">可忽略</option>
+                <option value="0">待处理</option>
+                <option value="1">可纳入</option>
+                <option value="2">已纳入</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-sm" (click)="search()">搜索</button>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-sm" (click)="download()">导出</button>
+        </div>
+    </div>
+    <my-table [table]="drugRuleTable" >
+        <template #tableTemplate let-tableinfo>
+            <tr *ngFor="let trow of tableinfo.dataList;let i = index;" (click)="choose(trow);" [class.selected]="trow === rule">
+                <td>{{i + 1}}</td>
+                <td>{{trow.drugId}}</td>
+                <td>{{trow.applyType == 1 ? '药品' : '产品'}}</td>
+                <td>{{trow.branch}}</td>
+                <td>{{trow.source == 1 ? '医院' : (trow.source == 2 ? '用户' : '')}}</td>
+                <td>{{statusTransfromMap[trow.status]}}</td>
+                <td>{{trow.checkUserName}}</td>
+                <td>{{trow.checkTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                <td>{{trow.checkAgainUserName}}</td>
+                <td>{{trow.checkAgainTime | date:"yyyy-MM-dd HH:mm:ss"}}</td>
+                <td [innerHTML]="trow.comment"></td>
+                <td><a (click)="goEdit(trow)">{{statusTransfromMap[trow.status]}}</a></td>
+            </tr>
+        </template>
+    </my-table>
+    
+</div>

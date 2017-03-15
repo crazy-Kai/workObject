@@ -1,0 +1,132 @@
+<div class="export-package">
+    <div class="heard-bar">
+        <a class="goback" (click)="goBackList()">返回</a>
+        <button class="btn btn-sm btn-primary" (click)="goHistory()" style="float: right;">导出历史</button>
+    </div>
+    <div class="export-form form-horizontal" *ngIf="!exporting" [hidden]="initialing">
+        <div class="form-group">
+            <label class="col-md-2 control-label">机构名称：</label>
+            <div class="col-md-10 form-inline">
+                <span>{{hospitalName}}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label"><strong class="required">*</strong>适应系统：</label>
+            <div class="col-md-10 form-inline">
+                <select class="form-control input-sm" [(ngModel)]="Kpackage.systemVersionType">
+                    <!--<option value="V0">低于2.7.4版本的2.0系统</option>
+                    <option value="V1">2.7.4版本</option>-->
+                    <option value="">---请选择---</option>
+                    <option value="V2|2.7.5及以上版本的2.0系统">2.7.5及以上版本的2.0系统</option>
+                    <!--<option value="V0">低于3.0.3版本的3.0系统</option>
+                    <option value="V1">3.0.3版本</option>-->
+                    <option value="V2|高于3.0.3版本的3.0系统">高于3.0.3版本的3.0系统</option>
+                    <!--<option value="V0">低于3.2.1.6版本的3.2系统</option>
+                    <option value="V1">3.2.1.6版本</option>-->
+                    <option value="V2|高于3.2.1.6版本的3.2系统">高于3.2.1.6版本的3.2系统</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label"><strong class="required">*</strong>是否包含患教：</label>
+            <div class="col-md-10 form-inline">
+                <select class="form-control input-sm" [(ngModel)]="Kpackage.patientRule">
+                    <option value="">---请选择---</option>
+                    <option value="ONLY">只含患教</option>
+                    <option value="WITHOUT">不含患教</option>
+                    <option value="ALL">全部规则保留</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">更新方式：</label>
+            <div class="col-md-10 form-inline">
+                <label for="all" class="radio-inline">
+                    <input type="radio" id="all" name="updateMode" [(ngModel)]="Kpackage.updateMode" [checked]="Kpackage.updateMode == 'ALL'" value="ALL">
+                    全量
+                </label>
+                <label for="patch" class="radio-inline">
+                    <input type="radio" id="patch" name="updateMode" [(ngModel)]="Kpackage.updateMode" [checked]="Kpackage.updateMode == 'PATCH'" value="PATCH">
+                    增量
+                </label>
+            </div>
+        </div>
+        <div class="form-group" *ngIf="Kpackage.updateMode == 'PATCH'">
+            <label class="col-md-2 control-label"><strong class="required">*</strong>数据开始日期：</label>
+            <div class="col-md-10 form-inline">
+                <input class="form-control timeipt input-sm" placeholder="yyyy-mm-dd" (click)="startDateforSearch.toggle()" 
+                    [(ngModel)]="startDate" (ngModelChange)="transDate($event)" [maxDate]="maxEndDate" name="startDateforSearch" 
+                    tabIndex="-1" ngbDatepicker #startDateforSearch="ngbDatepicker" data-ng-pattern="yyyy-mm-dd">
+            </div>
+        </div>
+        <div class="form-group" *ngIf="Kpackage.updateMode == 'PATCH'">
+            <label class="col-md-2 control-label">数据截止日期：</label>
+            <div class="col-md-10 form-inline">
+                <input type="text" class="form-control input-sm" [(ngModel)]="dateEnd" disabled>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">导出更新包：</label>
+            <div class="col-md-10 form-inline">
+                <button type="submit" class="btn btn-primary" (click)="confirmExport(true)">导出</button>
+            </div>
+        </div>
+    </div>
+    <div class="export-progress" *ngIf="exporting">
+        <div class="progress">
+            <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" [style.width]="exportingProgress">
+                <span class="sr-only">{{exportingProgress}} Complete</span>
+            </div>
+        </div>
+        <div class="tips">
+            请稍等片刻，正在导出...{{exportingProgress}}
+        </div>
+    </div>
+</div>
+
+<!-- 导出更新包时的确认浮动层 -->
+<my-dialog class="show-dialog" [dialogMsgWidth]="250">
+    <template #dialogTemplate let-dialogModel>
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="col-md-5 control-label">机构名称：</label>
+                <span class="col-md-5 form-span">{{hospitalName}}</span>
+            </div>
+            <div class="form-group">
+                <label class="col-md-5 control-label">适应系统：</label>
+                <span class="col-md-5 form-span">{{Kpackage.systemVersionString}}</span>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-5 control-label">是否包含患教：</label>
+                <span class="col-md-5 form-span">{{ Kpackage.patientRuleString }}</span>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-5 control-label">更新方式：</label>
+                <span class="col-md-5 form-span">{{Kpackage.updateModeString }}</span>
+            </div>
+
+            <div class="form-group" *ngIf="Kpackage.updateMode == 'PATCH'">
+                <label class="col-md-5 control-label">更新数据开始时间：</label>
+                <span class="col-md-5 form-span">{{Kpackage.dataFromTime | date:"yyyy-MM-dd"}}</span>
+            </div>
+            
+            <div class="form-group" *ngIf="Kpackage.updateMode == 'PATCH'">
+                <label class="col-md-5 control-label">更新数据结束时间：</label>
+                <span class="col-md-5 form-span">{{dateEnd}}</span>
+            </div>
+
+            <div class="form-group" style="text-align: center;">
+                <label class="col-md-12 warning">（注：请确认以上信息是否正确！）</label>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-12 form-inline" style="text-align: center;">
+                    <button type="submit" class="btn btn-primary" (click)="startExport(true)">确认</button>
+                    <button type="button" class="btn btn-primary" (click)="dialogModel.isTemplate = false;">取消</button>
+                </div>
+            </div>
+        </div>
+    </template>
+</my-dialog>

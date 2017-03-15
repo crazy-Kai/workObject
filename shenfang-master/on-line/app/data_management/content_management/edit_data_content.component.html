@@ -1,0 +1,700 @@
+<div class="flex column" style="margin: 10px;">
+    <div class="heard-bar fixed-header">
+        <a class="btn btn-primary" (click)="goback()">返回至列表</a>
+    </div>
+
+    <div class="flex1">
+        <!--书籍-->
+        <div *ngIf="docType == 0" class="add-data form-horizontal">
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>资料名称：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.docName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>书籍名称：</label>
+                <div class="col-md-10 form-inline">
+                    <span>{{docInfo.nameBook}}</span>
+                    <button [disabled]="readOnly" class="form-control btn btn-primary" (click)="chooseDataType()">选择</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>作者：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.bookAuthor" placeholder="多个作者时间需用英文状态'|'隔开">
+                </div>
+            </div>
+            <!--关联药品 产品 疾病-->
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联药品：</label>
+                <div class="col-md-10 form-inline">
+                    <input [disabled]="readOnly" type="text" class="form-control input-sm" (click)="chooseDrug()" [ngModel]="docInfo.refDrugs" placeholder="点击选择药品" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联产品：</label>
+                <div class="col-md-10 form-inline">
+                    <input [disabled]="readOnly" type="text" class="form-control input-sm" (click)="chooseProducts()" [ngModel]="docInfo.refProducts" placeholder="点击选择产品" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联疾病：</label>
+                <div class="col-md-10 form-inline">
+                    <input [disabled]="readOnly" type="text" class="form-control input-sm" (click)="chooseDisease()" [ngModel]="docInfo.refIcdCodes" placeholder="点击选择疾病" readonly>
+                </div>
+            </div>
+            <!--关联药品 产品 疾病 end-->
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>起止页：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="number" class="form-control input-sm" [(ngModel)]="startPage" style="width: 115px">
+                    <i style="display: inline-block;width: 10px;">~</i>
+                    <input [readonly]="readOnly" type="number" class="form-control input-sm" [(ngModel)]="endPage" style="width: 115px">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">资料来源：</label>
+                <div class="col-md-10 form-inline">
+                    <select [disabled]="readOnly" [(ngModel)]="docInfo.sourceType" class="form-control input-sm" style="width: 122px">
+                        <option value="">用户类型</option>
+                        <option value="0">系统</option>
+                        <option value="1">医院</option>
+                        <option value="2">企业</option>
+                    </select>
+                    <input [readonly]="readOnly" type="text" [(ngModel)]="docInfo.sourceType == '0' ? '杭州逸曜信息技术有限公司' : docInfo.sourceFrom" 
+                        class="form-control input-sm" style="width: 122px">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关键词：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.keyWord">
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label">摘要：</label>
+                <div class="col-md-10 form-inline">
+                    <textarea [readonly]="readOnly" class="form-control" rows="4" [(ngModel)]="docInfo.summary"></textarea>
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label">摘要翻译：</label>
+                <div class="col-md-10 form-inline">
+                    <textarea [readonly]="readOnly" class="form-control" rows="4" [(ngModel)]="docInfo.summaryZh"></textarea>
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label">内容：</label>
+                <div class="col-md-10 form-inline">
+                    <!--<textarea [readonly]="readOnly" class="form-control" rows="4" [(ngModel)]="docInfo.content"></textarea>-->
+                    <textarea rows="4" id="ueCotent" #UEditor></textarea>
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label"> </label>
+                <div class="col-md-10 form-inline">
+                    <my-upload [disabled]="readOnly" [typeId]="docInfo.id" [uploadType]="uploadType" (uploadComplete)="uploaded($event)"></my-upload>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"> </label>
+                <div class="col-md-10 form-inline">
+                    <button type="submit" class="btn btn-danger" (click)="goback()">取消</button>
+                    <button [disabled]="readOnly" type="submit" class="btn btn-primary" (click)="save()">保存</button>
+                </div>
+            </div>
+        </div>
+        <!--期刊-->
+        <div *ngIf="docType == 1" class="add-data form-horizontal" (click)="selecting = false">
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>资料名称：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.docName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>期刊名称：</label>
+                <div class="col-md-10 form-inline">
+                    <span>{{docInfo.nameBook}}</span>
+                    <button class="form-control btn btn-primary" (click)="chooseDataType()">选择</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">文献类型：</label>
+                <div class="col-md-10 form-inline">
+                    <select [disabled]="readOnly" [(ngModel)]="docInfo.scoreType" class="form-control input-sm">
+                        <option value="meta">Meta分析</option>
+                        <option value="rct">RCT研究</option>
+                        <option value="guide">指南</option>
+                        <option value="nrcs">非随机临床研究</option>
+                        <option value="ccs">病例对照研究</option>
+                        <option value="cs">队列研究</option>
+                        <option value="qhes">模型法药物经济学研究</option>
+                        <option value="chec">试验型药物经济学研究</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="docInfo.scoreType == 'guide'">
+                <label class="col-md-2 control-label">关联科室：</label><!--文献类型为指南的时候填写-->
+                <div class="col-md-10 form-inline" style="position: relative;">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" (click)="selecting = !selecting;$event.stopPropagation();" [(ngModel)]="docInfo.provenance" placeholder="最多选择2个关联科室">
+                    <ul class="multi-select" *ngIf="selecting">
+                        <li *ngFor="let opt of provenances" (click)="select(opt);$event.stopPropagation();" [class.selected]="contains(opt)">{{opt}}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">作者：</label><!--文献类型为指南的时候为必填-->
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.bookAuthor">
+                </div>
+            </div>
+            <!--关联药品 产品 疾病-->
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联药品：</label>
+                <div class="col-md-10 form-inline">
+                    <input type="text" class="form-control input-sm" (click)="chooseDrug()" [ngModel]="docInfo.refDrugs" placeholder="点击选择药品" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联产品：</label>
+                <div class="col-md-10 form-inline">
+                    <input type="text" class="form-control input-sm" (click)="fnDialogProdListShow()" [ngModel]="docInfo.refProducts" placeholder="点击选择产品啊" readonly>
+                    <dialog-prodlist [selected]="products" (confirm)="fnDialogProdListConfirm($event)"></dialog-prodlist>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联疾病：</label>
+                <div class="col-md-10 form-inline">
+                    <input type="text" class="form-control input-sm" (click)="chooseDisease()" [ngModel]="docInfo.refIcdCodes" placeholder="点击选择疾病" readonly>
+                </div>
+            </div>
+            <!--关联药品 产品 疾病 end-->
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>年，卷（期）：</label><!--文献类型为指南的时候为必填-->
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.yearVolume">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>起止页：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="number" class="form-control input-sm" [(ngModel)]="startPage" style="width: 115px">
+                    <i style="display: inline-block;width: 10px;">~</i>
+                    <input [readonly]="readOnly" type="number" class="form-control input-sm" [(ngModel)]="endPage" style="width: 115px">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">DOI号：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.doiNum">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">资料来源：</label>
+                <div class="col-md-10 form-inline">
+                    <select [disabled]="readOnly" [(ngModel)]="docInfo.sourceType" class="form-control input-sm" style="width: 122px">
+                        <option value="">用户类型</option>
+                        <option value="0">系统</option>
+                        <option value="1">医院</option>
+                        <option value="2">企业</option>
+                    </select>
+                    <input [readonly]="readOnly" type="text" [(ngModel)]="docInfo.sourceType == '0' ? '杭州逸曜信息技术有限公司' : docInfo.sourceFrom" class="form-control input-sm" style="width: 122px">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">文献评分：</label>
+                <div class="col-md-10 form-inline">
+                    <span style="padding: 5px 0;">{{docInfo.score ? docInfo.score : '暂无评分'}}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关键词：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.keyWord">
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label">摘要：</label>
+                <div class="col-md-10 form-inline">
+                    <textarea [readonly]="readOnly" class="form-control" rows="4" [(ngModel)]="docInfo.summary"></textarea>
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label">摘要翻译：</label>
+                <div class="col-md-10 form-inline">
+                    <textarea [readonly]="readOnly" class="form-control" rows="4" [(ngModel)]="docInfo.summaryZh"></textarea>
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label">内容：</label>
+                <div class="col-md-10 form-inline">
+                    <!--<textarea [readonly]="readOnly" class="form-control" rows="4" [innerHTML]="docInfo.content"></textarea>-->
+                    <textarea [readonly]="readOnly" rows="4" id="ueCotent" #UEditor></textarea>
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label"> </label>
+                <div class="col-md-10 form-inline" (click)="$event.stopPropagation()">
+                    <my-upload [disabled]="readOnly" [typeId]="docInfo.id" [uploadType]="uploadType" (uploadComplete)="uploaded($event)"></my-upload>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"> </label>
+                <div class="col-md-10 form-inline">
+                    <button type="submit" class="btn btn-danger" (click)="goback()">取消</button>
+                    <button [disabled]="readOnly" type="submit" class="btn btn-primary" (click)="save()">保存</button>
+                </div>
+            </div>
+        </div>
+        
+        <!--电子文献-->
+        <div *ngIf="docType == 2" class="add-data form-horizontal" (click)="selecting = false">
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>资料名称：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.docName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">文献类型：</label>
+                <div class="col-md-10 form-inline">
+                    <select [disabled]="readOnly" [(ngModel)]="docInfo.scoreType" class="form-control input-sm">
+                        <option value="meta">Meta分析</option>
+                        <option value="rct">RCT研究</option>
+                        <option value="guide">指南</option>
+                        <option value="nrcs">非随机临床研究</option>
+                        <option value="ccs">病例对照研究</option>
+                        <option value="cs">队列研究</option>
+                        <option value="qhes">模型法药物经济学研究</option>
+                        <option value="chec">试验型药物经济学研究</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="docInfo.scoreType == 'guide'">
+                <label class="col-md-2 control-label">关联科室：</label><!--文献类型为指南的时候填写-->
+                <div class="col-md-10 form-inline" style="position: relative;">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" (click)="selecting = !selecting;$event.stopPropagation();" [(ngModel)]="docInfo.provenance" placeholder="最多选择2个关联科室">
+                    <ul class="multi-select" *ngIf="selecting">
+                        <li *ngFor="let opt of provenances" (click)="select(opt);$event.stopPropagation();" [class.selected]="contains(opt)">{{opt}}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>作者：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.bookAuthor" placeholder="多个作者时间需用英文状态'|'隔开">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>电子文献：</label>
+                <div class="col-md-10 form-inline">
+                    <span>{{docInfo.nameBook}}</span>
+                    <button [disabled]="readOnly" class="form-control btn btn-primary" (click)="chooseDataType()">选择</button>
+                </div>
+            </div>
+            <!--关联药品 产品 疾病-->
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联药品：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" (click)="chooseDrug()" [ngModel]="docInfo.refDrugs" placeholder="点击选择药品" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联产品：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" (click)="chooseProducts()" [ngModel]="docInfo.refProducts" placeholder="点击选择产品" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联疾病：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" (click)="chooseDisease()" [ngModel]="docInfo.refIcdCodes" placeholder="点击选择疾病" readonly>
+                </div>
+            </div>
+            <!--关联药品 产品 疾病 end-->
+            <div class="form-group">
+                <label class="col-md-2 control-label">网站名称：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.networkName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">网站链接：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.networkLink">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">年：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.year">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">期：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.number">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">发布日期：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.publicationDate">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">资料来源：</label>
+                <div class="col-md-10 form-inline">
+                    <select [disabled]="readOnly" [(ngModel)]="docInfo.sourceType" class="form-control input-sm" style="width: 122px">
+                        <option >用户类型</option>
+                        <option value="0">系统</option>
+                        <option value="1">医院</option>
+                        <option value="2">企业</option>
+                    </select>
+                    <input [readonly]="readOnly" type="text" [(ngModel)]="docInfo.sourceType == '0' ? '杭州逸曜信息技术有限公司' : docInfo.sourceFrom" class="form-control input-sm" style="width: 122px">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关键词：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.keyWord">
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label">摘要：</label>
+                <div class="col-md-10 form-inline">
+                    <textarea [readonly]="readOnly" class="form-control" rows="4" [(ngModel)]="docInfo.summary"></textarea>
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label">摘要翻译：</label>
+                <div class="col-md-10 form-inline">
+                    <textarea [readonly]="readOnly" class="form-control" rows="4" [(ngModel)]="docInfo.summaryZh"></textarea>
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label">内容：</label>
+                <div class="col-md-10 form-inline">
+                    <!--<textarea [readonly]="readOnly" class="form-control" rows="4" [(ngModel)]="docInfo.content"></textarea>-->
+                    <textarea [readonly]="readOnly" rows="4" id="ueCotent" #UEditor></textarea>
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label"> </label>
+                <div class="col-md-10 form-inline" (click)="$event.stopPropagation()">
+                    <my-upload [disabled]="readOnly" [typeId]="docInfo.id" [uploadType]="uploadType" (uploadComplete)="uploaded($event)"></my-upload>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"> </label>
+                <div class="col-md-10 form-inline">
+                    <button type="submit" class="btn btn-danger" (click)="goback()">取消</button>
+                    <button [disabled]="readOnly" type="submit" class="btn btn-primary" (click)="save()">保存</button>
+                </div>
+            </div>
+        </div>
+
+        <!--电子公告-->
+        <div *ngIf="docType == 3" class="add-data form-horizontal">
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>资料名称：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.docName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>电子公告：</label>
+                <div class="col-md-10 form-inline">
+                    <span>{{docInfo.nameBook}}</span>
+                    <button [disabled]="readOnly" class="form-control btn btn-primary" (click)="chooseDataType()">选择</button>
+                </div>
+            </div>
+            <!--关联药品 产品 疾病-->
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联药品：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" (click)="chooseDrug()" [ngModel]="docInfo.refDrugs" placeholder="点击选择药品" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联产品：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" (click)="chooseProducts()" [ngModel]="docInfo.refProducts" placeholder="点击选择产品" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联疾病：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" (click)="chooseDisease()" [ngModel]="docInfo.refIcdCodes" placeholder="点击选择疾病" readonly>
+                </div>
+            </div>
+            <!--关联药品 产品 疾病 end-->
+            <div class="form-group">
+                <label class="col-md-2 control-label">网站名称：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.networkName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">网站链接：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.networkLink">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">发布文号：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.publicationNum">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">发布日期：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.publicationDate">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">资料来源：</label>
+                <div class="col-md-10 form-inline">
+                    <select [disabled]="readOnly" [(ngModel)]="docInfo.sourceType" class="form-control input-sm" style="width: 122px">
+                        <option >用户类型</option>
+                        <option value="0">系统</option>
+                        <option value="1">医院</option>
+                        <option value="2">企业</option>
+                    </select>
+                    <input [readonly]="readOnly" type="text" [(ngModel)]="docInfo.sourceType == '0' ? '杭州逸曜信息技术有限公司' : docInfo.sourceFrom" class="form-control input-sm" style="width: 122px">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关键词：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.keyWord">
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label">公告简介：</label>
+                <div class="col-md-10 form-inline">
+                    <textarea [readonly]="readOnly" class="form-control" rows="4" [(ngModel)]="docInfo.briefIntroduction"></textarea>
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label">内容：</label>
+                <div class="col-md-10 form-inline">
+                    <!--<textarea [readonly]="readOnly" class="form-control" rows="4" [(ngModel)]="docInfo.content"></textarea>-->
+                    <textarea [readonly]="readOnly" rows="4" id="ueCotent" #UEditor></textarea>
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label"> </label>
+                <div class="col-md-10 form-inline">
+                    <my-upload [disabled]="readOnly" [typeId]="docInfo.id" [uploadType]="uploadType" (uploadComplete)="uploaded($event)"></my-upload>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"> </label>
+                <div class="col-md-10 form-inline">
+                    <button type="submit" class="btn btn-danger" (click)="goback()">取消</button>
+                    <button [disabled]="readOnly" type="submit" class="btn btn-primary" (click)="save()">保存</button>
+                </div>
+            </div>
+        </div>
+
+        <!--其他资料-->
+        <div *ngIf="docType == 4" class="add-data form-horizontal">
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>资料名称：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.docName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">作者：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.bookAuthor" placeholder="多个作者时间需用英文状态'|'隔开">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"><em>*</em>其他资料名称：</label>
+                <div class="col-md-10 form-inline">
+                    <span>{{docInfo.nameBook}}</span>
+                    <button [disabled]="readOnly" class="form-control btn btn-primary" (click)="chooseDataType()">选择</button>
+                </div>
+            </div>
+            <!--关联药品 产品 疾病-->
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联药品：</label>
+                <div class="col-md-10 form-inline">
+                    <input type="text" class="form-control input-sm" (click)="chooseDrug()" [ngModel]="docInfo.refDrugs" placeholder="点击选择药品" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联产品：</label>
+                <div class="col-md-10 form-inline">
+                    <input type="text" class="form-control input-sm" (click)="chooseProducts()" [ngModel]="docInfo.refProducts" placeholder="点击选择产品" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关联疾病：</label>
+                <div class="col-md-10 form-inline">
+                    <input type="text" class="form-control input-sm" (click)="chooseDisease()" [ngModel]="docInfo.refIcdCodes" placeholder="点击选择疾病" readonly>
+                </div>
+            </div>
+            <!--关联药品 产品 疾病 end-->
+            <div class="form-group">
+                <label class="col-md-2 control-label">资料来源：</label>
+                <div class="col-md-10 form-inline">
+                    <select [disabled]="readOnly" [(ngModel)]="docInfo.sourceType" class="form-control input-sm" style="width: 122px">
+                        <option >用户类型</option>
+                        <option value="0">系统</option>
+                        <option value="1">医院</option>
+                        <option value="2">企业</option>
+                    </select>
+                    <input [readonly]="readOnly" type="text" [(ngModel)]="docInfo.sourceType == '0' ? '杭州逸曜信息技术有限公司' : docInfo.sourceFrom" class="form-control input-sm" style="width: 122px">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">关键词：</label>
+                <div class="col-md-10 form-inline">
+                    <input [readonly]="readOnly" type="text" class="form-control input-sm" [(ngModel)]="docInfo.keyWord">
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label">摘要：</label>
+                <div class="col-md-10 form-inline">
+                    <textarea [readonly]="readOnly" class="form-control" rows="4" [(ngModel)]="docInfo.summary"></textarea>
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label">摘要翻译：</label>
+                <div class="col-md-10 form-inline">
+                    <textarea [readonly]="readOnly" class="form-control" rows="4" [(ngModel)]="docInfo.summaryZh"></textarea>
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label">内容：</label>
+                <div class="col-md-10 form-inline">
+                    <!--<textarea [readonly]="readOnly" class="form-control" rows="4" [(ngModel)]="docInfo.content"></textarea>-->
+                    <textarea [readonly]="readOnly" rows="4" id="ueCotent" #UEditor></textarea>
+                </div>
+            </div>
+            <div class="form-group" style="height: auto;">
+                <label class="col-md-2 control-label"> </label>
+                <div class="col-md-10 form-inline">
+                    <my-upload [disabled]="readOnly" [typeId]="docInfo.id" [uploadType]="uploadType" (uploadComplete)="uploaded($event)"></my-upload>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label"> </label>
+                <div class="col-md-10 form-inline">
+                    <button type="submit" class="btn btn-danger" (click)="goback()">取消</button>
+                    <button [disabled]="readOnly" type="submit" class="btn btn-primary" (click)="save()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!---->
+<div class="container" *ngIf="relevanceType == 0 || relevanceType == 2">
+    <div id="mymodel" class="multitree">
+        <div class="model-header">
+            选择{{relevanceType == 0 ? '药品' : '疾病'}}分类
+        </div>
+        <div class="model-content flex column">
+            <div class="search-panel form-inline mb10">
+                <div class="form-group">
+                    <label class="control-label">{{relevanceType == 0 ? '药品' : '疾病'}}名称：</label>
+                    <div class="input-group">
+                        <div class="input-group-addon"></div>
+                        <input class="form-control" type="text" placeholder="请输入关键字" [(ngModel)]="treeSearchWord">
+                    </div>
+                    <button type="submit" class="btn btn-primary" (click)="search()">搜索</button>
+                </div>
+            </div>
+            <div class="multitree-container flex1">
+                <div class="multitree-tree">
+                    <Tree #tree [nodes]="nodes" class="my-tree" [options]="options"></Tree>
+                </div>
+                <div class="multitree-action-arrow"></div>
+                <div class="multitree-nodes">
+                    <ul>
+                        <li *ngFor="let item of curNodes;let i = index" (click)="curNodes.splice(i, 1);">
+                            <input type="checkbox" checked>{{item.name ? item.name : item.dbdName}}
+                        </li>
+                    </ul>
+                </div>    
+            </div>
+        </div>
+        <div class="btn-panel">
+            <button type="submit" class="btn btn-danger" (click)="close()">取消</button>
+            <button type="submit" class="btn btn-success" (click)="confirm()">确定</button>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade"></div>
+</div>
+
+<div class="container" *ngIf="relevanceType == -1">
+    <div id="mymodel" class="singletree">
+        <div class="model-header">
+            选择资料分类
+        </div>
+        <div class="model-content flex column">
+            <div class="search-panel form-inline mb10">
+                <div class="form-group">
+                    <label class="control-label">{{docTypeName}}名称：</label>
+                    <div class="input-group">
+                        <div class="input-group-addon"></div>
+                        <input class="form-control" type="text" placeholder="请输入关键字" [(ngModel)]="treeSearchWord">
+                    </div>
+                    <button type="submit" class="btn btn-primary" (click)="search()">搜索</button>
+                </div>
+            </div>
+            <div class="singletree-container flex1">
+                <Tree #tree [nodes]="bookTreeData" class="my-tree" [options]="dataTypeTreeOptions" (onActivate)="chooseType($event)" (dblclick)="dblClickRowChoose(tree)"></Tree>
+            </div>
+        </div>
+        <div class="btn-panel">
+            <button type="submit" class="btn btn-danger" (click)="close()">取消</button>
+            <button type="submit" class="btn btn-success" (click)="confirm()">确定</button>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade"></div>
+</div>
+
+<div class="container" *ngIf="relevanceType == 1">
+    <div id="mymodel" class="multitable">
+        <div class="model-header">
+            选择产品
+        </div>
+        <div class="model-content">
+            <div class="search-panel form-inline mb15">
+                <div class="form-group">
+                    <label class="control-label">产品名称：</label>
+                    <input class="form-control" type="text" placeholder="请输入关键字" [(ngModel)]="productSearchQuery.productName">
+                </div>
+                <!--<div class="form-group">
+                    <label class="control-label">商品名称：</label>
+                    <input class="form-control" type="text" placeholder="请输入关键字" [(ngModel)]="productSearchQuery.goodsName">
+                </div>-->
+                <div class="form-group">
+                    <label class="control-label">生产厂家：</label>
+                    <input class="form-control" type="text" placeholder="请输入关键字" [(ngModel)]="productSearchQuery.producerName">
+                </div>
+                <button type="submit" class="btn btn-primary" (click)="search()">搜索</button>
+            </div>
+            <div class="multitable-container">
+                <my-table [table]="producttable" [idAttr]="'dbdId'" [oriArrData]="curNodes" (onCheck)="onCheck($event)"></my-table>        
+            </div>
+        </div>
+        <div class="btn-panel">
+            <button type="submit" class="btn btn-danger" (click)="close()">取消</button>
+            <button type="submit" class="btn btn-success" (click)="confirm()">确定</button>
+        </div>
+    </div>
+    <div class="in modal-backdrop fade"></div>
+</div>
+
+<my-dialog></my-dialog>

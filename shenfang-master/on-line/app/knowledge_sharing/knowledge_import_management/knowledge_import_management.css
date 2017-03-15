@@ -1,0 +1,135 @@
+.knowledge-import-list td{padding: 10px;border: 1px solid #ddd;}
+
+/**
+ *  用户知识导入 @class => knowledge-import-list
+ */
+.knowledge-import-list{
+    margin: 10px;
+}
+.knowledges-search-bar{
+    padding: 5px 5px 0 5px;margin-bottom: 10px;
+    border: 1px solid #ddd;
+}
+.knowledges-search-bar > div{
+    margin-right: 10px;margin-bottom: 5px;
+}
+.knowledges-search-bar select{
+    min-width: 80px;
+}
+.quick-handler{
+    margin-bottom: 10px;
+}
+.quick-handler:after{
+    content: " ";display: block;visibility: hidden;clear: both;
+}
+
+.emptyWarning{
+    color: #f00;
+}
+.headline{
+    padding: 0 0 10px 10px;
+    border-bottom: 1px solid #ddd;
+}
+.headline h3{
+    margin: 0;
+    line-height: 35px;
+}
+.headline p{
+    margin: 0;padding:0;
+}
+.knowledge-import{
+
+}
+.knowledge-import .row{
+    margin-bottom: 10px;
+    line-height: 30px;
+}
+.knowledge-import .row label{
+    margin: 0;
+    text-align: right;
+}
+.uploadComponent{
+    position: relative;
+}
+.uploadComponent .btn-choose{
+    width:120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;
+}
+.uploadComponent input[type=file]{
+    opacity: 0;
+    position: absolute;left: 15px;top: 0;
+    width: 120px;height: 30px;
+}
+.progress-bar{
+    position: relative;
+    width: 250px;height: 18px;margin: 6px 0;overflow: hidden;
+    border: 1px solid #ddd;border-radius: 3px;
+    background: #eee;
+}
+.progress{
+    -webkit-transition: all ease .5s;
+    -moz-transition: all ease .5s;
+    -ms-transition: all ease .5s;
+    transition: all ease .5s;
+
+    display: block;height: 16px;width: 0;
+    background: #337ab7;
+}
+.progress.faild{
+    background: #b01515;
+}
+.active-slide{
+    position: absolute;left: -50px;top: 0;
+    width: 80px;height: 18px;
+    background:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,0)),color-stop(0.55,rgba(255,255,255,0.55)),color-stop(1,rgba(255,255,255,0)));
+
+    -webkit-animation: slide 4s infinite linear;
+    animation: slide 4s infinite linear;
+}
+
+@keyframes slide{
+    0% {
+        left: -50px;
+    }
+    40% {
+        left: 250px;
+    }
+    100% {
+        left: 250px;
+    }
+}
+@-webkit-keyframes slide{
+    0% {
+        left: -30px;
+    }
+    40% {
+        left: 250px;
+    }
+    100% {
+        left: 250px;
+    }
+}
+ /**
+ *  回收日志
+ */
+.importLogs th, .importLogs td{
+    padding: 7px;
+}
+.orgs-list{
+    height: 440px;overflow: auto;
+}
+.orgs-list:after{
+    content: " ";display: block;visibility: hidden;clear: both;
+}
+.orgs-list li{
+    width: 32%;float:left;
+    padding: 5px;margin: 0.5%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+.orgs-list li:hover{
+    background: #dce6ee;
+    box-shadow: 0 0 2px rgba(102, 175, 233, .6);
+}
+.orgs-list li.checked{
+    background: #286090;color: #fff;
+}

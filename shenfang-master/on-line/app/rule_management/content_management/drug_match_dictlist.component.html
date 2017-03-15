@@ -1,0 +1,22 @@
+<div class="pw-edit-header">
+    <!--<div style="float: right;">
+        <button class="btn btn-primary" (click)="saveDrugMatch()">保存</button>
+        <button class="btn btn-default" (click)="cancel()">取消</button>
+    </div>-->
+    <h3>配伍标志字典</h3>
+</div>
+<div class="pw-searchcon">
+   <my-table [table]="table" (onDblClick)="alert($event)">
+        <template #tableTemplate let-tableinfo>
+            <tr *ngFor="let trow of tableinfo.dataList"  [class.selected]="trow === selectedDataList">
+                <td>{{trow.flag}}</td>
+                <td>{{trow.message}}</td>
+                <td>{{trow.level}}</td>
+                <td>
+                    <a (click)="pwDicModify(trow)">修改</a>
+                </td>
+            </tr>
+        </template>
+    </my-table>
+</div>
+<my-dialog></my-dialog>

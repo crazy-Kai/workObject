@@ -1,0 +1,77 @@
+<!-- gray-border bg-white single-padding -->
+<div class="flex column flexbox">
+    <div class="form-inline search-form fixed-header">
+        <div class="form-group">
+            <label class="control-label">名称:</label><input class="form-control input-sm" type="text" [(ngModel)]="searchService.dataGradeDocName">
+        </div>
+        <div class="form-group">
+            <label class="control-label">添加人:</label><input class="form-control input-sm" type="text" [(ngModel)]="searchService.dataGradeUserCreate">
+        </div>
+        <div class="form-group">
+            <label class="control-label">文献类型:</label>
+            <select [(ngModel)]="searchService.dataGradeScoreType">
+                <option value="meta">Meta分析</option>
+                <option value="rct">RCT研究</option>
+                <option value="nrcs">非随机临床研究</option>
+                <option value="cs">病例对照研究</option>
+                <option value="ccs">队列研究</option>
+                <option value="qhes">模型法药物经济学研究</option>
+                <option value="chec">试验型药物经济学研究</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label">1号评分人:</label><input class="form-control input-sm" type="text" [(ngModel)]="searchService.dataGradeGraders1">
+        </div>
+        <div class="form-group">
+            <label class="control-label">2号评分人:</label><input class="form-control input-sm" type="text" [(ngModel)]="searchService.dataGradeGraders2">
+        </div>
+        <div class="form-group">
+            <label class="control-label">审核人:</label><input class="form-control input-sm" type="text" [(ngModel)]="searchService.dataGradeGraders0">
+        </div>
+        <div class="form-group">
+            <label class="control-label">状态:</label>
+            <select [(ngModel)]="searchService.dataScoreStatus">
+                <option value="">全部</option>
+                <option value="1" >待评分</option>
+                <option value="2" >待审核</option>
+                <option value="3" >自动审核</option>
+                <option value="4" >已审核</option>
+                <option value="5" >人工审核</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-sm btn-primary" type="submit" (click)="search()">搜索</button>
+        </div>
+
+        <!-- 工具栏: class="bottom-single-padding btn-group"  -->
+        <div class="mb10" style="text-align: left;">
+            <button class="btn btn-primary" (click)="gotoEvaluation('score')" *ngIf="canScore">评分</button>
+            <button class="btn btn-primary" (click)="gotoEvaluation('audit')" *ngIf="canAudit">审核</button>
+            <button class="btn btn-primary" (click)="gotoEvaluation('view')">查看</button>
+        </div>
+    </div>
+
+    <div class="flex1 elastictable">
+        <my-table [table]="table" [isFixedHeader]="true">
+            <template #tableTemplate let-tableinfo>
+                <tr *ngFor="let trow of tableinfo.dataList" (click)="onClick(trow)" [class.selected]="trow === selectedDataList">
+                    <td width='200px'>{{trow.docName}}</td>
+                    <td width='200px'>
+                        <span *ngFor="let dpd of trow.dpds">
+                            {{dpd.dbdName}}({{dpdTypeList[dpd.dbdType]}})
+                        </span>
+                    </td>
+                    <td width='100px'>{{docTypeList[trow.docType]}}</td>
+                    <td width='100px'>{{trow.nameBook}}</td>
+                    <td width='100px'>{{scoreTypeList[trow.scoreType]}}</td>
+                    <td width='200px'>{{stateAuditList[trow.scoreStatus-1]}}</td>
+                    <td width='140px'>{{trow.graders1}}/{{trow.scoringTime1 | date:"yy-MM-dd"}}</td>
+                    <td width='140px'>{{trow.graders2}}/{{trow.scoringTime2 | date:"yy-MM-dd"}}</td>
+                    <td width='120px'>{{trow.graders0}}/{{trow.scoringTime0 | date:"yy-MM-dd"}}</td>
+                    <td width='120px'>{{trow.createdName}}/{{trow.createdTime | date:"yy-MM-dd"}}</td>
+                </tr>
+            </template>
+        </my-table>
+    </div>
+</div>
+<my-dialog></my-dialog>
